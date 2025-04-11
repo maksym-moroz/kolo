@@ -9,11 +9,11 @@ import com.kolo.store.Store
 
 // todo think through possible ways to do this
 
-class ChildParentCommunicationMiddleware<A : Action, S : State> : Middleware<A, S> {
+class ChildParentCommunicationMiddleware<S : State> : Middleware<S> {
     override fun interfere(
         store: Store<S>,
-        next: Dispatch<A>,
-    ): Dispatch<A> =
+        next: Dispatch<Action>,
+    ): Dispatch<Action> =
         Dispatch { action ->
             when (action) {
                 is ResultAction -> {

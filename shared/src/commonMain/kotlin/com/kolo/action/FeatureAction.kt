@@ -1,3 +1,3 @@
 package com.kolo.action
 
-sealed interface FeatureAction : Action
+interface FeatureAction : Action

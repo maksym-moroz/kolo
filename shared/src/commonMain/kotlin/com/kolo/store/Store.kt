@@ -12,5 +12,6 @@ interface Store<S : State> {
     val events: SharedFlow<Action>
     val actions: SharedFlow<Action>
 
-    suspend fun dispatch(action: Action)
+    // suspend
+    fun dispatch(action: Action)
 }

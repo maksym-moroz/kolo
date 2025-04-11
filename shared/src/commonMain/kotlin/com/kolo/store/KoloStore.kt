@@ -1,10 +1,7 @@
 package com.kolo.store
 
 import com.kolo.action.Action
-import com.kolo.action.EventAction
-import com.kolo.action.FeatureAction
-import com.kolo.action.ResultAction
-import com.kolo.action.SystemAction
+import com.kolo.action.AsEventAction
 import com.kolo.middleware.Middleware
 import com.kolo.middleware.dispatch.Dispatch
 import com.kolo.state.State
@@ -19,18 +16,24 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.runningFold
 
 // todo move out into impl gradle project (eventually)
 
 class KoloStore<S : State>(
     initialState: S,
-    middleware: List<Middleware<Action, S>>, // [1, 2, 3] -> (dispatch) -> (3, dispatch) -> ... -> (1, 2, 3, dispatch)
-    reducer: S.(action: Action) -> S,
+    middleware: List<Middleware<S>>, // [1, 2, 3] -> (dispatch) -> (3, dispatch) -> ... -> (1, 2, 3, dispatch)
+    reducer: (S, Action) -> S,
     outerScope: CoroutineScope,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate, // todo need immediate?
 ) : Store<S> {
+    constructor(
+        initialState: S,
+        middleware: List<Middleware<S>>,
+        reducer: (S, Action) -> S,
+        outerScope: CoroutineScope,
+    ) : this(initialState, middleware, reducer, outerScope, Dispatchers.Main.immediate)
+
     override val scope: CoroutineScope =
         CoroutineScope(dispatcher + SupervisorJob(outerScope.coroutineContext[Job]))
 
@@ -49,16 +52,26 @@ class KoloStore<S : State>(
     private val dispatch = Dispatch<Action> { action: Action -> reduce.emit(action) }
     private val interference = middleware.foldRight(dispatch) { acc, next -> acc.interfere(this, next) }
 
+    // todo(maksym) components should subscribe to events
+
     init {
         reduce
-            .runningFold(initialState) { state, action -> state.reducer(action) }
+            .runningFold(initialState) { state, action -> reducer(state, action) }
+            // .onEach { println("state: $it") }
             .onEach(states::emit)
             .launchIn(scope)
 
         actions
-            .onStart { emit(SystemAction.InitialAction) }
-            .onEach(::processAction)
-            .launchIn(scope)
+            // .onEach { println("action: $it") }
+            // todo fix
+            // .onStart { emit(SystemAction.InitialAction) }
+            .onEach { action ->
+                when (action) {
+                    // is separate pipeline for events a good idea? Seems like it
+                    is AsEventAction -> events.emit(action)
+                    else -> interference.perform(action)
+                }
+            }.launchIn(scope)
 
         // todo check if the fact it's in init block will make it fail
         // first make sure everything fired through, then launch initial action
@@ -67,32 +80,9 @@ class KoloStore<S : State>(
 //        }
     }
 
-    private suspend fun processAction(action: Action) {
-        when (action) {
-            is EventAction -> {
-                // good enough?
-                events.emit(action)
-            }
-
-            is SystemAction -> {
-                // todo separate pipeline for system events
-                interference.perform(action)
-            }
-
-            is FeatureAction -> {
-                // can we make this better if we know it's a feature action?
-                interference.perform(action)
-            }
-
-            is ResultAction -> {
-                // how to do this with no middleware?
-                interference.perform(action)
-            }
-        }
-    }
-
-    override suspend fun dispatch(action: Action) {
-        actions.emit(action)
+    override /*suspend*/ fun dispatch(action: Action) {
+        // actions.emit(action)
+        actions.tryEmit(action)
     }
 }
 

@@ -9,13 +9,13 @@ import com.kolo.store.Store
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class ActionEffectMiddleware<A : Action, S : State>(
-    private val effects: Set<Effect>,
-) : Middleware<A, S> {
+class ActionEffectMiddleware<S : State>(
+    private val effects: List<Effect>,
+) : Middleware<S> {
     override fun interfere(
         store: Store<S>,
-        next: Dispatch<A>,
-    ): Dispatch<A> {
+        next: Dispatch<Action>,
+    ): Dispatch<Action> {
         effects
             .forEach { sideEffect ->
                 sideEffect
