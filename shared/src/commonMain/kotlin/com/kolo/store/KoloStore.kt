@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.runningFold
 
 class KoloStore<S : State>(
     initialState: S,
-    middleware: List<Middleware<Action, S>>,
+    middleware: List<Middleware<Action, S>>, // [1, 2, 3] -> (dispatch) -> (3, dispatch) -> ... -> (1, 2, 3, dispatch)
     reducer: S.(action: Action) -> S,
     outerScope: CoroutineScope,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate, // todo need immediate?
@@ -47,8 +47,7 @@ class KoloStore<S : State>(
     private val reduce: MutableSharedFlow<Action> = MutableSharedFlow(replay = 1)
 
     private val dispatch = Dispatch<Action> { action: Action -> reduce.emit(action) }
-    private val interference =
-        middleware.foldRight(dispatch) { acc, next -> acc.interfere(this, next) }
+    private val interference = middleware.foldRight(dispatch) { acc, next -> acc.interfere(this, next) }
 
     init {
         reduce
