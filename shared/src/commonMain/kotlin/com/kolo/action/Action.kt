@@ -1,3 +1,9 @@
 package com.kolo.action
 
-sealed interface Action
+interface Action
+
+interface AsResultAction
+
+interface AsEventAction
+
+interface AsSystemAction

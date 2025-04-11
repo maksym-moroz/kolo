@@ -7,7 +7,7 @@ import com.kolo.store.Store
 class StoreContextDelegate<S : State>(
     private val store: Store<S>,
 ) : StoreContext {
-    override suspend fun dispatch(action: Action) {
+    override /*suspend*/ fun dispatch(action: Action) {
         store.dispatch(action)
     }
 }

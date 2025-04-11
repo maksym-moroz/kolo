@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kolo"
 include(":shared")
+include(":kolodemoactivity")
