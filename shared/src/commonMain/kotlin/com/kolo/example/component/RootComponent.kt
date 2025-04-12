@@ -10,10 +10,11 @@ import com.kolo.example.state.RootState
 
 class RootComponent(
     override val content: UiContent<RootState>,
+    initialState: RootState,
     container: EffectContainer,
 ) : KoloComponent<WithNoResultAction, RootState>(
         effectContainer = container,
-        initialState = RootState(0),
+        initialState = initialState,
     ) {
     override fun /*ReduceContext.*/reduce(
         state: RootState,

@@ -20,18 +20,22 @@ struct iOSApp: App {
     let storeContext: StoreContext
     
     init() {
-        rootState = RootState(counter: 0)
+        rootState = RootState(counter: -1)
         
         container = RootEffectContainer()
         effects = container.effects()
 
-        middleware = RootMiddlewareKt.createRootMiddlewareList()
+        middleware = createRootMiddlewareList()
         
         uiContent = RootUiContentImpl()
-        component = RootComponent(content: uiContent, container: container)
+        component = RootComponent(
+            content: uiContent,
+            initialState: rootState,
+            container: container,
+        )
         
         
-        mainScope = MainScope().create()
+        mainScope = createMainScope()
         
         store = KoloStore(
             initialState: rootState,
@@ -46,15 +50,18 @@ struct iOSApp: App {
     
 	var body: some Scene {
 		WindowGroup {
-            let swiftUiView = component.content.ios(storeContext: storeContext, state: store.states.value) as! (any View)
+            let swiftUiView = component.content.ios(storeContext: storeContext, state: store.states) as! (any View)
             AnyView(swiftUiView)
 		}
 	}
 }
 
 class RootUiContentImpl: RootUiContent {
-    override func ios(storeContext: any StoreContext, state: RootState) -> Any {
-        RootComponentUi(storeContext: storeContext, state: state)
+    override func ios(storeContext: any StoreContext, state: SkieSwiftStateFlow<RootState>) -> Any {
+                RootComponentUi(
+                    storeContext: storeContext,
+                    stateFlow: state
+                )
     }
 }
 
