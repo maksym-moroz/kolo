@@ -58,11 +58,9 @@ class MainActivity : ComponentActivity() {
             }
 
         val component = RootComponent(content, state, container)
-
+        val context = ReduceContextDelegate(emptyMap())
         val reducer = { state: RootState, action: Action ->
-            with(ReduceContextDelegate(emptyMap())) {
-                component.processReduce(state, action)
-            }
+            component.processReduce(context, state, action)
         }
 
         val store =

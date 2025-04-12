@@ -9,7 +9,7 @@ import com.kolo.store.Store
 
 // todo think through possible ways to do this
 
-class ChildParentCommunicationMiddleware<S : State> : Middleware<S> {
+class ChildParentCommunicationMiddleware<S : State> : Middleware<S>() {
     override fun interfere(
         store: Store<S>,
         next: Dispatch<Action>,

@@ -8,9 +8,9 @@ struct iOSApp: App {
     
     let container: RootEffectContainer
     let effects: [Effect]
-    let middleware: [Middleware]
+    let middleware: [Middleware<RootState>]
     
-
+    
     let uiContent: UiContent<RootState>
     let component: RootComponent
     
@@ -24,8 +24,12 @@ struct iOSApp: App {
         
         container = RootEffectContainer()
         effects = container.effects()
-
-        middleware = createRootMiddlewareList()
+        
+        middleware = [
+            ActionEffectMiddleware(effects: effects),
+            EventEffectMiddleware(effects: effects)
+            
+        ]
         
         uiContent = RootUiContentImpl()
         component = RootComponent(
@@ -37,31 +41,37 @@ struct iOSApp: App {
         
         mainScope = createMainScope()
         
+        let context = ReduceContextDelegate(externalInput: [:])
+        
         store = KoloStore(
             initialState: rootState,
             middleware: middleware,
             reducer: { [component] state, action in
-                component.reduce(state: state, action: action)
+                component.processReduce(
+                    context: context,
+                    state: state,
+                    action: action
+                )
             },
             outerScope: mainScope
         )
         storeContext = StoreContextDelegate<RootState>(store: store)
     }
     
-	var body: some Scene {
-		WindowGroup {
+    var body: some Scene {
+        WindowGroup {
             let swiftUiView = component.content.ios(storeContext: storeContext, state: store.states) as! (any View)
             AnyView(swiftUiView)
-		}
-	}
+        }
+    }
 }
 
-class RootUiContentImpl: RootUiContent {
+class RootUiContentImpl: UiContent<RootState> {
     override func ios(storeContext: any StoreContext, state: SkieSwiftStateFlow<RootState>) -> Any {
-                RootComponentUi(
-                    storeContext: storeContext,
-                    stateFlow: state
-                )
+        RootComponentUi(
+            storeContext: storeContext,
+            stateFlow: state
+        )
     }
 }
 

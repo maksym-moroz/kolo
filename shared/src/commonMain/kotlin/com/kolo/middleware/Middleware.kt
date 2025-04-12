@@ -5,8 +5,8 @@ import com.kolo.middleware.dispatch.Dispatch
 import com.kolo.state.State
 import com.kolo.store.Store
 
-interface Middleware<S : State> {
-    fun interfere(
+abstract class Middleware<S : State> {
+    abstract fun interfere(
         store: Store<S>,
         next: Dispatch<Action>,
     ): Dispatch<Action>

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onEach
 
 class EventEffectMiddleware<S : State>(
     private val effects: List<Effect>,
-) : Middleware<S> {
+) : Middleware<S>() {
     override fun interfere(
         store: Store<S>,
         next: Dispatch<Action>,
