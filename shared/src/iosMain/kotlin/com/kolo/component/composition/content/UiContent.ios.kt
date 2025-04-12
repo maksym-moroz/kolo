@@ -3,6 +3,7 @@ package com.kolo.component.composition.content
 import androidx.compose.runtime.Composable
 import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.state.State
+import kotlinx.coroutines.flow.StateFlow
 
 actual abstract class UiContent<S : State> {
     @Composable
@@ -13,6 +14,6 @@ actual abstract class UiContent<S : State> {
 
     actual abstract fun ios(
         storeContext: StoreContext,
-        state: S,
+        state: StateFlow<S>,
     ): Any
 }

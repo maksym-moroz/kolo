@@ -1,3 +1,4 @@
+import co.touchlab.skie.configuration.DefaultArgumentInterop
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.internal.config.LanguageFeature
 
@@ -74,5 +75,16 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+skie {
+    features {
+        enableFlowCombineConvertorPreview = true
+        enableSwiftUIObservingPreview = true
+
+        group {
+            DefaultArgumentInterop.Enabled(true)
+        }
     }
 }

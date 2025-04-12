@@ -3,7 +3,9 @@ package com.kolo.component.composition.content
 import androidx.compose.runtime.Composable
 import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.state.State
+import kotlinx.coroutines.flow.StateFlow
 
+// todo(maksym) rework completely
 expect abstract class UiContent<S : State> {
     @Composable
     abstract fun android(
@@ -13,6 +15,6 @@ expect abstract class UiContent<S : State> {
 
     abstract fun ios(
         storeContext: StoreContext,
-        state: S,
+        state: StateFlow<S>,
     ): Any
 }

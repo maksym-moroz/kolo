@@ -27,13 +27,6 @@ class KoloStore<S : State>(
     outerScope: CoroutineScope,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate, // todo need immediate?
 ) : Store<S> {
-    constructor(
-        initialState: S,
-        middleware: List<Middleware<S>>,
-        reducer: (S, Action) -> S,
-        outerScope: CoroutineScope,
-    ) : this(initialState, middleware, reducer, outerScope, Dispatchers.Main.immediate)
-
     override val scope: CoroutineScope =
         CoroutineScope(dispatcher + SupervisorJob(outerScope.coroutineContext[Job]))
 

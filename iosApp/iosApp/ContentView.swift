@@ -1,21 +1,24 @@
 import SwiftUI
 import shared
-import Combine
 
 struct RootComponentUi: View {
     var storeContext: StoreContext
-    var state: RootState
+    var stateFlow: SkieSwiftStateFlow<RootState>
     
-    // Custom initializer to set the initial state.
-    init(storeContext: StoreContext, state: RootState) {
+    @SwiftUICore.State var state: RootState
+    
+    init(storeContext: StoreContext, stateFlow: SkieSwiftStateFlow<RootState>) {
         self.storeContext = storeContext
-        self.state = state
+        self.stateFlow = stateFlow
+        
+        state = stateFlow.value
     }
     
     var body: some View {
         VStack {
             Text("Counter: \(state.counter)")
                 .padding()
+                .collect(flow: stateFlow, into: $state)
             Button("Increment") {
                 storeContext.dispatch(action:RootActionIncrement())
             }

@@ -25,6 +25,7 @@ import com.kolo.middleware.Middleware
 import com.kolo.middleware.effect.ActionEffectMiddleware
 import com.kolo.middleware.effect.EventEffectMiddleware
 import com.kolo.store.KoloStore
+import kotlinx.coroutines.flow.StateFlow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,8 @@ class MainActivity : ComponentActivity() {
                 EventEffectMiddleware<RootState>(container.effects()),
             )
 
+        val state = RootState(counter = -1)
+
         val content =
             object : UiContent<RootState>() {
                 @Composable
@@ -50,22 +53,21 @@ class MainActivity : ComponentActivity() {
 
                 override fun ios(
                     storeContext: StoreContext,
-                    state: RootState,
+                    state: StateFlow<RootState>,
                 ) = Unit
             }
 
-        val rootComponent = RootComponent(content, container)
+        val component = RootComponent(content, state, container)
 
-        // todo investigate generic options
         val reducer = { state: RootState, action: Action ->
             with(ReduceContextDelegate(emptyMap())) {
-                rootComponent.processReduce(state, action)
+                component.processReduce(state, action)
             }
         }
 
         val store =
             KoloStore<RootState>(
-                initialState = RootState(counter = 0),
+                initialState = state,
                 middleware = middleware,
                 reducer = reducer,
                 outerScope = lifecycleScope,
@@ -76,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val context = remember(store) { StoreContextDelegate(store) }
 
-                    rootComponent.content.android(context, store.states.collectAsState().value)
+                    component.content.android(context, store.states.collectAsState().value)
                 }
             }
         }
