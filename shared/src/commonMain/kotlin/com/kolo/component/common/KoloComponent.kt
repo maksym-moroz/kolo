@@ -18,7 +18,7 @@ abstract class KoloComponent<RA : ResultAction, S : State>(
     ChildrenContext<RA, S> by ChildrenContextDelegate(emptySet()) {
     abstract val content: UiContent<S>
 
-    final override fun processReduce(
+    final override fun process(
         context: ReduceContext,
         state: S,
         action: Action,

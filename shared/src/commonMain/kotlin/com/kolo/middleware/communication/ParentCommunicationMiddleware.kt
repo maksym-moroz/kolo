@@ -2,14 +2,14 @@ package com.kolo.middleware.communication
 
 import com.kolo.action.Action
 import com.kolo.action.ResultAction
+import com.kolo.middleware.Dispatch
 import com.kolo.middleware.Middleware
-import com.kolo.middleware.dispatch.Dispatch
 import com.kolo.state.State
 import com.kolo.store.Store
 
-// todo think through possible ways to do this
-
-class ChildParentCommunicationMiddleware<S : State> : Middleware<S>() {
+class ParentCommunicationMiddleware<S : State>(
+    private val dispatch: ParentDispatch,
+) : Middleware<S>() {
     override fun interfere(
         store: Store<S>,
         next: Dispatch<Action>,
@@ -17,7 +17,7 @@ class ChildParentCommunicationMiddleware<S : State> : Middleware<S>() {
         Dispatch { action ->
             when (action) {
                 is ResultAction -> {
-                    // todo how to propagate changes?
+                    dispatch.dispatch(action)
                 }
                 else -> {
                     next.perform(action)
