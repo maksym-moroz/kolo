@@ -8,5 +8,7 @@ sealed interface RootAction : Action {
 
     data object Decrement : RootAction
 
+    data object Reset : RootAction
+
     data object DisplaySnackbarAction : RootAction, AsEventAction
 }

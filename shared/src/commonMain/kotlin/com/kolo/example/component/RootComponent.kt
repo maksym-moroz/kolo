@@ -21,6 +21,7 @@ class RootComponent(
         when (action) {
             RootAction.Decrement -> state.copy(counter = state.counter - 1)
             RootAction.Increment -> state.copy(counter = state.counter + 1)
+            RootAction.Reset -> state.copy(counter = 0)
             else -> state
         }
 }

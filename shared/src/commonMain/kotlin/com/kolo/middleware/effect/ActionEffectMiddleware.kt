@@ -19,7 +19,7 @@ class ActionEffectMiddleware<S : State>(
         effects
             .forEach { sideEffect ->
                 sideEffect
-                    .intercept(store.actions) // can't visualize it (rework after test)
+                    .intercept(store.actions)
                     .onEach(store::dispatch)
                     // .catch {  } todo decide on error propagation/handling
                     .launchIn(store.scope)
