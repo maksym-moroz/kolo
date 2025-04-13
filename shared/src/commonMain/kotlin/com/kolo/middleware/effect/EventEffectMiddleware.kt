@@ -2,8 +2,8 @@ package com.kolo.middleware.effect
 
 import com.kolo.action.Action
 import com.kolo.effect.Effect
+import com.kolo.middleware.Dispatch
 import com.kolo.middleware.Middleware
-import com.kolo.middleware.dispatch.Dispatch
 import com.kolo.state.State
 import com.kolo.store.Store
 import kotlinx.coroutines.flow.launchIn

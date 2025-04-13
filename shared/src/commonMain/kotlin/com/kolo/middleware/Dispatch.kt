@@ -1,4 +1,4 @@
-package com.kolo.middleware.dispatch
+package com.kolo.middleware
 
 import com.kolo.action.Action
 

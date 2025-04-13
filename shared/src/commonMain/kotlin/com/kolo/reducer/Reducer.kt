@@ -1,10 +1,11 @@
 package com.kolo.reducer
 
 import com.kolo.action.Action
+import com.kolo.state.State
 
-fun interface Reducer<A : Action, S : Any> {
+fun interface Reducer<S : State> {
     fun reduce(
-        action: A,
         state: S,
+        action: Action,
     ): S
 }

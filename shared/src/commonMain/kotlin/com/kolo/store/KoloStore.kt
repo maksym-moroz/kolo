@@ -3,9 +3,11 @@ package com.kolo.store
 import com.kolo.action.Action
 import com.kolo.action.AsEventAction
 import com.kolo.action.SystemAction
-import com.kolo.middleware.Middleware
-import com.kolo.middleware.dispatch.Dispatch
+import com.kolo.middleware.Dispatch
+import com.kolo.middleware.builder.StoreMiddlewareBuilder
+import com.kolo.reducer.Reducer
 import com.kolo.state.State
+import com.kolo.store.configuration.StoreConfiguration
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +25,9 @@ import kotlinx.coroutines.flow.runningFold
 // todo move out into impl gradle project (eventually)
 
 class KoloStore<S : State>(
+    configuration: StoreConfiguration,
     initialState: S,
-    middleware: List<Middleware<S>>,
-    reducer: (S, Action) -> S,
+    reducer: Reducer<S>,
     outerScope: CoroutineScope,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate, // todo need immediate?
 ) : Store<S> {
@@ -44,6 +46,15 @@ class KoloStore<S : State>(
 
     private val reduce: MutableSharedFlow<Action> = MutableSharedFlow(replay = 1)
 
+    private val middleware =
+        StoreMiddlewareBuilder<S>()
+            .withEventEffects(configuration.eventEffects)
+            .withActionEffects(configuration.actionEffects)
+            .withParentDispatch(configuration.parentDispatch)
+            // todo create standard middleware like logging, add here
+            .withAdditionalMiddleware(emptyList())
+            .build()
+
     private val dispatch = Dispatch<Action> { action: Action -> reduce.emit(action) }
     private val interference = middleware.foldRight(dispatch) { acc, next -> acc.interfere(this, next) }
 
@@ -51,7 +62,8 @@ class KoloStore<S : State>(
 
     init {
         reduce
-            .runningFold(initialState) { state, action -> reducer(state, action) }
+            // todo check if works with states.value
+            .runningFold(states.value) { state, action -> reducer.reduce(state, action) }
             .onEach(states::emit)
             .launchIn(scope)
 
@@ -68,6 +80,6 @@ class KoloStore<S : State>(
 
     // todo items are being dropped
     override /*suspend*/ fun dispatch(action: Action) {
-        val result = actions.tryEmit(action)
+        actions.tryEmit(action)
     }
 }

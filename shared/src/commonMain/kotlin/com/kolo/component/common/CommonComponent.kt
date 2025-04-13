@@ -11,7 +11,7 @@ abstract class CommonComponent<RA : ResultAction, S : State>(
     override val container: EffectContainer,
     protected val state: S,
 ) : KoloNode {
-    abstract fun processReduce(
+    abstract fun process(
         context: ReduceContext,
         state: S,
         action: Action,
