@@ -6,18 +6,21 @@ import shared
 struct iOSApp: App {
     let rootState: RootState
     
-    let container: RootEffectContainer
+    let container: EffectContainer
     let effects: [Effect]
-    let middleware: [Middleware<RootState>]
     
+    let reduceContext: ReduceContext
     
     let uiContent: UiContent<RootState>
     let component: RootComponent
     
-    let mainScope: Kotlinx_coroutines_coreCoroutineScope
+    let componentConfiguration: ComponentConfiguration
     
+    let reducer: ReducerImpl<RootState>
+    
+    let storeConfiguration: StoreConfiguration
     let store: KoloStore<RootState>
-    let storeContext: StoreContext
+    let componentStoreContext: StoreContext
     
     init() {
         rootState = RootState(counter: -1)
@@ -25,11 +28,7 @@ struct iOSApp: App {
         container = RootEffectContainer()
         effects = container.effects()
         
-        middleware = [
-            ActionEffectMiddleware(effects: effects),
-            EventEffectMiddleware(effects: effects)
-            
-        ]
+        reduceContext = ReduceContextDelegate(externalInput: [:])
         
         uiContent = RootUiContentImpl()
         component = RootComponent(
@@ -38,29 +37,41 @@ struct iOSApp: App {
             container: container,
         )
         
-        
-        mainScope = createMainScope()
-        
-        let context = ReduceContextDelegate(externalInput: [:])
-        
-        store = KoloStore(
-            initialState: rootState,
-            middleware: middleware,
-            reducer: { [component] state, action in
-                component.processReduce(
-                    context: context,
-                    state: state,
-                    action: action
-                )
-            },
-            outerScope: mainScope
+        componentConfiguration = ComponentConfiguration(
+            hasContracts: false,
+            hasResults: false,
+            hasEffects: false,
+            hasEvents: false
         )
-        storeContext = StoreContextDelegate<RootState>(store: store)
+        
+        reducer = ReducerImpl(component: component.asGenericComponent(), context: reduceContext)
+        
+        let parentStoreContext: StoreContext? = nil
+        
+        let parentDispatch: ParentDispatch
+        if componentConfiguration.hasContracts {
+            parentDispatch = ParentDispatchImpl(storeContext: parentStoreContext!)
+        } else {
+            parentDispatch = ParentDispatchNoop()
+        }
+        
+        storeConfiguration = StoreConfiguration(
+            actionEffects: effects,
+            eventEffects: effects,
+            parentDispatch: parentDispatch
+        )
+        store = KoloStore(
+            configuration: storeConfiguration,
+            initialState: rootState,
+            reducer: reducer,
+            outerScope: createMainScope()
+        )
+        componentStoreContext = StoreContextDelegate<RootState>(store: store)
     }
     
     var body: some Scene {
         WindowGroup {
-            let swiftUiView = component.content.ios(storeContext: storeContext, state: store.states) as! (any View)
+            let swiftUiView = component.content.ios(storeContext: componentStoreContext, state: store.states) as! (any View)
             AnyView(swiftUiView)
         }
     }
@@ -74,4 +85,3 @@ class RootUiContentImpl: UiContent<RootState> {
         )
     }
 }
-
