@@ -6,26 +6,26 @@ import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.example.component.RootComponent
-import com.kolo.example.state.RootState
+import com.kolo.example.state.RootSelf
 import kotlinx.coroutines.flow.StateFlow
 
 fun initialiseComponent(
-    state: RootState,
+    state: RootSelf,
     container: EffectContainer,
 ): RootComponent {
     val content =
-        object : UiContent<RootState>() {
+        object : UiContent<RootSelf>() {
             @Composable
             override fun android(
                 storeContext: StoreContext,
-                state: RootState,
+                state: RootSelf,
             ) {
                 ExampleUiContent(storeContext, state)
             }
 
             override fun ios(
                 storeContext: StoreContext,
-                state: StateFlow<RootState>,
+                state: StateFlow<RootSelf>,
             ) = Unit
         }
 

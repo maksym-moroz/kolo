@@ -4,12 +4,12 @@ import com.kolo.action.Action
 import com.kolo.effect.Effect
 import com.kolo.middleware.Dispatch
 import com.kolo.middleware.Middleware
-import com.kolo.state.State
+import com.kolo.state.Self
 import com.kolo.store.Store
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class EventEffectMiddleware<S : State>(
+class EventEffectMiddleware<S : Self>(
     private val effects: List<Effect>,
 ) : Middleware<S>() {
     override fun interfere(

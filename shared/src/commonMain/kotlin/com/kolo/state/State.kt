@@ -1,4 +1,4 @@
 package com.kolo.state
 
-// can be useful later
+// base state marker, could be useful
 interface State

@@ -4,10 +4,10 @@ import com.kolo.action.Action
 import com.kolo.action.ResultAction
 import com.kolo.middleware.Dispatch
 import com.kolo.middleware.Middleware
-import com.kolo.state.State
+import com.kolo.state.Self
 import com.kolo.store.Store
 
-class ParentCommunicationMiddleware<S : State>(
+class ParentCommunicationMiddleware<S : Self>(
     private val dispatch: ParentDispatch,
 ) : Middleware<S>() {
     override fun interfere(

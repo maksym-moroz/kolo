@@ -12,14 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.example.action.RootAction
-import com.kolo.example.state.RootState
+import com.kolo.example.state.RootSelf
 import kotlinx.coroutines.launch
 
 // probably annotation processing to bind to needed component
 @Composable
 internal fun ExampleUiContent(
     storeContext: StoreContext,
-    state: RootState,
+    state: RootSelf,
 ) {
     val coroutineScope = rememberCoroutineScope()
     Column(
