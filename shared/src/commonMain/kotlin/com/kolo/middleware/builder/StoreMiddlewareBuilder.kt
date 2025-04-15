@@ -8,9 +8,9 @@ import com.kolo.middleware.communication.ParentDispatchImpl
 import com.kolo.middleware.communication.ParentDispatchNoop
 import com.kolo.middleware.effect.ActionEffectMiddleware
 import com.kolo.middleware.effect.EventEffectMiddleware
-import com.kolo.state.State
+import com.kolo.state.Self
 
-class StoreMiddlewareBuilder<S : State> {
+class StoreMiddlewareBuilder<S : Self> {
     private var actionEffects: List<Effect> = emptyList()
     private var eventEffects: List<Effect> = emptyList()
 

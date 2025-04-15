@@ -6,7 +6,7 @@ import com.kolo.action.SystemAction
 import com.kolo.middleware.Dispatch
 import com.kolo.middleware.builder.StoreMiddlewareBuilder
 import com.kolo.reducer.Reducer
-import com.kolo.state.State
+import com.kolo.state.Self
 import com.kolo.store.configuration.StoreConfiguration
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.runningFold
 
 // todo move out into impl gradle project (eventually)
 
-class KoloStore<S : State>(
+class KoloStore<S : Self>(
     configuration: StoreConfiguration,
     initialState: S,
     reducer: Reducer<S>,

@@ -7,21 +7,23 @@ import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.reduce.ReduceContext
 import com.kolo.example.action.RootAction
-import com.kolo.example.state.RootState
+import com.kolo.example.state.RootSelf
+import com.kolo.state.WithNoContract
 
 class RootComponent(
-    override val content: UiContent<RootState>,
-    initialState: RootState,
+    override val content: UiContent<RootSelf>,
     container: EffectContainer,
-) : KoloComponent<WithNoResultAction, RootState>(container, initialState) {
+    initialSelf: RootSelf,
+) : KoloComponent<WithNoResultAction, RootSelf, WithNoContract>(container, initialSelf) {
     override fun ReduceContext.reduce(
-        state: RootState,
+        self: RootSelf,
+        contract: WithNoContract,
         action: Action,
-    ): RootState =
+    ): RootSelf =
         when (action) {
-            RootAction.Decrement -> state.copy(counter = state.counter - 1)
-            RootAction.Increment -> state.copy(counter = state.counter + 1)
-            RootAction.Reset -> state.copy(counter = 0)
-            else -> state
+            RootAction.Decrement -> self.copy(counter = self.counter - 1)
+            RootAction.Increment -> self.copy(counter = self.counter + 1)
+            RootAction.Reset -> self.copy(counter = 0)
+            else -> self
         }
 }

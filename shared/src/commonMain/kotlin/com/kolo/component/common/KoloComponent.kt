@@ -7,28 +7,38 @@ import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.children.ChildrenContext
 import com.kolo.component.composition.context.children.ChildrenContextDelegate
 import com.kolo.component.composition.context.reduce.ReduceContext
-import com.kolo.state.State
+import com.kolo.state.Contract
+import com.kolo.state.Self
 
 // main component to use on app level
 
-abstract class KoloComponent<RA : ResultAction, S : State>(
+abstract class KoloComponent<RA : ResultAction, S : Self, C : Contract>(
     effectContainer: EffectContainer,
-    initialState: S,
-) : CommonComponent<RA, S>(effectContainer, initialState),
-    ChildrenContext<RA, S> by ChildrenContextDelegate(emptySet()) {
+    initialSelf: S,
+) : CommonComponent<RA, S, C>(effectContainer, initialSelf),
+    ChildrenContext<RA, S, C> by ChildrenContextDelegate(emptySet()) {
     abstract val content: UiContent<S>
 
     final override fun process(
         context: ReduceContext,
-        state: S,
+        self: S,
         action: Action,
     ): S {
-        // todo add needed logic later
-        return context.reduce(state, action)
+        val newState = context.reduce(self, contract, action)
+
+        children
+            .forEach {
+                // process somehow
+                // how to self + contract?
+                // extremely dumb names
+            }
+
+        return newState
     }
 
     abstract fun ReduceContext.reduce(
-        state: S,
+        self: S,
+        contract: C,
         action: Action,
     ): S
 }

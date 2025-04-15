@@ -22,12 +22,13 @@ import com.kolo.component.composition.context.store.StoreContextDelegate
 import com.kolo.component.configuration.ComponentConfiguration
 import com.kolo.effect.Effect
 import com.kolo.example.container.RootEffectContainer
-import com.kolo.example.state.RootState
+import com.kolo.example.state.RootSelf
 import com.kolo.middleware.communication.ParentDispatch
 import com.kolo.middleware.communication.ParentDispatchImpl
 import com.kolo.middleware.communication.ParentDispatchNoop
 import com.kolo.reducer.Reducer
 import com.kolo.reducer.ReducerImpl
+import com.kolo.state.WithNoContract
 import com.kolo.store.KoloStore
 import com.kolo.store.configuration.StoreConfiguration
 
@@ -36,14 +37,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val state = RootState(counter = -1)
+        val state = RootSelf(counter = -1)
 
         val container: EffectContainer = RootEffectContainer()
-        val component: KoloComponent<*, RootState> = initialiseComponent(state, container)
+        val component: KoloComponent<*, RootSelf, WithNoContract> = initialiseComponent(state, container)
 
         val reduceContext: ReduceContext = initialiseReduceContext()
 
-        val reducer: Reducer<RootState> = ReducerImpl(component, reduceContext)
+        val reducer: Reducer<RootSelf> = ReducerImpl(component, reduceContext)
 
         // todo split action and event effects into containers
         val effects: List<Effect> = container.effects()
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity() {
         // [component, store, etc] as a single entity, if hasContracts store should be accessible
         val storeContext: StoreContext? =
             if (componentConfiguration.hasContracts) {
-                StoreContextDelegate<RootState>(TODO())
+                StoreContextDelegate<RootSelf>(TODO())
             } else {
                 null
             }
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
         val storeConfiguration: StoreConfiguration = getStoreConfiguration(effects, parentDispatch)
 
         val store =
-            KoloStore<RootState>(
+            KoloStore<RootSelf>(
                 configuration = storeConfiguration,
                 initialState = state,
                 reducer = reducer,
