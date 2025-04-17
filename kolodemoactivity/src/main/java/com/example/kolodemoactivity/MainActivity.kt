@@ -21,8 +21,8 @@ import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.component.composition.context.store.StoreContextDelegate
 import com.kolo.component.configuration.ComponentConfiguration
 import com.kolo.effect.Effect
-import com.kolo.example.container.RootEffectContainer
-import com.kolo.example.state.RootSelf
+import com.kolo.example.a.container.RootEffectContainer
+import com.kolo.example.a.state.RootSelf
 import com.kolo.middleware.communication.ParentDispatch
 import com.kolo.middleware.communication.ParentDispatchImpl
 import com.kolo.middleware.communication.ParentDispatchNoop
@@ -76,6 +76,7 @@ class MainActivity : ComponentActivity() {
             KoloStore<RootSelf>(
                 configuration = storeConfiguration,
                 initialState = state,
+                initialContract = TODO(),
                 reducer = reducer,
                 outerScope = lifecycleScope,
             )

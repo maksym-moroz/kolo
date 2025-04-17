@@ -1,4 +1,4 @@
-package com.kolo.example.action
+package com.kolo.example.a.action
 
 import com.kolo.action.Action
 import com.kolo.action.AsEventAction
