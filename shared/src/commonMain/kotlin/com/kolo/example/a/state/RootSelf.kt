@@ -1,4 +1,4 @@
-package com.kolo.example.state
+package com.kolo.example.a.state
 
 import com.kolo.state.Self
 

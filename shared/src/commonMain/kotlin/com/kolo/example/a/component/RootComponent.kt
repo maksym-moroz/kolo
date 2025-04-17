@@ -1,4 +1,4 @@
-package com.kolo.example.component
+package com.kolo.example.a.component
 
 import com.kolo.action.Action
 import com.kolo.action.ResultAction.WithNoResultAction
@@ -6,8 +6,8 @@ import com.kolo.component.common.KoloComponent
 import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.reduce.ReduceContext
-import com.kolo.example.action.RootAction
-import com.kolo.example.state.RootSelf
+import com.kolo.example.a.action.RootAction
+import com.kolo.example.a.state.RootSelf
 import com.kolo.state.WithNoContract
 
 class RootComponent(

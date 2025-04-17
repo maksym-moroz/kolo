@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.kolo.component.composition.context.store.StoreContext
-import com.kolo.example.action.RootAction
-import com.kolo.example.state.RootSelf
+import com.kolo.example.a.action.RootAction
+import com.kolo.example.a.state.RootSelf
 import kotlinx.coroutines.launch
 
 // probably annotation processing to bind to needed component

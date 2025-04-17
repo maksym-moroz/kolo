@@ -2,8 +2,8 @@ package com.kolo.component.extensions
 
 import com.kolo.action.ResultAction
 import com.kolo.component.common.KoloComponent
-import com.kolo.example.component.RootComponent
-import com.kolo.example.state.RootSelf
+import com.kolo.example.a.component.RootComponent
+import com.kolo.example.a.state.RootSelf
 
 // file for workarounds, hacks and moving forward
 // one can hope it won't grow

@@ -8,4 +8,6 @@ import com.kolo.state.Self
 interface ChildrenContext<RA : ResultAction, S : Self, C : Contract> {
     // should be a stack (maybe?)
     val children: Set<KoloComponent<RA, S, C>>
+
+    // child: [component + store] -> ContextComponent [c+s]
 }

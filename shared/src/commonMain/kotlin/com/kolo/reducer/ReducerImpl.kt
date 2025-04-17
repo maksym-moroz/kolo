@@ -13,6 +13,7 @@ class ReducerImpl<S : Self>(
 ) : Reducer<S> {
     override fun reduce(
         self: S,
+        contract: Contract,
         action: Action,
-    ): S = component.process(context, self, action)
+    ): S = component.process(context, self, contract, action)
 }
