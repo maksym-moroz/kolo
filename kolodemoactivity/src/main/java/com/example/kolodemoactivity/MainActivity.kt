@@ -90,8 +90,8 @@ class MainActivity : ComponentActivity() {
 
         // ### Extract all of this into separate functions
 
-        val initialSelfB: SelfB = SelfB(accumulator = 0)
-        val initialContractB: ContractB = ContractB(counter = 0)
+        val initialSelfB = SelfB(accumulator = 0)
+        val initialContractB = ContractB(counter = 0)
 
         val containerB: EffectContainer = EffectContainerB()
         val componentB: KoloComponent<*, SelfB, ContractB> = initialiseComponentB(initialSelfB, containerB)
@@ -119,18 +119,18 @@ class MainActivity : ComponentActivity() {
                 ParentDispatchNoop
             }
 
-        val storeConfigurationB: StoreConfiguration = getStoreConfiguration(effectsA, parentDispatchA)
+        val storeConfigurationB: StoreConfiguration = getStoreConfiguration(effectsB, parentDispatchB)
 
-        val storeB =
+        val storeB: KoloStore<SelfB> =
             KoloStore<SelfB>(
-                configuration = storeConfigurationA,
+                configuration = storeConfigurationB,
                 initialState = initialSelfB,
-                initialContract = initialContractA,
+                initialContract = initialContractB,
                 reducer = reducerB,
                 outerScope = lifecycleScope,
             )
 
-        val componentDispatchB: StoreContext = StoreContextDelegate(storeA)
+        val componentDispatchB: StoreContext = StoreContextDelegate(storeB)
 
         setContent {
             KoloTheme {
