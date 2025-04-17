@@ -1,4 +1,4 @@
-package com.kolo.example.a.effect
+package com.kolo.example.b.effect
 
 import com.kolo.action.Action
 import com.kolo.effect.Effect
@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 
-class ResetOnDecrementEffect : Effect {
+class ResetOnDecrementEffectB : Effect {
     override fun intercept(actions: Flow<Action>): Flow<Action> =
         actions
             .filterIsInstance<ActionA.Decrement>()

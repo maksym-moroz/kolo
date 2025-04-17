@@ -11,15 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.kolo.component.composition.context.store.StoreContext
-import com.kolo.example.a.action.RootAction
-import com.kolo.example.a.state.RootSelf
+import com.kolo.example.a.action.ActionA
+import com.kolo.example.a.state.SelfA
 import kotlinx.coroutines.launch
 
 // probably annotation processing to bind to needed component
 @Composable
 internal fun ExampleUiContent(
     storeContext: StoreContext,
-    state: RootSelf,
+    state: SelfA,
 ) {
     val coroutineScope = rememberCoroutineScope()
     Column(
@@ -34,7 +34,7 @@ internal fun ExampleUiContent(
         Button(
             onClick = {
                 coroutineScope.launch {
-                    storeContext.dispatch(RootAction.Increment)
+                    storeContext.dispatch(ActionA.Increment)
                 }
             },
         ) {
@@ -44,7 +44,7 @@ internal fun ExampleUiContent(
         Button(
             onClick = {
                 coroutineScope.launch {
-                    storeContext.dispatch(RootAction.Decrement)
+                    storeContext.dispatch(ActionA.Decrement)
                 }
             },
         ) {
@@ -54,7 +54,7 @@ internal fun ExampleUiContent(
         Button(
             onClick = {
                 coroutineScope.launch {
-                    storeContext.dispatch(RootAction.DisplaySnackbarAction)
+                    storeContext.dispatch(ActionA.DisplaySnackbarActionA)
                 }
             },
         ) {

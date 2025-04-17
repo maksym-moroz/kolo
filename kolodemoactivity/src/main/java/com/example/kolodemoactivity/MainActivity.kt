@@ -21,8 +21,8 @@ import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.component.composition.context.store.StoreContextDelegate
 import com.kolo.component.configuration.ComponentConfiguration
 import com.kolo.effect.Effect
-import com.kolo.example.a.container.RootEffectContainer
-import com.kolo.example.a.state.RootSelf
+import com.kolo.example.a.container.EffectContainerA
+import com.kolo.example.a.state.SelfA
 import com.kolo.middleware.communication.ParentDispatch
 import com.kolo.middleware.communication.ParentDispatchImpl
 import com.kolo.middleware.communication.ParentDispatchNoop
@@ -37,14 +37,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val state = RootSelf(counter = -1)
+        val initialSelf = SelfA(counter = -1)
+        val initialContract = WithNoContract
 
-        val container: EffectContainer = RootEffectContainer()
-        val component: KoloComponent<*, RootSelf, WithNoContract> = initialiseComponent(state, container)
+        val container: EffectContainer = EffectContainerA()
+        val component: KoloComponent<*, SelfA, WithNoContract> = initialiseComponent(initialSelf, container)
 
         val reduceContext: ReduceContext = initialiseReduceContext()
 
-        val reducer: Reducer<RootSelf> = ReducerImpl(component, reduceContext)
+        val reducer: Reducer<SelfA> = ReducerImpl(component, reduceContext)
 
         // todo split action and event effects into containers
         val effects: List<Effect> = container.effects()
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
         // [component, store, etc] as a single entity, if hasContracts store should be accessible
         val storeContext: StoreContext? =
             if (componentConfiguration.hasContracts) {
-                StoreContextDelegate<RootSelf>(TODO())
+                StoreContextDelegate<SelfA>(TODO())
             } else {
                 null
             }
@@ -73,10 +74,10 @@ class MainActivity : ComponentActivity() {
         val storeConfiguration: StoreConfiguration = getStoreConfiguration(effects, parentDispatch)
 
         val store =
-            KoloStore<RootSelf>(
+            KoloStore<SelfA>(
                 configuration = storeConfiguration,
-                initialState = state,
-                initialContract = TODO(),
+                initialState = initialSelf,
+                initialContract = initialContract,
                 reducer = reducer,
                 outerScope = lifecycleScope,
             )
@@ -86,7 +87,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             KoloTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    component.content.android(componentDispatch, store.states.collectAsState().value)
+                    component.content.android(
+                        componentDispatch,
+                        store.states.collectAsState().value,
+                        store.contracts.collectAsState().value,
+                    )
                 }
             }
         }

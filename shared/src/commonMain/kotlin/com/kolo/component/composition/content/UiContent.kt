@@ -2,6 +2,7 @@ package com.kolo.component.composition.content
 
 import androidx.compose.runtime.Composable
 import com.kolo.component.composition.context.store.StoreContext
+import com.kolo.state.Contract
 import com.kolo.state.Self
 import kotlinx.coroutines.flow.StateFlow
 
@@ -11,6 +12,7 @@ expect abstract class UiContent<S : Self> {
     abstract fun android(
         storeContext: StoreContext,
         state: S,
+        contract: Contract,
     )
 
     abstract fun ios(
