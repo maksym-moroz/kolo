@@ -10,5 +10,7 @@ sealed interface ActionA : Action {
 
     data object Reset : ActionA
 
+    data object AddB : ActionA
+
     data object DisplaySnackbarActionA : ActionA, AsEventAction
 }

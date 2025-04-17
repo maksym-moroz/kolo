@@ -2,6 +2,7 @@ package com.kolo.example.b.component
 
 import com.kolo.action.Action
 import com.kolo.action.ResultAction.WithNoResultAction
+import com.kolo.action.variant.ContractUpdateAction
 import com.kolo.component.common.KoloComponent
 import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
@@ -18,12 +19,21 @@ class ComponentB(
     override fun ReduceContext.reduce(
         self: SelfB,
         contract: ContractB,
-        action: Action,
-    ): SelfB =
-        when (action) {
-            ActionB.Decrement -> self.copy(accumulator = self.accumulator - 10)
-            ActionB.Increment -> self.copy(accumulator = self.accumulator + 10)
-            ActionB.Reset -> self.copy(accumulator = 0)
-            else -> self
-        }
+        action: Action, // -> ContractUpdateAction
+    ): SelfB {
+        val newState =
+            if (contract.area > 0) {
+                when (action) {
+                    is ContractUpdateAction<*> -> self.copy(area = contract.area)
+                    ActionB.Decrement -> self.copy(accumulator = self.accumulator - 10)
+                    ActionB.Increment -> self.copy(accumulator = self.accumulator + 10)
+                    ActionB.Reset -> self.copy(accumulator = 0)
+                    else -> self
+                }
+            } else {
+                SelfB(1)
+            }
+
+        return newState
+    }
 }

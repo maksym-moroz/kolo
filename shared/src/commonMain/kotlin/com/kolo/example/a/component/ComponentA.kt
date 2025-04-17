@@ -8,6 +8,8 @@ import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.reduce.ReduceContext
 import com.kolo.example.a.action.ActionA
 import com.kolo.example.a.state.SelfA
+import com.kolo.example.b.component.ComponentB
+import com.kolo.example.b.state.self.SelfB
 import com.kolo.state.WithNoContract
 
 class ComponentA(
@@ -24,6 +26,23 @@ class ComponentA(
             ActionA.Decrement -> self.copy(counter = self.counter - 1)
             ActionA.Increment -> self.copy(counter = self.counter + 1)
             ActionA.Reset -> self.copy(counter = 0)
+            ActionA.AddB -> {
+                self.copy(
+                    children =
+                        self.children.apply {
+                            add(
+                                ComponentB(
+                                    content = TODO(),
+                                    container = TODO(),
+                                    SelfB(
+                                        accumulator = 0,
+                                        area = self.height * self.width,
+                                    ),
+                                ),
+                            )
+                        },
+                )
+            }
             else -> self
         }
 }

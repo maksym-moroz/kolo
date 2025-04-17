@@ -7,13 +7,13 @@ import com.kolo.component.composition.context.reduce.ReduceContext
 import com.kolo.state.Contract
 import com.kolo.state.Self
 
-class ReducerImpl<S : Self>(
-    private val component: KoloComponent<out ResultAction, S, out Contract>,
+class ReducerImpl<S : Self, C : Contract>(
+    private val component: KoloComponent<out ResultAction, S, C>,
     private val context: ReduceContext,
-) : Reducer<S> {
+) : Reducer<S, C> {
     override fun reduce(
         self: S,
-        contract: Contract,
+        contract: C,
         action: Action,
     ): S = component.process(context, self, contract, action)
 }

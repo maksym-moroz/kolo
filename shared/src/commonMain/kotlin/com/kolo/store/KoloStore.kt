@@ -3,6 +3,7 @@ package com.kolo.store
 import com.kolo.action.Action
 import com.kolo.action.AsEventAction
 import com.kolo.action.SystemAction
+import com.kolo.action.variant.ContractUpdateAction
 import com.kolo.middleware.Dispatch
 import com.kolo.middleware.builder.StoreMiddlewareBuilder
 import com.kolo.reducer.Reducer
@@ -25,22 +26,22 @@ import kotlinx.coroutines.flow.runningFold
 
 // todo move out into impl gradle project (eventually)
 
-class KoloStore<S : Self>(
+class KoloStore<S : Self, C : Contract>(
     configuration: StoreConfiguration,
     initialState: S,
-    initialContract: Contract,
-    reducer: Reducer<S>,
+    initialContract: C,
+    reducer: Reducer<S, C>,
     outerScope: CoroutineScope,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate, // todo need immediate?
-) : Store<S> {
+) : Store<S, C> {
     override val scope: CoroutineScope =
         CoroutineScope(dispatcher + SupervisorJob(outerScope.coroutineContext[Job]))
 
     override val states: StateFlow<S>
         private field: MutableStateFlow<S> = MutableStateFlow(initialState)
 
-    override val contracts: StateFlow<Contract>
-        private field: MutableStateFlow<Contract> = MutableStateFlow(initialContract)
+    override val contracts: StateFlow<C>
+        private field: MutableStateFlow<C> = MutableStateFlow(initialContract)
 
     override val events: SharedFlow<Action>
         private field: MutableSharedFlow<Action> = MutableSharedFlow()
@@ -52,7 +53,7 @@ class KoloStore<S : Self>(
     private val reduce: MutableSharedFlow<Action> = MutableSharedFlow(replay = 1)
 
     private val middleware =
-        StoreMiddlewareBuilder<S>()
+        StoreMiddlewareBuilder<S, C>()
             .withEventEffects(configuration.eventEffects)
             .withActionEffects(configuration.actionEffects)
             .withParentDispatch(configuration.parentDispatch)
@@ -77,9 +78,16 @@ class KoloStore<S : Self>(
             .onEach { action ->
                 when (action) {
                     // is separate pipeline for events a good idea? Seems like it
-                    is AsEventAction -> events.emit(action)
-                    else -> interference.perform(action)
+                    is AsEventAction -> {
+                        events.emit(action)
+                    }
+                    is ContractUpdateAction<*> -> {
+                        @Suppress("UNCHECKED_CAST")
+                        contracts.emit(action.value as C)
+                    }
                 }
+                // todo check if this is ok for event actions
+                interference.perform(action)
             }.launchIn(scope)
     }
 
