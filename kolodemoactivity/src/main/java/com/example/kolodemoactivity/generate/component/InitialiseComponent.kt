@@ -5,29 +5,31 @@ import com.example.kolodemoactivity.example.content.ExampleUiContent
 import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.store.StoreContext
-import com.kolo.example.a.component.RootComponent
-import com.kolo.example.a.state.RootSelf
+import com.kolo.example.a.component.ComponentA
+import com.kolo.example.a.state.SelfA
+import com.kolo.state.Contract
 import kotlinx.coroutines.flow.StateFlow
 
 fun initialiseComponent(
-    state: RootSelf,
+    state: SelfA,
     container: EffectContainer,
-): RootComponent {
+): ComponentA {
     val content =
-        object : UiContent<RootSelf>() {
+        object : UiContent<SelfA>() {
             @Composable
             override fun android(
                 storeContext: StoreContext,
-                state: RootSelf,
+                state: SelfA,
+                contract: Contract,
             ) {
                 ExampleUiContent(storeContext, state)
             }
 
             override fun ios(
                 storeContext: StoreContext,
-                state: StateFlow<RootSelf>,
+                state: StateFlow<SelfA>,
             ) = Unit
         }
 
-    return RootComponent(content, state, container)
+    return ComponentA(content, state, container)
 }
