@@ -41,15 +41,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val initialSelfA = SelfA(counter = -1)
-        val initialContractA = WithNoContract
+        val initialSelfA =
+            SelfA(
+                counter = -1,
+                height = 10,
+                width = 10,
+                children = emptyList(),
+            )
+        val initialContractA: WithNoContract = WithNoContract
 
         val containerA: EffectContainer = EffectContainerA()
         val componentA: KoloComponent<*, SelfA, WithNoContract> = initialiseComponentA(initialSelfA, containerA)
 
         val reduceContextA: ReduceContext = initialiseReduceContext()
 
-        val reducerA: Reducer<SelfA> = ReducerImpl(componentA, reduceContextA)
+        val reducerA: Reducer<SelfA, WithNoContract> = ReducerImpl(componentA, reduceContextA)
 
         // todo split action and event effects into containers
         val effectsA: List<Effect> = containerA.effects()
@@ -63,7 +69,7 @@ class MainActivity : ComponentActivity() {
         // [component, store, etc] as a single entity, if hasContracts store should be accessible
         val storeContextA: StoreContext? =
             if (componentConfigurationA.hasContracts) {
-                StoreContextDelegate<SelfA>(TODO())
+                StoreContextDelegate<SelfA, WithNoContract>(TODO())
             } else {
                 null
             }
@@ -78,7 +84,7 @@ class MainActivity : ComponentActivity() {
         val storeConfigurationA: StoreConfiguration = getStoreConfiguration(effectsA, parentDispatchA)
 
         val storeA =
-            KoloStore<SelfA>(
+            KoloStore<SelfA, WithNoContract>(
                 configuration = storeConfigurationA,
                 initialState = initialSelfA,
                 initialContract = initialContractA,
@@ -91,14 +97,14 @@ class MainActivity : ComponentActivity() {
         // ### Extract all of this into separate functions
 
         val initialSelfB = SelfB(accumulator = 0)
-        val initialContractB = ContractB(counter = 0)
+        val initialContractB = ContractB(area = 0)
 
         val containerB: EffectContainer = EffectContainerB()
         val componentB: KoloComponent<*, SelfB, ContractB> = initialiseComponentB(initialSelfB, containerB)
 
         val reduceContextB: ReduceContext = initialiseReduceContext()
 
-        val reducerB: Reducer<SelfB> = ReducerImpl(componentB, reduceContextB)
+        val reducerB: Reducer<SelfB, ContractB> = ReducerImpl(componentB, reduceContextB)
 
         // todo split action and event effects into containers
         val effectsB: List<Effect> = containerB.effects()
@@ -107,7 +113,7 @@ class MainActivity : ComponentActivity() {
 
         val storeContextB: StoreContext? =
             if (componentConfigurationB.hasContracts) {
-                StoreContextDelegate<SelfA>(storeA)
+                StoreContextDelegate<SelfA, WithNoContract>(storeA)
             } else {
                 null
             }
@@ -121,8 +127,8 @@ class MainActivity : ComponentActivity() {
 
         val storeConfigurationB: StoreConfiguration = getStoreConfiguration(effectsB, parentDispatchB)
 
-        val storeB: KoloStore<SelfB> =
-            KoloStore<SelfB>(
+        val storeB: KoloStore<SelfB, ContractB> =
+            KoloStore<SelfB, ContractB>(
                 configuration = storeConfigurationB,
                 initialState = initialSelfB,
                 initialContract = initialContractB,

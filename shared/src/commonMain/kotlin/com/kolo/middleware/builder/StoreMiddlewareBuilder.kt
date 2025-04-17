@@ -8,9 +8,10 @@ import com.kolo.middleware.communication.ParentDispatchImpl
 import com.kolo.middleware.communication.ParentDispatchNoop
 import com.kolo.middleware.effect.ActionEffectMiddleware
 import com.kolo.middleware.effect.EventEffectMiddleware
+import com.kolo.state.Contract
 import com.kolo.state.Self
 
-class StoreMiddlewareBuilder<S : Self> {
+class StoreMiddlewareBuilder<S : Self, C : Contract> {
     private var actionEffects: List<Effect> = emptyList()
     private var eventEffects: List<Effect> = emptyList()
 
@@ -20,13 +21,13 @@ class StoreMiddlewareBuilder<S : Self> {
     private var parentDispatch: ParentDispatch = ParentDispatchNoop
     private var enableParentDispatch: Boolean = false
 
-    private var additionalMiddleware: List<Middleware<S>> = emptyList()
+    private var additionalMiddleware: List<Middleware<S, C>> = emptyList()
 
     /**
      * If you want ActionEffectMiddleware, call this with the
      * effect list and toggle it on.
      */
-    fun withActionEffects(effects: List<Effect>): StoreMiddlewareBuilder<S> {
+    fun withActionEffects(effects: List<Effect>): StoreMiddlewareBuilder<S, C> {
         this.actionEffects = effects
         this.includeActionEffects = true
         return this
@@ -36,7 +37,7 @@ class StoreMiddlewareBuilder<S : Self> {
      * If you want EventEffectMiddleware, call this with the
      * effect list and toggle it on.
      */
-    fun withEventEffects(effects: List<Effect>): StoreMiddlewareBuilder<S> {
+    fun withEventEffects(effects: List<Effect>): StoreMiddlewareBuilder<S, C> {
         this.eventEffects = effects
         this.includeEventEffects = true
         return this
@@ -49,7 +50,7 @@ class StoreMiddlewareBuilder<S : Self> {
     fun withParentDispatch(
         // enable: Boolean,
         dispatch: ParentDispatch,
-    ): StoreMiddlewareBuilder<S> {
+    ): StoreMiddlewareBuilder<S, C> {
         this.enableParentDispatch = true
         this.parentDispatch = dispatch
         return this
@@ -59,7 +60,7 @@ class StoreMiddlewareBuilder<S : Self> {
      * Add any custom middlewares you want, for logging, analytics, or
      * specialized logic.
      */
-    fun withAdditionalMiddleware(middleware: List<Middleware<S>>): StoreMiddlewareBuilder<S> {
+    fun withAdditionalMiddleware(middleware: List<Middleware<S, C>>): StoreMiddlewareBuilder<S, C> {
         additionalMiddleware = middleware
         return this
     }
@@ -67,7 +68,7 @@ class StoreMiddlewareBuilder<S : Self> {
     // middleware order is critical, this means the logic should be lifted and isolated
     // logic should be independent of builder, possibly weights and min-heap approach
 
-    fun build(): List<Middleware<S>> =
+    fun build(): List<Middleware<S, C>> =
         buildList {
             // If the user opted into ActionEffectMiddleware
             if (includeActionEffects && actionEffects.isNotEmpty()) {

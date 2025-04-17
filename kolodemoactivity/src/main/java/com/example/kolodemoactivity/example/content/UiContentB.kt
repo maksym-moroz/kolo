@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.sp
 import com.kolo.component.composition.context.store.StoreContext
 import com.kolo.example.a.action.ActionA
 import com.kolo.example.b.state.self.SelfB
+import com.kolo.state.Contract
 import kotlinx.coroutines.launch
 
 // probably annotation processing to bind to needed component
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 internal fun UiContentB(
     storeContext: StoreContext,
     state: SelfB,
+    contract: Contract,
 ) {
     val coroutineScope = rememberCoroutineScope()
     Column(

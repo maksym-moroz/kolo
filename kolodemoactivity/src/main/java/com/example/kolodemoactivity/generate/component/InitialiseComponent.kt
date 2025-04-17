@@ -49,7 +49,7 @@ fun initialiseComponentB(
                 state: SelfB,
                 contract: Contract,
             ) {
-                UiContentB(storeContext, state)
+                UiContentB(storeContext, state, contract)
             }
 
             override fun ios(

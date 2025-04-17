@@ -22,14 +22,23 @@ abstract class KoloComponent<RA : ResultAction, S : Self, C : Contract>(
     final override fun process(
         context: ReduceContext,
         self: S,
-        contract: Contract,
+        contract: C,
         action: Action,
     ): S {
         val newState = context.reduce(self, contract, action)
 
+        // old: [h: 99, w: 99]
+        // new: [h: 100, w: 99]
+
+        // what's mapper.invoke(newState)?
+        // add(ComponentA(initialState = SelfB()) {
+        //    val area = it.height * it.width
+        //    ContractB(area = area)
+        // }
+
 //        children
 //            .forEach { (child, mapper) ->
-//                child.dispatch(ContractUpdateAction<>(mapper.invoke(newState)))
+//                child.dispatch(ContractUpdateAction<ContractB>(mapper.invoke(newState))) (StateA) -> ContractB
 //            }
 
         return newState
