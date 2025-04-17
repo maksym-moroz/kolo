@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 // probably annotation processing to bind to needed component
 @Composable
-internal fun ExampleUiContent(
+internal fun UiContentA(
     storeContext: StoreContext,
     state: SelfA,
 ) {

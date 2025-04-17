@@ -7,23 +7,23 @@ import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.reduce.ReduceContext
 import com.kolo.example.b.action.ActionB
-import com.kolo.example.b.state.SelfB
-import com.kolo.state.WithNoContract
+import com.kolo.example.b.state.contract.ContractB
+import com.kolo.example.b.state.self.SelfB
 
 class ComponentB(
     override val content: UiContent<SelfB>,
     container: EffectContainer,
     initialSelf: SelfB,
-) : KoloComponent<WithNoResultAction, SelfB, WithNoContract>(container, initialSelf) {
+) : KoloComponent<WithNoResultAction, SelfB, ContractB>(container, initialSelf) {
     override fun ReduceContext.reduce(
         self: SelfB,
-        contract: WithNoContract,
+        contract: ContractB,
         action: Action,
     ): SelfB =
         when (action) {
-            ActionB.Decrement -> self.copy(counter = self.counter - 1)
-            ActionB.Increment -> self.copy(counter = self.counter + 1)
-            ActionB.Reset -> self.copy(counter = 0)
+            ActionB.Decrement -> self.copy(accumulator = self.accumulator - 10)
+            ActionB.Increment -> self.copy(accumulator = self.accumulator + 10)
+            ActionB.Reset -> self.copy(accumulator = 0)
             else -> self
         }
 }
