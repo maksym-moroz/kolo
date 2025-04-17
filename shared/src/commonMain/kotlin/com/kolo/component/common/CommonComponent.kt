@@ -16,6 +16,7 @@ abstract class CommonComponent<RA : ResultAction, S : Self, C : Contract>(
     abstract fun process(
         context: ReduceContext,
         self: S,
+        contract: Contract,
         action: Action,
     ): S
 }

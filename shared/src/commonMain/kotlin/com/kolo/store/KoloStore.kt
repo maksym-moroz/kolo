@@ -6,6 +6,7 @@ import com.kolo.action.SystemAction
 import com.kolo.middleware.Dispatch
 import com.kolo.middleware.builder.StoreMiddlewareBuilder
 import com.kolo.reducer.Reducer
+import com.kolo.state.Contract
 import com.kolo.state.Self
 import com.kolo.store.configuration.StoreConfiguration
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.runningFold
 class KoloStore<S : Self>(
     configuration: StoreConfiguration,
     initialState: S,
+    initialContract: Contract,
     reducer: Reducer<S>,
     outerScope: CoroutineScope,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate, // todo need immediate?
@@ -36,6 +38,9 @@ class KoloStore<S : Self>(
 
     override val states: StateFlow<S>
         private field: MutableStateFlow<S> = MutableStateFlow(initialState)
+
+    override val contracts: StateFlow<Contract>
+        private field: MutableStateFlow<Contract> = MutableStateFlow(initialContract)
 
     override val events: SharedFlow<Action>
         private field: MutableSharedFlow<Action> = MutableSharedFlow()
@@ -63,7 +68,7 @@ class KoloStore<S : Self>(
     init {
         reduce
             // todo check if works with states.value
-            .runningFold(states.value) { state, action -> reducer.reduce(state, action) }
+            .runningFold(states.value) { state, action -> reducer.reduce(state, contracts.value, action) }
             .onEach(states::emit)
             .launchIn(scope)
 

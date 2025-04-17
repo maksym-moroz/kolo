@@ -5,8 +5,8 @@ import com.example.kolodemoactivity.example.content.ExampleUiContent
 import com.kolo.component.composition.container.EffectContainer
 import com.kolo.component.composition.content.UiContent
 import com.kolo.component.composition.context.store.StoreContext
-import com.kolo.example.component.RootComponent
-import com.kolo.example.state.RootSelf
+import com.kolo.example.a.component.RootComponent
+import com.kolo.example.a.state.RootSelf
 import kotlinx.coroutines.flow.StateFlow
 
 fun initialiseComponent(
