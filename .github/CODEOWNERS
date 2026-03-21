@@ -1,0 +1,22 @@
+# Default owner
+* @maksym-moroz
+
+# Build and dependency wiring
+/build-logic/ @maksym-moroz
+/build.gradle.kts @maksym-moroz
+/settings.gradle.kts @maksym-moroz
+/gradle.properties @maksym-moroz
+/gradle/ @maksym-moroz
+
+# App modules
+/androidApp/ @maksym-moroz
+/composeApp/ @maksym-moroz
+/shared/ @maksym-moroz
+/server/ @maksym-moroz
+/iosApp/ @maksym-moroz
+
+# Planning and repo policy
+/docs/ @maksym-moroz
+/openspec/ @maksym-moroz
+/AGENTS.md @maksym-moroz
+/README.md @maksym-moroz

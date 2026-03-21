@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+set -eu
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+COMMITLINT_BIN="$ROOT_DIR/node_modules/.bin/commitlint"
+
+if [ ! -x "$COMMITLINT_BIN" ]; then
+  echo "commitlint is not installed. Run 'npm install' from $ROOT_DIR first." >&2
+  exit 1
+fi
+
+"$COMMITLINT_BIN" --extends @commitlint/config-conventional --edit "$1"

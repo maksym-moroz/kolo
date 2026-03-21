@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Local tooling
+.codex/
+.idea/
+.vscode/
+*.iml
+
+# Gradle / Kotlin
+.gradle/
+**/.gradle/
+.kotlin/
+**/.kotlin/
+build/
+*/build/
+**/build/
+
+# Android local config
+local.properties
+captures/
+
+# Xcode user-specific state
+DerivedData/
+*.xcuserstate
+**/xcuserdata/
+
+# Logs
+*.log
+
+# Node-based repo tooling
+node_modules/

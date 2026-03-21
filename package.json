@@ -1,0 +1,13 @@
+{
+  "name": "kolo-repo-tools",
+  "private": true,
+  "description": "Repository-local tooling for conventional commits.",
+  "scripts": {
+    "commitlint:edit": "commitlint --extends @commitlint/config-conventional --edit",
+    "commitlint:last": "commitlint --extends @commitlint/config-conventional --from HEAD~1 --to HEAD --verbose"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1"
+  }
+}
