@@ -2,16 +2,13 @@ plugins {
     alias(libs.plugins.kolo.android.application)
 }
 
-val appVersionCode = providers.gradleProperty("kolo.version.code").get().toInt()
-val appVersionName = providers.gradleProperty("kolo.version.name").get()
-
 android {
     namespace = "com.focus.kolo"
 
     defaultConfig {
         applicationId = "com.focus.kolo"
-        versionCode = appVersionCode
-        versionName = appVersionName
+        versionCode = providers.gradleProperty("kolo.version.code").get().toInt()
+        versionName = providers.gradleProperty("kolo.version.name").get()
     }
 }
 

@@ -1,5 +1,8 @@
-package com.focus.kolo.buildlogic
+package com.focus.kolo.buildlogic.server
 
+import com.focus.kolo.buildlogic.convention.internal.configureDetekt
+import com.focus.kolo.buildlogic.convention.internal.registerModuleQualityCheckTask
+import com.focus.kolo.buildlogic.convention.internal.versionInt
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -15,6 +18,10 @@ public class KoloServerJvmConventionPlugin : Plugin<Project> {
             extensions.configure<KotlinJvmProjectExtension> {
                 jvmToolchain(versionInt("java-toolchain"))
             }
+
+            val qualityCheck = registerModuleQualityCheckTask()
+            configureDetekt(qualityCheck)
+            pluginManager.apply("com.autonomousapps.dependency-analysis")
         }
     }
 }

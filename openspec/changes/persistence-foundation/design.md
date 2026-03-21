@@ -1,11 +1,11 @@
 ## Context
 
-The current repository is still close to the default Kotlin Multiplatform template: shared code is minimal, no persistence libraries are configured, and there is no agreed data boundary for tasks, reminders, journaling, or settings. At the same time, the target product is explicitly offline-first, which makes persistence a foundation concern rather than a later optimization.
+The current repository is no longer just the default Kotlin Multiplatform template: `androidApp` is the Android boundary, `build-logic` owns shared Gradle conventions, and the shared store contract already lives in `shared:core:store:api` and `shared:core:store:impl`. However, there are still no persistence libraries configured and there is still no agreed data boundary for tasks, reminders, journaling, or settings. At the same time, the target product is explicitly offline-first, which makes persistence a foundation concern rather than a later optimization.
 
 There are also structural constraints that shape the design:
 
 - The app is Kotlin Multiplatform-first, so feature storage contracts must live in shared code.
-- AGP 9 migration is already a known concern for the repo, so persistence work should fit a future `androidApp + KMP libraries` split instead of reinforcing the current template layout.
+- The AGP 9 first cut is already in place, so persistence work should fit the current `androidApp + KMP libraries` structure and avoid reinforcing the remaining broad `shared` module as a long-term catch-all.
 - Reminder behavior is time-sensitive across timezone and DST changes, which means storage decisions are not just schema decisions.
 - Future sync is expected, but the immediate goal is local usefulness before backend complexity.
 
@@ -123,7 +123,7 @@ Why:
 
 ## Risks / Trade-offs
 
-- [AGP 9 migration friction] -> Keep persistence planning compatible with a future module split and avoid doubling down on the current wizard layout.
+- [Shared-module decomposition friction] -> Keep persistence planning compatible with the current module boundaries and avoid doubling down on the remaining broad `shared` layout.
 - [Room KMP + KSP complexity across targets] -> Keep target list explicit, export schemas, and add platform/bootstrap work early rather than late.
 - [Timezone and DST bugs in reminders] -> Persist reminder intent explicitly and add deterministic time-zone tests before release.
 - [Over-modeling the schema too early] -> Start with a boring v1 model for tasks, reminders, journals, settings, and sync state only.

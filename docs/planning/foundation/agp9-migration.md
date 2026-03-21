@@ -2,7 +2,18 @@
 
 ## Goal
 
-Move the repo from the current template-shaped KMP layout to an AGP 9-friendly module structure that keeps Android app code, shared KMP libraries, iOS host code, and server code cleanly separated.
+Document and continue the move from the original template-shaped KMP layout to an AGP 9-friendly module structure that keeps Android app code, shared KMP libraries, iOS host code, and server code cleanly separated.
+
+## Status Snapshot
+
+The first migration cut is already implemented:
+
+- `androidApp` is now the real Android app module
+- `composeApp` is now a library module instead of the Android app boundary
+- `build-logic` is the source of truth for shared plugin wiring
+- `shared:core:store:api` and `shared:core:store:impl` are already extracted
+
+The remaining work is deeper decomposition of `shared` plus feature extraction, not recreating the Android app boundary.
 
 ## Exact Target Module Tree
 
@@ -39,13 +50,13 @@ root
     └── planning
 ```
 
-## Current To Future Mapping
+## Migration Mapping
 
-Current `composeApp`:
+Original `composeApp` role:
 
-- becomes `androidApp`
-- keeps Android entry points and Android-only UI shell concerns
-- loses shared domain, data, and store responsibilities
+- supplied the original Android entry points before `androidApp` existed
+- now keeps shared Compose-facing UI concerns instead of acting as the Android app boundary
+- should not regain shared domain, data, or store responsibilities that belong elsewhere
 
 Current `shared`:
 
@@ -69,9 +80,10 @@ Current `server`:
 
 ### Phase 1: Structural split
 
-- Create the new `androidApp` module.
-- Stop treating `composeApp` as the final Android app boundary.
-- Prepare `shared` for conversion into library-focused submodules.
+- Status: first cut completed.
+- `androidApp` exists and is the app boundary.
+- `composeApp` is no longer treated as the final Android app boundary.
+- `shared` is prepared for further conversion into narrower library-focused submodules.
 
 ### Phase 2: Shared foundation
 
@@ -112,7 +124,7 @@ Current `server`:
 - Do not collapse Android and shared concerns into one module just to shorten the migration.
 - Do not finalize iOS UI implementation in the module-split ticket; preserve the host boundary only.
 
-## Recommended First Implementation Step
+## Historical First Implementation Step
 
 Create the `androidApp` module and make `composeApp` clearly non-final in the planning docs, then move the existing Android entry point and build configuration to the new app boundary.
 

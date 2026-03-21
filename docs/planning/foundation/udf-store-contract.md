@@ -100,7 +100,7 @@ In practice:
 - reducers and middleware get their own files
 - runtime implementations stay separate from public contracts
 
-This keeps future extraction into `shared:core:store` and feature modules mechanical instead of disruptive.
+This keeps the current extracted store modules and future feature-module extraction mechanical instead of disruptive.
 
 ## Non-Goals
 

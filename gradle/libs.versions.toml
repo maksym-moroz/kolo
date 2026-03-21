@@ -58,6 +58,7 @@ compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.re
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 datastore-core = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+detekt-gradlePlugin = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -79,11 +80,14 @@ ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "kt
 ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
+spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 
 [plugins]
 # Convention plugins
+kolo-android-kotlin-multiplatform-library = { id = "kolo.android.kotlin.multiplatform.library" }
 kolo-android-application = { id = "kolo.android.application" }
 kolo-compose-multiplatform = { id = "kolo.compose.multiplatform" }
+kolo-root = { id = "kolo.root" }
 kolo-server-jvm = { id = "kolo.server.jvm" }
 kolo-shared-multiplatform = { id = "kolo.shared.multiplatform" }
 

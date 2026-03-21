@@ -13,6 +13,7 @@ It exists for two reasons:
 - [multi-agent-workflow.md](/Users/maksymmoroz/startup/kolo/docs/planning/multi-agent-workflow.md): how agents claim work, define write scope, hand off, and close tickets
 - [backlog.md](/Users/maksymmoroz/startup/kolo/docs/planning/backlog.md): prioritized epics and tickets
 - [foundation/README.md](/Users/maksymmoroz/startup/kolo/docs/planning/foundation/README.md): entry point for the AGP 9 and version baseline artifacts
+- [foundation/quality-tooling-map.md](/Users/maksymmoroz/startup/kolo/docs/planning/foundation/quality-tooling-map.md): durable map for CI, formatting, static analysis, linting, and dependency health wiring
 - [foundation/udf-store-contract.md](/Users/maksymmoroz/startup/kolo/docs/planning/foundation/udf-store-contract.md): implemented shared UDF/store contract
 - [workstreams/persistence.md](/Users/maksymmoroz/startup/kolo/docs/planning/workstreams/persistence.md): deep notes and ticket detail for local persistence
 
@@ -32,6 +33,13 @@ Use these statuses consistently in backlog tickets:
 One ticket, one owner, one declared write scope.
 
 If two agents need the same write scope, split the ticket or serialize the work.
+
+## Current Repo Reality
+
+- the AGP 9 first cut is already implemented with `androidApp` as the real Android boundary
+- shared Gradle wiring now lives in the `build-logic` included build
+- the shared store contract is already extracted into `shared:core:store:api` and `shared:core:store:impl`
+- the next planning focus is persistence, navigation, and reminders on top of that baseline
 
 ## Suggested Cadence
 
