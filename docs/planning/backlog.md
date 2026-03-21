@@ -258,6 +258,10 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 - Write scope: planning docs only
 - Dependencies: NAV-001, REM-001, PERS-002
 - Goal: make release blockers explicit early
+- Current Android baseline:
+  - `:androidApp:assembleRelease` and `:androidApp:bundleRelease` should stay green in health checks
+  - release `mapping.txt` is retained as a build artifact
+  - release bundle size is tracked in CI
 - Done when:
   - migrations, deep links, reminder permissions, taps, accessibility, and offline restore checks are listed
 
