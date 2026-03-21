@@ -262,6 +262,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
   - `:androidApp:assembleRelease` and `:androidApp:bundleRelease` should stay green in health checks
   - release `mapping.txt` is retained as a build artifact
   - release bundle size is tracked in CI
+  - Baseline Profiles are generated through `:androidApp:generateBaselineProfile` and should be refreshed after startup or major navigation-path changes
 - Done when:
   - migrations, deep links, reminder permissions, taps, accessibility, and offline restore checks are listed
 

@@ -39,6 +39,7 @@ Rule:
 Current top-level structure:
 
 - `androidApp/`: Android application entry point
+- `baselineprofile/`: Android Baseline Profile generator module
 - `build-logic/`: included Gradle build for convention plugins
 - `composeApp/`: KMP UI library, currently the Compose-facing UI surface
 - `docs/planning/`: planning, backlog, architecture, and workstreams
@@ -53,6 +54,7 @@ Current architectural reality:
 - AGP 9 migration first cut is done
 - `build-logic` is the source of truth for shared Gradle plugin wiring
 - `androidApp` is the real Android app boundary
+- `baselineprofile` generates Baseline Profiles for the Android app and is not a shipping app module
 - `composeApp` is not the Android application module anymore
 - the store contract has already been extracted into `shared:core:store:api` and `shared:core:store:impl`
 - `shared` is still broad outside the extracted store modules and has not yet been split into the rest of `shared/core/*` and `shared/feature/*`
@@ -79,6 +81,11 @@ If a task touches these areas, start here:
 - build: `androidApp/build.gradle.kts`
 - entry point: `androidApp/src/main/kotlin/com/focus/kolo/MainActivity.kt`
 - manifest: `androidApp/src/main/AndroidManifest.xml`
+
+### Android baseline profiles
+
+- build: `baselineprofile/build.gradle.kts`
+- generator: `baselineprofile/src/main/kotlin/com/focus/kolo/baselineprofile/BaselineProfileGenerator.kt`
 
 ### Shared UI library
 
@@ -134,6 +141,7 @@ These are the current project defaults unless a ticket explicitly changes them.
 - prefer boring module boundaries over clever indirection
 - keep shared Gradle setup in `build-logic` convention plugins rather than repeating plugin stacks in module build files
 - keep module build scripts focused on namespace, target-specific compiler settings, and direct dependencies
+- keep Baseline Profile generation isolated in `baselineprofile` instead of mixing generator code into `androidApp`
 - do not reintroduce the old KMP + Android app pairing in `composeApp`
 - never put several top-level classes, interfaces, or objects in one Kotlin file
 - prefer one top-level type per file, especially for actions, effects, state, reducers, and middleware
@@ -161,6 +169,12 @@ These are the current project defaults unless a ticket explicitly changes them.
 - DataStore KMP is the intended settings store
 - reminder time must be timezone-safe
 - migration tests are part of the baseline, not an optional later hardening task
+
+### Release hardening
+
+- Baseline Profiles are part of the Android release-performance baseline
+- keep the profile generator focused on startup and the most important user journeys
+- regenerate profiles after meaningful Android startup or navigation-path changes
 
 ### Multi-agent work
 

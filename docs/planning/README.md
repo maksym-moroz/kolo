@@ -37,6 +37,7 @@ If two agents need the same write scope, split the ticket or serialize the work.
 ## Current Repo Reality
 
 - the AGP 9 first cut is already implemented with `androidApp` as the real Android boundary
+- Android Baseline Profile generation now lives in a dedicated `baselineprofile` test module
 - shared Gradle wiring now lives in the `build-logic` included build
 - the shared store contract is already extracted into `shared:core:store:api` and `shared:core:store:impl`
 - the next planning focus is persistence, navigation, and reminders on top of that baseline

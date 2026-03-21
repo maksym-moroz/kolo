@@ -36,6 +36,7 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":androidApp")
+include(":baselineprofile")
 include(":composeApp")
 include(":server")
 include(":shared")
