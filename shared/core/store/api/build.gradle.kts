@@ -1,22 +1,11 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.kolo.android.kotlin.multiplatform.library)
     alias(libs.plugins.binaryCompatibilityValidator)
 }
 
 kotlin {
-    jvmToolchain(17)
-
     android {
         namespace = "com.focus.kolo.shared.core.store.api"
-        compileSdk =
-            libs.versions.android.compileSdk
-                .get()
-                .toInt()
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
     }
 
     iosArm64()

@@ -6,6 +6,7 @@ Pin a boring, supportable dependency baseline for the starter app so the AGP 9 m
 
 ## Recommended Baseline
 
+- Java toolchain: `17`
 - Kotlin: `2.3.20`
 - AGP: `9.1.0`
 - Gradle: `9.3.1`
@@ -16,12 +17,13 @@ Pin a boring, supportable dependency baseline for the starter app so the AGP 9 m
 - DataStore: `1.2.1`
 - Ktor: `3.4.1`
 - Navigation Compose: `2.9.2`
-- Metro: release compatible with Kotlin `2.3.20`
+- Metro: `0.11.x`
 
 ## Locked Versus Flexible
 
 ### Locked
 
+- Java toolchain should stay on `17` for the initial baseline unless an upstream tool requires a coordinated move.
 - Kotlin should stay on `2.3.20` for the initial starter baseline unless the build toolchain forces a move.
 - AGP should stay on `9.1.0` because the repo already needs the new KMP-friendly module shape.
 - Room, DataStore, Ktor, and Lifecycle should be pinned to the specified release lines so the persistence and shared architecture work against fixed APIs.
@@ -29,7 +31,7 @@ Pin a boring, supportable dependency baseline for the starter app so the AGP 9 m
 ### Flexible
 
 - Compose Multiplatform can move within the `1.10.x` patch line if the selected Kotlin version requires a compatible patch release.
-- Metro can move to the release that is compatible with the chosen Kotlin version and target set.
+- Metro can move within a compatible `0.11.x` line if Kotlin compatibility or native behavior requires a patch-level change.
 - Navigation Compose can move within the minor line if a later patch is needed for a specific navigation or back-stack fix.
 
 ## Compatibility Notes
@@ -55,10 +57,11 @@ This set is stable enough to support the new module structure, already aligns wi
 
 The repo currently uses these concrete versions:
 
+- Java toolchain `17`
 - Kotlin `2.3.20`
 - AGP `9.1.0`
 - Gradle `9.3.1`
 - Compose Multiplatform `1.10.3`
 - Lifecycle `2.10.0`
 - Ktor `3.4.1`
-- Metro `0.10.4`
+- Metro `0.11.4`

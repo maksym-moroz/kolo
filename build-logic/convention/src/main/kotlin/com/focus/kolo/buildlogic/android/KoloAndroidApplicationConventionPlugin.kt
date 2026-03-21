@@ -1,6 +1,9 @@
-package com.focus.kolo.buildlogic
+package com.focus.kolo.buildlogic.android
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.focus.kolo.buildlogic.convention.internal.configureDetekt
+import com.focus.kolo.buildlogic.convention.internal.registerModuleQualityCheckTask
+import com.focus.kolo.buildlogic.convention.internal.versionInt
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -15,6 +18,14 @@ public class KoloAndroidApplicationConventionPlugin : Plugin<Project> {
 
             extensions.configure<KotlinProjectExtension> {
                 jvmToolchain(versionInt("java-toolchain"))
+            }
+
+            val qualityCheck = registerModuleQualityCheckTask()
+            configureDetekt(qualityCheck)
+            pluginManager.apply("com.autonomousapps.dependency-analysis")
+
+            qualityCheck.configure {
+                dependsOn(tasks.named("lintDebug"))
             }
 
             extensions.configure<ApplicationExtension> {

@@ -1,4 +1,23 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, and server.
+This is a Kotlin Multiplatform repo for the Kolo starter app.
+
+Current targets:
+
+- Android app in `androidApp`
+- iOS host app in `iosApp`
+- shared Kotlin and app graph code in `shared`
+- shared store contract and runtime in `shared:core:store:api` and `shared:core:store:impl`
+- shared Compose-facing UI library in `composeApp`
+- Ktor server in `server`
+- shared Gradle conventions in `build-logic`
+
+## Start Here
+
+If you need repo context before editing, read these in order:
+
+1. `docs/planning/README.md`
+2. `docs/planning/backlog.md`
+3. `docs/planning/starter-architecture.md`
+4. the relevant workstream or foundation doc for the task
 
 ## Bootstrap From Clone
 
@@ -18,6 +37,26 @@ npm install
 git config core.hooksPath .githooks
 ```
 
+## Common Commands
+
+Run the repository quality gate:
+
+```shell
+./gradlew qualityCheck
+```
+
+Apply repository formatting:
+
+```shell
+./gradlew qualityFix
+```
+
+Run the broader default validation used for build, shared Kotlin, and store changes:
+
+```shell
+./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64
+```
+
 Build Android:
 
 ```shell
@@ -30,68 +69,44 @@ Run the server:
 ./gradlew :server:run
 ```
 
-Open the iOS app in Xcode:
+Open the iOS host app in Xcode:
 
 ```shell
 open iosApp/iosApp.xcodeproj
 ```
 
-Recommended verification before you start work:
+Generate dependency analysis reports:
 
 ```shell
-./gradlew :build-logic:convention:jar :shared:core:store:impl:jvmTest :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64
+./gradlew dependencyHealth
 ```
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+## Repo Map
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+- `androidApp/`: Android application boundary and entry point
+- `build-logic/`: included Gradle build for shared convention plugins
+- `composeApp/`: Compose Multiplatform UI library consumed by the Android app
+- `docs/planning/`: backlog, architecture, workstreams, and foundation docs
+- `iosApp/`: iOS host app and SwiftUI shell
+- `openspec/`: change proposals, tasks, and archive artifacts
+- `server/`: Ktor server module
+- `shared/`: shared Kotlin, Metro app graph, and remaining common code
+- `shared/core/store/api/`: public store contract
+- `shared/core/store/impl/`: store runtime implementation
 
-* [/server](./server/src/main/kotlin) is for the Ktor server application.
+## Build Notes
 
-* [/shared](./shared/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you
-  can add code to the platform-specific folders here too.
+- `build-logic` is the source of truth for shared Gradle plugin wiring
+- root repository orchestration now lives in the `kolo.root` convention plugin and the root `kolo {}` block only declares which modules participate in aggregate checks
+- the base Android-KMP library convention owns the common plugin stack, toolchain, and default Android SDK values for library modules
+- the durable implementation map for CI and linting lives in `docs/planning/foundation/quality-tooling-map.md`
+- `androidApp` is the real Android app boundary
+- `composeApp` is not the Android application module
+- `shared` is still broad outside the extracted store modules and will be split further later
+- the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
+- shared SDK and toolchain versions live in `gradle/libs.versions.toml`
 
-### Build and Run Android Application
-
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :androidApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :androidApp:assembleDebug
-  ```
-
-### Build and Run Server
-
-To build and run the development version of the server, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :server:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :server:run
-  ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
-
-### Commit Convention
+## Commit Convention
 
 This repo uses Conventional Commits.
 
@@ -113,9 +128,9 @@ npm install
 git config core.hooksPath .githooks
 ```
 
-GitHub Actions also lints commits on pull requests and pushes to `main`.
+GitHub Actions also lint commit messages on pull requests and pushes to `main`.
 
-### Versioning
+## Versioning
 
 The repo uses Semantic Versioning for the shared release version.
 

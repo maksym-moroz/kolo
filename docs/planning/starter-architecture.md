@@ -16,14 +16,19 @@ The app should be locally useful before auth, sync, or cloud backup exist.
 
 ## Current Repo Reality
 
-The repo is still close to the default Kotlin Multiplatform wizard:
+The repo is no longer just the default Kotlin Multiplatform wizard shape.
 
-- `composeApp`
-- `shared`
-- `iosApp`
-- `server`
+Current implemented structure:
 
-There is very little application architecture in place yet. This is useful because the starter can still be shaped cleanly, but it also means build and module structure choices need to be made before feature code starts spreading.
+- `androidApp` is the Android application boundary
+- `build-logic` is the included build for shared convention plugins
+- `composeApp` is a KMP UI library, not the Android app module
+- `shared` is the remaining broad KMP library
+- `shared:core:store:api` and `shared:core:store:impl` are already extracted
+- `iosApp` remains the iOS host
+- `server` remains the Ktor server starter
+
+That means the first AGP 9 migration cut has landed. The remaining structural work is mostly deeper shared-module decomposition and feature extraction rather than re-establishing the app boundary.
 
 ## Primary Recommendation
 
@@ -66,7 +71,7 @@ Choose Compose on Android and SwiftUI on iOS if:
 
 ## Build And Module Direction
 
-AGP 9 migration should happen before the codebase grows much further. The current template layout still reflects the older KMP + Android plugin pairing and should not be treated as the final structure.
+The AGP 9 migration first cut is already in place. The remaining module work is to continue decomposing `shared` into narrower core and feature modules without regressing the current platform boundaries.
 
 Target module direction:
 
@@ -91,6 +96,7 @@ This is a direction, not a locked final tree. The important part is the separati
 
 Use boring versions with official support where possible:
 
+- Java toolchain `17`
 - Kotlin `2.3.20`
 - AGP `9.1.x`
 - Compose Multiplatform `1.10.x` patch compatible with chosen Kotlin
@@ -100,7 +106,7 @@ Use boring versions with official support where possible:
 - DataStore `1.2.1`
 - Ktor `3.4.1`
 - navigation-compose `2.9.2`
-- Metro on a release compatible with the chosen Kotlin compiler
+- Metro `0.11.x`
 
 ## UDF / Redux Direction
 

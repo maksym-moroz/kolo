@@ -22,6 +22,7 @@ Read these in order when starting work:
 High-value deep docs:
 
 - `docs/planning/foundation/agp9-migration.md`
+- `docs/planning/foundation/quality-tooling-map.md`
 - `docs/planning/foundation/udf-store-contract.md`
 - `docs/planning/foundation/version-baseline.md`
 - `docs/planning/workstreams/persistence.md`
@@ -55,6 +56,7 @@ Current architectural reality:
 - `composeApp` is not the Android application module anymore
 - the store contract has already been extracted into `shared:core:store:api` and `shared:core:store:impl`
 - `shared` is still broad outside the extracted store modules and has not yet been split into the rest of `shared/core/*` and `shared/feature/*`
+- the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
 - some planning docs still describe the pre-`androidApp` or future split state; prefer code and build files when they disagree
 
 ## 3. Code Ownership Map
@@ -65,11 +67,12 @@ If a task touches these areas, start here:
 
 - included build: `build-logic/settings.gradle.kts`
 - convention plugin build: `build-logic/convention/build.gradle.kts`
-- Android app convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/KoloAndroidApplicationConventionPlugin.kt`
-- Compose KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/KoloComposeMultiplatformConventionPlugin.kt`
-- shared KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/KoloSharedMultiplatformConventionPlugin.kt`
-- server convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/KoloServerJvmConventionPlugin.kt`
-- convention helpers: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/ProjectExtensions.kt`
+- base KMP Android library convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidKotlinMultiplatformLibraryConventionPlugin.kt`
+- Android app convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidApplicationConventionPlugin.kt`
+- Compose KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/compose/KoloComposeMultiplatformConventionPlugin.kt`
+- shared KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/shared/KoloSharedMultiplatformConventionPlugin.kt`
+- server convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/server/KoloServerJvmConventionPlugin.kt`
+- convention helpers: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/convention/internal/`
 
 ### Android app boundary
 
@@ -115,6 +118,9 @@ If a task touches these areas, start here:
 - version catalog: `gradle/libs.versions.toml`
 - convention build: `build-logic/convention/`
 - root external plugin classpath aliases: `build.gradle.kts`
+- root convention plugin: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/root/KoloRootConventionPlugin.kt`
+- root extension: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/root/KoloRootExtension.kt`
+- root quality tasks: `qualityCheck`, `qualityFix`, `dependencyHealth` exposed by `kolo.root`
 - settings and included build wiring: `settings.gradle.kts`
 
 ## 4. Common Practice Map
@@ -188,10 +194,10 @@ When picking up a ticket:
 
 Default validation expectations by area:
 
-- build-logic or plugin wiring changes: `./gradlew help` first, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
-- root/module/build changes: `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
-- store API or runtime changes: `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
-- shared Kotlin changes: add `:shared:compileKotlinIosSimulatorArm64`
+- build-logic or plugin wiring changes: `./gradlew help` first, then `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
+- root/module/build changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
+- store API or runtime changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
+- shared Kotlin changes: `./gradlew qualityCheck`, then add `:shared:compileKotlinIosSimulatorArm64`
 - server changes: keep `./gradlew test`
 - planning/doc-only changes: no build required, but keep links and status coherent
 
@@ -266,8 +272,10 @@ Agents should know these before editing:
 - preserve the API vs impl split when extending store code
 - `shared` is still broad outside the extracted store modules and will likely be split further later
 - `build-logic` is now the source of truth for shared plugin wiring; prefer changing conventions there before copying build setup into modules
-- the current convention plugins are intentionally thin; `composeApp` and `shared` still keep Android-KMP target settings locally because that DSL was not cleanly configurable from the first binary-plugin cut
-- the root `build.gradle.kts` plugin block must stay minimal but non-empty; removing the external `apply false` aliases breaks convention-plugin loading for AGP-backed plugins
+- shared SDK and toolchain values, including `java-toolchain`, now live in `gradle/libs.versions.toml`; keep toolchain-related build settings aligned with the catalog
+- the current convention plugins are intentionally thin; the shared base KMP Android library convention owns the common plugin stack, toolchain, and default Android SDK values, while modules still keep local Android-KMP target settings such as namespace and source-set options
+- the root `build.gradle.kts` plugin block should stay small, but the external `apply false` aliases still need to stay there; removing them breaks convention-plugin loading for AGP-backed plugins
+- the root quality entry points are `qualityCheck`, `qualityFix`, and `dependencyHealth`; prefer those over memorizing individual lint or formatting tasks
 - `composeApp` still has a non-blocking unused `commonTest` source-set warning under the Android-KMP layout
 - Metro is integrated, but only as a small first cut; do not assume a full app graph already exists
 - the current UI is still template-level and should not be mistaken for settled architecture

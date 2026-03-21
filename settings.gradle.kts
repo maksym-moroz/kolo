@@ -35,12 +35,9 @@ dependencyResolutionManagement {
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-include(":composeApp")
 include(":androidApp")
-
+include(":composeApp")
 include(":server")
-
 include(":shared")
-
 include(":shared:core:store:api")
 include(":shared:core:store:impl")

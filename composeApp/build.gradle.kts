@@ -3,18 +3,8 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(17)
-
     android {
         namespace = "com.focus.kolo.composeapp"
-        compileSdk =
-            libs.versions.android.compileSdk
-                .get()
-                .toInt()
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
         withHostTest {}
         androidResources {
             enable = true
