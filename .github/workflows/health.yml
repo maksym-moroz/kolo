@@ -53,6 +53,22 @@ jobs:
           end=$(date +%s)
           echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
 
+      - name: "🚀 Measure Android release build"
+        id: android_release_build
+        run: |
+          start=$(date +%s)
+          ./gradlew :androidApp:assembleRelease
+          end=$(date +%s)
+          echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
+
+      - name: "📦 Measure Android release bundle"
+        id: android_release_bundle
+        run: |
+          start=$(date +%s)
+          ./gradlew :androidApp:bundleRelease
+          end=$(date +%s)
+          echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
+
       - name: "🍏 Measure shared iOS compile"
         id: ios_compile
         run: |
@@ -61,18 +77,18 @@ jobs:
           end=$(date +%s)
           echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
 
-      - name: "📦 Collect APK size"
-        id: apk
+      - name: "📦 Collect release bundle size"
+        id: release_bundle
         run: |
-          apk_path="androidApp/build/outputs/apk/debug/androidApp-debug.apk"
-          size_bytes=$(stat -c%s "$apk_path")
+          bundle_path="androidApp/build/outputs/bundle/release/androidApp-release.aab"
+          size_bytes=$(stat -c%s "$bundle_path")
           size_mb=$(python - <<PY
           size = int("${size_bytes}")
           print(f"{size / (1024 * 1024):.2f} MB")
           PY
           )
           {
-            echo "path=$apk_path"
+            echo "path=$bundle_path"
             echo "size_bytes=$size_bytes"
             echo "size_human=$size_mb"
           } >> "$GITHUB_OUTPUT"
@@ -159,9 +175,11 @@ jobs:
         env:
           STORE_TEST_SECONDS: ${{ steps.store_tests.outputs.seconds }}
           ANDROID_BUILD_SECONDS: ${{ steps.android_build.outputs.seconds }}
+          ANDROID_RELEASE_BUILD_SECONDS: ${{ steps.android_release_build.outputs.seconds }}
+          ANDROID_RELEASE_BUNDLE_SECONDS: ${{ steps.android_release_bundle.outputs.seconds }}
           IOS_COMPILE_SECONDS: ${{ steps.ios_compile.outputs.seconds }}
-          APK_SIZE_HUMAN: ${{ steps.apk.outputs.size_human }}
-          APK_SIZE_BYTES: ${{ steps.apk.outputs.size_bytes }}
+          RELEASE_BUNDLE_SIZE_HUMAN: ${{ steps.release_bundle.outputs.size_human }}
+          RELEASE_BUNDLE_SIZE_BYTES: ${{ steps.release_bundle.outputs.size_bytes }}
           MODULE_COUNT: ${{ steps.stats.outputs.modules }}
           KOTLIN_FILE_COUNT: ${{ steps.stats.outputs.kotlin_files }}
           SWIFT_FILE_COUNT: ${{ steps.stats.outputs.swift_files }}
@@ -173,17 +191,19 @@ jobs:
           mkdir -p build/health
           store="${STORE_TEST_SECONDS:-n/a}"
           android="${ANDROID_BUILD_SECONDS:-n/a}"
+          android_release="${ANDROID_RELEASE_BUILD_SECONDS:-n/a}"
+          android_release_bundle="${ANDROID_RELEASE_BUNDLE_SECONDS:-n/a}"
           ios="${IOS_COMPILE_SECONDS:-n/a}"
-          apk_human="${APK_SIZE_HUMAN:-n/a}"
-          apk_bytes="${APK_SIZE_BYTES:-n/a}"
+          release_bundle_human="${RELEASE_BUNDLE_SIZE_HUMAN:-n/a}"
+          release_bundle_bytes="${RELEASE_BUNDLE_SIZE_BYTES:-n/a}"
           modules="${MODULE_COUNT:-n/a}"
           kotlin_files="${KOTLIN_FILE_COUNT:-n/a}"
           swift_files="${SWIFT_FILE_COUNT:-n/a}"
           version_name="${VERSION_NAME:-n/a}"
           version_code="${VERSION_CODE:-n/a}"
 
-          if [[ "${STORE_TEST_SECONDS:-}" =~ ^[0-9]+$ ]] && [[ "${ANDROID_BUILD_SECONDS:-}" =~ ^[0-9]+$ ]] && [[ "${IOS_COMPILE_SECONDS:-}" =~ ^[0-9]+$ ]]; then
-            total="$((STORE_TEST_SECONDS + ANDROID_BUILD_SECONDS + IOS_COMPILE_SECONDS))s"
+          if [[ "${STORE_TEST_SECONDS:-}" =~ ^[0-9]+$ ]] && [[ "${ANDROID_BUILD_SECONDS:-}" =~ ^[0-9]+$ ]] && [[ "${ANDROID_RELEASE_BUILD_SECONDS:-}" =~ ^[0-9]+$ ]] && [[ "${ANDROID_RELEASE_BUNDLE_SECONDS:-}" =~ ^[0-9]+$ ]] && [[ "${IOS_COMPILE_SECONDS:-}" =~ ^[0-9]+$ ]]; then
+            total="$((STORE_TEST_SECONDS + ANDROID_BUILD_SECONDS + ANDROID_RELEASE_BUILD_SECONDS + ANDROID_RELEASE_BUNDLE_SECONDS + IOS_COMPILE_SECONDS))s"
           else
             total="n/a"
           fi
@@ -195,6 +215,8 @@ jobs:
             echo "| --- | --- |"
             echo "| Store impl JVM tests | ${store} |"
             echo "| Android debug build | ${android} |"
+            echo "| Android release build | ${android_release} |"
+            echo "| Android release bundle | ${android_release_bundle} |"
             echo "| Shared iOS simulator compile | ${ios} |"
             echo "| Total measured time | ${total} |"
             if [ -n "$AVERAGE_DURATION" ]; then
@@ -202,7 +224,7 @@ jobs:
             else
               echo "| Rolling average on main | Not enough history yet |"
             fi
-            echo "| APK size | ${apk_human} (${apk_bytes} bytes) |"
+            echo "| Android release AAB size | ${release_bundle_human} (${release_bundle_bytes} bytes) |"
             echo "| Gradle modules | ${modules} |"
             echo "| Kotlin source files | ${kotlin_files} |"
             echo "| Swift source files | ${swift_files} |"
@@ -222,4 +244,28 @@ jobs:
         with:
           name: android-debug-apk
           path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          if-no-files-found: ignore
+
+      - name: "📤 Upload release APK"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-apk
+          path: androidApp/build/outputs/apk/release/androidApp-release-unsigned.apk
+          if-no-files-found: ignore
+
+      - name: "📤 Upload release AAB"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-aab
+          path: androidApp/build/outputs/bundle/release/androidApp-release.aab
+          if-no-files-found: ignore
+
+      - name: "📤 Upload R8 mapping"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-mapping
+          path: androidApp/build/outputs/mapping/release/mapping.txt
           if-no-files-found: ignore

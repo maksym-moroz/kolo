@@ -54,13 +54,25 @@ Apply repository formatting:
 Run the broader default validation used for build, shared Kotlin, and store changes:
 
 ```shell
-./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64
+./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64
 ```
 
 Build Android:
 
 ```shell
 ./gradlew :androidApp:assembleDebug
+```
+
+Build Android release:
+
+```shell
+./gradlew :androidApp:assembleRelease
+```
+
+Build the Play-facing Android release bundle:
+
+```shell
+./gradlew :androidApp:bundleRelease
 ```
 
 Run the server:

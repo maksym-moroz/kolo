@@ -119,8 +119,15 @@ What stays module-local:
 - measures:
   - `:shared:core:store:impl:jvmTest`
   - `:androidApp:assembleDebug`
+  - `:androidApp:assembleRelease`
+  - `:androidApp:bundleRelease`
   - `:shared:compileKotlinIosSimulatorArm64`
-- publishes timing and APK-size summary artifacts
+- publishes timing plus Android release AAB-size summary artifacts
+- uploads:
+  - debug APK
+  - unsigned release APK
+  - release AAB
+  - release `mapping.txt` for R8 output inspection
 
 `actionlint.yml`
 
@@ -138,7 +145,7 @@ Use these before changing the quality system:
 - `./gradlew qualityFix`
 - `./gradlew dependencyHealth`
 - `./gradlew help`
-- `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
+- `./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64`
 
 ## Update Rules
 

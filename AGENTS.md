@@ -194,8 +194,8 @@ When picking up a ticket:
 
 Default validation expectations by area:
 
-- build-logic or plugin wiring changes: `./gradlew help` first, then `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
-- root/module/build changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
+- build-logic or plugin wiring changes: `./gradlew help` first, then `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64`
+- root/module/build changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64`
 - store API or runtime changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
 - shared Kotlin changes: `./gradlew qualityCheck`, then add `:shared:compileKotlinIosSimulatorArm64`
 - server changes: keep `./gradlew test`
