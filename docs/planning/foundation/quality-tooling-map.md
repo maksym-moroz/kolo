@@ -7,6 +7,7 @@ Use it when you need to:
 - understand what `qualityCheck`, `qualityFix`, or `dependencyHealth` actually do
 - add or remove a module from repository quality checks
 - change module-level Detekt, Android lint, or dependency-analysis behavior
+- locate the baseline profile generation entry point and its owning module
 - update GitHub workflows without drifting from local developer commands
 
 ## Source Of Truth
@@ -31,6 +32,8 @@ Workflow definitions:
 - health workflow: [health.yml](/Users/maksymmoroz/startup/kolo/.github/workflows/health.yml)
 - workflow lint: [actionlint.yml](/Users/maksymmoroz/startup/kolo/.github/workflows/actionlint.yml)
 - commit message lint: [commitlint.yml](/Users/maksymmoroz/startup/kolo/.github/workflows/commitlint.yml)
+- baseline profile generator: [baselineprofile/build.gradle.kts](/Users/maksymmoroz/startup/kolo/baselineprofile/build.gradle.kts)
+- baseline profile test: [BaselineProfileGenerator.kt](/Users/maksymmoroz/startup/kolo/baselineprofile/src/main/kotlin/com/focus/kolo/baselineprofile/BaselineProfileGenerator.kt)
 
 ## Root Orchestration
 
@@ -102,6 +105,11 @@ What stays module-local:
 - source-set dependencies
 - Android-KMP-specific options such as `withHostTest {}` or `androidResources { enable = true }`
 
+Baseline Profile generation is separate from aggregate quality checks:
+
+- `androidApp` applies the Baseline Profile plugin and packages generated rules in release artifacts
+- `baselineprofile` is a dedicated `com.android.test` producer module and is generated on demand rather than through `qualityCheck`
+
 ## Workflow To Task Map
 
 `quality.yml`
@@ -146,6 +154,7 @@ Use these before changing the quality system:
 - `./gradlew dependencyHealth`
 - `./gradlew help`
 - `./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64`
+- `./gradlew :androidApp:generateBaselineProfile`
 
 ## Update Rules
 

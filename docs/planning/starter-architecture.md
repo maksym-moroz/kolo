@@ -21,6 +21,7 @@ The repo is no longer just the default Kotlin Multiplatform wizard shape.
 Current implemented structure:
 
 - `androidApp` is the Android application boundary
+- `baselineprofile` is the Android Baseline Profile generator module
 - `build-logic` is the included build for shared convention plugins
 - `composeApp` is a KMP UI library, not the Android app module
 - `shared` is the remaining broad KMP library
@@ -48,6 +49,7 @@ For UI, the MVP recommendation is full Compose Multiplatform unless there is alr
 8. Preferences are not stored in the main database unless they are relational.
 9. Platform integrations are isolated behind `expect`/`actual` or thin platform wrappers.
 10. Release readiness includes migrations, deep links, notification taps, back behavior, and accessibility.
+11. Android release readiness includes current Baseline Profiles for startup and critical user journeys.
 
 ## UI Direction
 

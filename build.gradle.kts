@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
+    alias(libs.plugins.androidTest) apply false
+    alias(libs.plugins.androidx.baselineprofile) apply false
     alias(libs.plugins.binaryCompatibilityValidator) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.composeMultiplatform) apply false

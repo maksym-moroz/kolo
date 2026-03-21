@@ -3,6 +3,7 @@ This is a Kotlin Multiplatform repo for the Kolo starter app.
 Current targets:
 
 - Android app in `androidApp`
+- Android baseline profile generator in `baselineprofile`
 - iOS host app in `iosApp`
 - shared Kotlin and app graph code in `shared`
 - shared store contract and runtime in `shared:core:store:api` and `shared:core:store:impl`
@@ -93,9 +94,16 @@ Generate dependency analysis reports:
 ./gradlew dependencyHealth
 ```
 
+Generate Android baseline profiles with the configured Gradle-managed device:
+
+```shell
+./gradlew :androidApp:generateBaselineProfile
+```
+
 ## Repo Map
 
 - `androidApp/`: Android application boundary and entry point
+- `baselineprofile/`: Android Baseline Profile generator module targeting `androidApp`
 - `build-logic/`: included Gradle build for shared convention plugins
 - `composeApp/`: Compose Multiplatform UI library consumed by the Android app
 - `docs/planning/`: backlog, architecture, workstreams, and foundation docs
@@ -113,6 +121,7 @@ Generate dependency analysis reports:
 - the base Android-KMP library convention owns the common plugin stack, toolchain, and default Android SDK values for library modules
 - the durable implementation map for CI and linting lives in `docs/planning/foundation/quality-tooling-map.md`
 - `androidApp` is the real Android app boundary
+- `baselineprofile` owns Baseline Profile generation for Android startup and critical user journeys
 - `composeApp` is not the Android application module
 - `shared` is still broad outside the extracted store modules and will be split further later
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
