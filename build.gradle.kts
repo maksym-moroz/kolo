@@ -4,6 +4,10 @@ import dev.detekt.gradle.extensions.DetektExtension
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
 
+val javaToolchainVersion =
+    libs.versions.java.toolchain
+        .get()
+
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
@@ -70,13 +74,12 @@ subprojects {
         }
 
         tasks.withType(Detekt::class.java).configureEach {
-            jvmTarget = "17"
-            setSource(
+            jvmTarget = javaToolchainVersion
+            source =
                 fileTree(projectDir) {
                     include("src/**/*.kt")
                     exclude("**/build/**")
-                },
-            )
+                }
             reports {
                 html.required.set(true)
                 sarif.required.set(true)

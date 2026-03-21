@@ -71,9 +71,11 @@ jobs:
           print(f"{size / (1024 * 1024):.2f} MB")
           PY
           )
-          echo "path=$apk_path" >> "$GITHUB_OUTPUT"
-          echo "size_bytes=$size_bytes" >> "$GITHUB_OUTPUT"
-          echo "size_human=$size_mb" >> "$GITHUB_OUTPUT"
+          {
+            echo "path=$apk_path"
+            echo "size_bytes=$size_bytes"
+            echo "size_human=$size_mb"
+          } >> "$GITHUB_OUTPUT"
 
       - name: "📚 Collect repo stats"
         id: stats
@@ -88,11 +90,13 @@ jobs:
           swift_files=$(find iosApp -name '*.swift' | wc -l | tr -d ' ')
           version_name=$(grep '^kolo.version.name=' gradle.properties | cut -d= -f2)
           version_code=$(grep '^kolo.version.code=' gradle.properties | cut -d= -f2)
-          echo "modules=$modules" >> "$GITHUB_OUTPUT"
-          echo "kotlin_files=$kotlin_files" >> "$GITHUB_OUTPUT"
-          echo "swift_files=$swift_files" >> "$GITHUB_OUTPUT"
-          echo "version_name=$version_name" >> "$GITHUB_OUTPUT"
-          echo "version_code=$version_code" >> "$GITHUB_OUTPUT"
+          {
+            echo "modules=$modules"
+            echo "kotlin_files=$kotlin_files"
+            echo "swift_files=$swift_files"
+            echo "version_name=$version_name"
+            echo "version_code=$version_code"
+          } >> "$GITHUB_OUTPUT"
 
       - name: "📉 Calculate rolling average"
         id: history
