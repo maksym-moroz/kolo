@@ -7,4 +7,9 @@ import org.gradle.kotlin.dsl.getByType
 
 internal fun Project.libs(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
-internal fun Project.versionInt(alias: String): Int = libs().findVersion(alias).get().requiredVersion.toInt()
+internal fun Project.versionInt(alias: String): Int =
+    libs()
+        .findVersion(alias)
+        .get()
+        .requiredVersion
+        .toInt()

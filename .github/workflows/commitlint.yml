@@ -1,4 +1,4 @@
-name: Commitlint
+name: "📝 Commitlint"
 
 on:
   pull_request:
@@ -17,12 +17,13 @@ permissions:
 
 jobs:
   commitlint:
+    name: "🧾 Lint commit messages"
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: "📥 Check out repository"
         uses: actions/checkout@v6
 
-      - name: Lint conventional commit messages
+      - name: "🔎 Lint conventional commit messages"
         uses: wagoid/commitlint-github-action@v6
         with:
           helpURL: https://www.conventionalcommits.org/en/v1.0.0/

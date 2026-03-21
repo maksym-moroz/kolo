@@ -3,8 +3,10 @@ agp = "9.1.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
+java-toolchain = "17"
 androidx-activity = "1.13.0"
 androidx-appcompat = "1.7.1"
+androidx-compose = "1.10.5"
 androidx-core = "1.18.0"
 androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.10.0"
@@ -20,16 +22,23 @@ kotlinx-serialization = "1.10.0"
 ksp = "2.3.5"
 ktor = "3.4.1"
 logback = "1.5.32"
+mappie = "2.3.20-2.4.1"
 material3 = "1.10.0-alpha05"
 metro = "0.11.4"
 room = "2.8.4"
 sqlite = "2.6.2"
+spotless = "8.4.0"
+detekt = "2.0.0-alpha.2"
+dependencyAnalysis = "3.6.1"
+binaryCompatibilityValidator = "0.18.1"
 work = "2.11.1"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "androidx-compose" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
@@ -63,6 +72,7 @@ ktor-clientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-clientDarwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-clientJava = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-clientOkHttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-http = { module = "io.ktor:ktor-http", version.ref = "ktor" }
 ktor-serializationKotlinxJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-serverCore = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
@@ -89,4 +99,10 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+mappie = { id = "tech.mappie.plugin", version.ref = "mappie" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
+binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }

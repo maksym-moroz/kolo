@@ -24,7 +24,8 @@ internal class DefaultStore<S : UiState, A : UiAction, E : UiEffect>(
     private val reducer: Reducer<S, A>,
     middlewares: List<Middleware<S, A, E>> = emptyList(),
     effectBufferCapacity: Int = StoreFactory.DEFAULT_EFFECT_BUFFER_CAPACITY,
-) : Store<S, A, E>, StoreScope<S, A, E> {
+) : Store<S, A, E>,
+    StoreScope<S, A, E> {
     private val actions = Channel<A>(capacity = Channel.BUFFERED)
     private val mutableState = MutableStateFlow(initialState)
     private val mutableEffects = MutableSharedFlow<E>(extraBufferCapacity = effectBufferCapacity)
@@ -32,15 +33,18 @@ internal class DefaultStore<S : UiState, A : UiAction, E : UiEffect>(
     override val state = mutableState.asStateFlow()
     override val effects = mutableEffects.asSharedFlow()
 
-    private val pipeline: Next<A> = middlewares
-        .asReversed()
-        .fold(Next<A> { action ->
-            mutableState.value = reducer.reduce(mutableState.value, action)
-        }) { next, middleware ->
-            Next { action ->
-                middleware.intercept(action, this, next)
+    private val pipeline: Next<A> =
+        middlewares
+            .asReversed()
+            .fold(
+                Next<A> { action ->
+                    mutableState.value = reducer.reduce(mutableState.value, action)
+                },
+            ) { next, middleware ->
+                Next { action ->
+                    middleware.intercept(action, this, next)
+                }
             }
-        }
 
     init {
         scope.launch {

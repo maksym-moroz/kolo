@@ -162,6 +162,12 @@ These are the current project defaults unless a ticket explicitly changes them.
 - if write scope overlaps, do not parallelize
 - update planning docs when architecture or sequencing changes
 
+### GitHub presentation
+
+- emojis are allowed in GitHub-facing markdown and workflow/job/step names
+- do not use emojis in commit messages
+- keep commit messages conventional and machine-friendly even if GitHub UI text is more expressive
+
 ## 5. Ticket Map
 
 Current sequence from the backlog:

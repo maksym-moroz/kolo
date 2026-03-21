@@ -18,11 +18,12 @@ class DefaultStoreFactory : StoreFactory {
         reducer: Reducer<S, A>,
         middlewares: List<Middleware<S, A, E>>,
         effectBufferCapacity: Int,
-    ): Store<S, A, E> = DefaultStore(
-        initialState = initialState,
-        scope = scope,
-        reducer = reducer,
-        middlewares = middlewares,
-        effectBufferCapacity = effectBufferCapacity,
-    )
+    ): Store<S, A, E> =
+        DefaultStore(
+            initialState = initialState,
+            scope = scope,
+            reducer = reducer,
+            middlewares = middlewares,
+            effectBufferCapacity = effectBufferCapacity,
+        )
 }

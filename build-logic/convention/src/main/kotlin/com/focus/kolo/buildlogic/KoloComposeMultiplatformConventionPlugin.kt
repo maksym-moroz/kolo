@@ -14,7 +14,7 @@ public class KoloComposeMultiplatformConventionPlugin : Plugin<Project> {
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
             extensions.configure<KotlinProjectExtension> {
-                jvmToolchain(17)
+                jvmToolchain(versionInt("java-toolchain"))
             }
         }
     }

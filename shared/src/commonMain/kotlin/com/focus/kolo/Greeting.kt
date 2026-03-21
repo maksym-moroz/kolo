@@ -8,7 +8,5 @@ class Greeting(
 ) {
     constructor() : this(getPlatform())
 
-    fun greet(): String {
-        return "Hello, ${platform.name}!"
-    }
+    fun greet(): String = "Hello, ${platform.name}!"
 }

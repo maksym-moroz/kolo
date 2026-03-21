@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 @Preview
-fun App() {
+fun koloApp() {
     val appGraph = remember { createPlatformAppGraph() }
 
     MaterialTheme {

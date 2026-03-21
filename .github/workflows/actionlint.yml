@@ -1,0 +1,21 @@
+name: "🧩 Workflow Lint"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: "🛠️ Validate GitHub workflows"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Check out repository"
+        uses: actions/checkout@v6
+
+      - name: "🔎 Run actionlint"
+        uses: raven-actions/actionlint@v2

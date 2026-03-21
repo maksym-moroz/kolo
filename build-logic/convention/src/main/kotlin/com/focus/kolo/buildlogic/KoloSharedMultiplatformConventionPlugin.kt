@@ -13,7 +13,7 @@ public class KoloSharedMultiplatformConventionPlugin : Plugin<Project> {
             pluginManager.apply("dev.zacsweers.metro")
 
             extensions.configure<KotlinProjectExtension> {
-                jvmToolchain(17)
+                jvmToolchain(versionInt("java-toolchain"))
             }
         }
     }

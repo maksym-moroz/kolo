@@ -14,9 +14,14 @@ application {
 
 dependencies {
     implementation(projects.shared)
-    implementation(libs.logback)
+    implementation(libs.ktor.http)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
+    runtimeOnly(libs.logback)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.ktor.clientCore)
+    testImplementation(libs.ktor.http)
     testImplementation(libs.ktor.serverTestHost)
-    testImplementation(libs.kotlin.testJunit)
+    testRuntimeOnly(libs.kotlin.testJunit)
 }

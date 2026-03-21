@@ -1,3 +1,8 @@
+val javaToolchainVersion =
+    libs.versions.java.toolchain
+        .get()
+        .toInt()
+
 plugins {
     `kotlin-dsl`
 }
@@ -5,7 +10,7 @@ plugins {
 group = "com.focus.kolo.buildlogic"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(javaToolchainVersion)
     explicitApi()
 }
 

@@ -13,7 +13,7 @@ public class KoloServerJvmConventionPlugin : Plugin<Project> {
             pluginManager.apply("application")
 
             extensions.configure<KotlinJvmProjectExtension> {
-                jvmToolchain(17)
+                jvmToolchain(versionInt("java-toolchain"))
             }
         }
     }

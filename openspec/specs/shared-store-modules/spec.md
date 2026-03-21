@@ -41,4 +41,3 @@ The system SHALL enforce a dependency graph where `shared:core:store:impl` depen
 #### Scenario: No compatibility bridge through broad shared module
 - **WHEN** the store extraction is completed
 - **THEN** consumers are wired directly to `shared:core:store:api` and `shared:core:store:impl` without relying on the broad `shared` module as a bridge
-

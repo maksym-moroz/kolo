@@ -24,61 +24,69 @@ import kotlin.test.assertFalse
 @OptIn(ExperimentalCoroutinesApi::class)
 class DefaultStoreTest {
     @Test
-    fun dispatch_reduces_actions_in_order() = runTest {
-        val storeScope = CoroutineScope(StandardTestDispatcher(testScheduler) + SupervisorJob())
-        val store = DefaultStoreFactory().create<CounterState, CounterAction, CounterEffect>(
-            initialState = CounterState(),
-            scope = storeScope,
-            reducer = Reducer<CounterState, CounterAction> { current, action ->
-                when (action) {
-                    CounterIncrementAction -> current.copy(count = current.count + 1)
-                    CounterLoadRequestedAction -> current.copy(loading = true)
-                    CounterLoadFinishedAction -> current.copy(loading = false)
-                }
-            },
-        )
+    fun dispatch_reduces_actions_in_order() =
+        runTest {
+            val storeScope = CoroutineScope(StandardTestDispatcher(testScheduler) + SupervisorJob())
+            val store =
+                DefaultStoreFactory().create<CounterState, CounterAction, CounterEffect>(
+                    initialState = CounterState(),
+                    scope = storeScope,
+                    reducer =
+                        Reducer<CounterState, CounterAction> { current, action ->
+                            when (action) {
+                                CounterIncrementAction -> current.copy(count = current.count + 1)
+                                CounterLoadRequestedAction -> current.copy(loading = true)
+                                CounterLoadFinishedAction -> current.copy(loading = false)
+                            }
+                        },
+                )
 
-        store.dispatch(CounterIncrementAction)
-        store.dispatch(CounterIncrementAction)
-        advanceUntilIdle()
+            store.dispatch(CounterIncrementAction)
+            store.dispatch(CounterIncrementAction)
+            advanceUntilIdle()
 
-        assertEquals(2, store.state.value.count)
-        storeScope.cancel()
-    }
-
-    @Test
-    fun middleware_can_emit_effects_and_follow_up_actions() = runTest {
-        val storeScope = CoroutineScope(StandardTestDispatcher(testScheduler) + SupervisorJob())
-        val store = DefaultStoreFactory().create<CounterState, CounterAction, CounterEffect>(
-            initialState = CounterState(),
-            scope = storeScope,
-            reducer = Reducer<CounterState, CounterAction> { current, action ->
-                when (action) {
-                    CounterIncrementAction -> current.copy(count = current.count + 1)
-                    CounterLoadRequestedAction -> current.copy(loading = true)
-                    CounterLoadFinishedAction -> current.copy(loading = false)
-                }
-            },
-            middlewares = listOf(
-                Middleware<CounterState, CounterAction, CounterEffect> { action, scope, next ->
-                    next.dispatch(action)
-                    if (action == CounterLoadRequestedAction) {
-                        scope.emit(CounterEffect("loading"))
-                        scope.dispatch(CounterLoadFinishedAction)
-                    }
-                },
-            ),
-        )
-
-        val effect = async(start = CoroutineStart.UNDISPATCHED) {
-            store.effects.first()
+            assertEquals(2, store.state.value.count)
+            storeScope.cancel()
         }
 
-        store.dispatch(CounterLoadRequestedAction)
-        advanceUntilIdle()
+    @Test
+    fun middleware_can_emit_effects_and_follow_up_actions() =
+        runTest {
+            val storeScope = CoroutineScope(StandardTestDispatcher(testScheduler) + SupervisorJob())
+            val store =
+                DefaultStoreFactory().create<CounterState, CounterAction, CounterEffect>(
+                    initialState = CounterState(),
+                    scope = storeScope,
+                    reducer =
+                        Reducer<CounterState, CounterAction> { current, action ->
+                            when (action) {
+                                CounterIncrementAction -> current.copy(count = current.count + 1)
+                                CounterLoadRequestedAction -> current.copy(loading = true)
+                                CounterLoadFinishedAction -> current.copy(loading = false)
+                            }
+                        },
+                    middlewares =
+                        listOf(
+                            Middleware<CounterState, CounterAction, CounterEffect> { action, scope, next ->
+                                next.dispatch(action)
+                                if (action == CounterLoadRequestedAction) {
+                                    scope.emit(CounterEffect("loading"))
+                                    scope.dispatch(CounterLoadFinishedAction)
+                                }
+                            },
+                        ),
+                )
 
-        assertEquals("loading", effect.await().message)
-        assertFalse(store.state.value.loading)
-        storeScope.cancel()
-    }
+            val effect =
+                async(start = CoroutineStart.UNDISPATCHED) {
+                    store.effects.first()
+                }
+
+            store.dispatch(CounterLoadRequestedAction)
+            advanceUntilIdle()
+
+            assertEquals("loading", effect.await().message)
+            assertFalse(store.state.value.loading)
+            storeScope.cancel()
+        }
 }

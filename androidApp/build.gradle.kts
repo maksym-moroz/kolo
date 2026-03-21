@@ -17,6 +17,7 @@ android {
 
 dependencies {
     implementation(projects.composeApp)
+    implementation(libs.androidx.activity)
     implementation(libs.androidx.activity.compose)
-    debugImplementation(libs.compose.uiTooling)
+    implementation(libs.androidx.compose.runtime)
 }
