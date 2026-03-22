@@ -37,11 +37,11 @@ jobs:
       - name: "🛠️ Set up Gradle"
         uses: gradle/actions/setup-gradle@v4
 
-      - name: "🧪 Measure store impl JVM tests"
+      - name: "🧪 Measure store impl tests"
         id: store_tests
         run: |
           start=$(date +%s)
-          ./gradlew :shared:core:store:impl:jvmTest
+          ./gradlew :shared:core:store:impl:allTests
           end=$(date +%s)
           echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
 
@@ -213,7 +213,7 @@ jobs:
             echo
             echo "| Metric | Value |"
             echo "| --- | --- |"
-            echo "| Store impl JVM tests | ${store} |"
+            echo "| Store impl tests | ${store} |"
             echo "| Android debug build | ${android} |"
             echo "| Android release build | ${android_release} |"
             echo "| Android release bundle | ${android_release_bundle} |"

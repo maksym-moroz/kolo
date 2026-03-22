@@ -19,7 +19,6 @@ application {
 }
 
 dependencies {
-    implementation(projects.shared)
     implementation(libs.ktor.http)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
