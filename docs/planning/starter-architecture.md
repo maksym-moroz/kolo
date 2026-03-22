@@ -27,7 +27,7 @@ Current implemented structure:
 - `shared` is the remaining broad KMP library
 - `shared:core:store:api` and `shared:core:store:impl` are already extracted
 - `iosApp` remains the iOS host
-- `server` remains the Ktor server starter
+- `server` is now a standalone NestJS server starter
 
 That means the first AGP 9 migration cut has landed. The remaining structural work is mostly deeper shared-module decomposition and feature extraction rather than re-establishing the app boundary.
 
@@ -90,7 +90,7 @@ Target module direction:
 - `shared:feature:journal`
 - `shared:feature:reminders`
 - `shared:feature:settings`
-- `server`: Ktor server starter
+- `server`: NestJS + PostgreSQL + Flyway starter
 
 This is a direction, not a locked final tree. The important part is the separation between platform entry points and reusable KMP libraries.
 
@@ -106,7 +106,10 @@ Use boring versions with official support where possible:
 - Room `2.8.4`
 - bundled SQLite `2.6.2`
 - DataStore `1.2.1`
-- Ktor `3.4.1`
+- Ktor client `3.4.1`
+- NestJS `11.1.x`
+- PostgreSQL `16`
+- Flyway `11.x`
 - navigation-compose `2.9.2`
 - Metro `0.11.x`
 
@@ -239,7 +242,7 @@ Minimum test layers:
 - migration tests
 - reminder time model tests across timezone and DST changes
 - Ktor client tests with mock engine
-- Ktor server tests
+- NestJS integration tests
 - Compose UI tests if UI is shared
 
 ## Risks To Keep Visible

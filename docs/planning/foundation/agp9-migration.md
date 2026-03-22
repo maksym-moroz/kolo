@@ -29,7 +29,7 @@ root
 │   ├── SwiftUI shell or Compose host wrapper
 │   └── framework consumption of shared modules
 ├── server
-│   ├── Ktor entry point
+│   ├── NestJS entry point
 │   ├── typed routes
 │   └── server persistence and API contracts
 ├── shared

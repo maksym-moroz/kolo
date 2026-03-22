@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-kolodbuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kolodbpass}
+      POSTGRES_DB: ${POSTGRES_DB:-kolodb}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER:-kolodbuser} -d ${POSTGRES_DB:-kolodb}
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-kolodb}
+      FLYWAY_USER: ${POSTGRES_USER:-kolodbuser}
+      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD:-kolodbpass}
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+      FLYWAY_CONNECT_RETRIES: 60
+    volumes:
+      - ./db/migration:/flyway/sql:ro
+
+volumes:
+  postgres-data:

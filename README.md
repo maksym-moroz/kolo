@@ -8,7 +8,7 @@ Current targets:
 - shared Kotlin and app graph code in `shared`
 - shared store contract and runtime in `shared:core:store:api` and `shared:core:store:impl`
 - shared Compose-facing UI library in `composeApp`
-- Ktor server in `server`
+- NestJS server in `server`
 - shared Gradle conventions in `build-logic`
 
 ## Start Here
@@ -27,7 +27,8 @@ Prerequisites:
 - JDK 17
 - Android SDK with API 36 installed
 - Xcode for the iOS host app
-- Node.js and npm for repository-local commit tooling
+- Node.js and npm for repository-local tooling and the server
+- Docker for the local PostgreSQL and Flyway workflow
 
 From a fresh clone:
 
@@ -79,7 +80,12 @@ Build the Play-facing Android release bundle:
 Run the server:
 
 ```shell
-./gradlew :server:run
+cd server
+cp .env.example .env
+npm install
+npm run db:up
+npm run db:migrate
+npm run start:dev
 ```
 
 Open the iOS host app in Xcode:
@@ -109,7 +115,7 @@ Generate Android baseline profiles with the configured Gradle-managed device:
 - `docs/planning/`: backlog, architecture, workstreams, and foundation docs
 - `iosApp/`: iOS host app and SwiftUI shell
 - `openspec/`: change proposals, tasks, and archive artifacts
-- `server/`: Ktor server module
+- `server/`: NestJS + PostgreSQL + Flyway server
 - `shared/`: shared Kotlin, Metro app graph, and remaining common code
 - `shared/core/store/api/`: public store contract
 - `shared/core/store/impl/`: store runtime implementation
@@ -123,6 +129,7 @@ Generate Android baseline profiles with the configured Gradle-managed device:
 - `androidApp` is the real Android app boundary
 - `baselineprofile` owns Baseline Profile generation for Android startup and critical user journeys
 - `composeApp` is not the Android application module
+- `server` is a standalone Node/NestJS app and is no longer a Gradle module
 - `shared` is still broad outside the extracted store modules and will be split further later
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
 - shared SDK and toolchain versions live in `gradle/libs.versions.toml`
@@ -157,7 +164,7 @@ The repo uses Semantic Versioning for the shared release version.
 
 - Gradle source of truth: `kolo.version.name` and `kolo.version.code` in `gradle.properties`
 - Android reads both values from Gradle properties
-- Server reads `kolo.version.name` from Gradle properties
+- Server version currently lives in `server/package.json`
 - iOS `MARKETING_VERSION` is currently mirrored in `iosApp/Configuration/Config.xcconfig`
 
 Use these bump rules:

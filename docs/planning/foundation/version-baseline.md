@@ -15,7 +15,10 @@ Pin a boring, supportable dependency baseline for the starter app so the AGP 9 m
 - Room: `2.8.4`
 - SQLite bundled driver: `2.6.2`
 - DataStore: `1.2.1`
-- Ktor: `3.4.1`
+- Ktor client: `3.4.1`
+- NestJS server: `11.1.x`
+- PostgreSQL: `16`
+- Flyway: `11.x`
 - Navigation Compose: `2.9.2`
 - Metro: `0.11.x`
 
@@ -26,7 +29,7 @@ Pin a boring, supportable dependency baseline for the starter app so the AGP 9 m
 - Java toolchain should stay on `17` for the initial baseline unless an upstream tool requires a coordinated move.
 - Kotlin should stay on `2.3.20` for the initial starter baseline unless the build toolchain forces a move.
 - AGP should stay on `9.1.0` because the repo already needs the new KMP-friendly module shape.
-- Room, DataStore, Ktor, and Lifecycle should be pinned to the specified release lines so the persistence and shared architecture work against fixed APIs.
+- Room, DataStore, Ktor client, NestJS, and Lifecycle should be pinned to the specified release lines so the persistence and shared architecture work against fixed APIs.
 
 ### Flexible
 
@@ -41,13 +44,13 @@ Pin a boring, supportable dependency baseline for the starter app so the AGP 9 m
 - Metro should be treated conservatively across native targets and multi-module boundaries until the module graph stabilizes.
 - Room KMP should be introduced with schema export and migration testing from the start to avoid version churn later.
 - DataStore should remain the settings store only; do not stretch it into a general database substitute.
-- Ktor client and server should be kept on the same major/minor line to reduce contract drift.
+- PostgreSQL and Flyway should move deliberately because migration behavior is part of the server baseline.
 
 ## Version Policy
 
 1. Lock the baseline in version catalog once.
 2. Allow patch-only movement for Compose MP, Metro, and Navigation if needed for compatibility.
-3. Treat Kotlin, AGP, Room, DataStore, Ktor, and Lifecycle as controlled upgrades that require explicit planning.
+3. Treat Kotlin, AGP, Room, DataStore, Ktor client, NestJS, PostgreSQL, Flyway, and Lifecycle as controlled upgrades that require explicit planning.
 
 ## Why This Baseline
 
@@ -63,5 +66,5 @@ The repo currently uses these concrete versions:
 - Gradle `9.3.1`
 - Compose Multiplatform `1.10.3`
 - Lifecycle `2.10.0`
-- Ktor `3.4.1`
+- Ktor client `3.4.1`
 - Metro `0.11.4`

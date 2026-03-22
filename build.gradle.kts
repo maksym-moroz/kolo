@@ -12,7 +12,6 @@ plugins {
     alias(libs.plugins.dependencyAnalysis) apply false
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
-    alias(libs.plugins.ktor) apply false
     alias(libs.plugins.mappie) apply false
     alias(libs.plugins.metro) apply false
 }
@@ -22,7 +21,6 @@ kolo {
         listOf(
             ":androidApp",
             ":composeApp",
-            ":server",
             ":shared",
             ":shared:core:store:api",
             ":shared:core:store:impl",
@@ -31,7 +29,6 @@ kolo {
     dependencyHealthModules.addAll(
         listOf(
             ":androidApp",
-            ":server",
         ),
     )
 }

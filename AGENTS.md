@@ -45,7 +45,7 @@ Current top-level structure:
 - `docs/planning/`: planning, backlog, architecture, and workstreams
 - `iosApp/`: iOS host app and SwiftUI host shell
 - `openspec/`: change proposals, task tracking, and archive/spec artifacts
-- `server/`: Ktor server module
+- `server/`: NestJS + PostgreSQL + Flyway server
 - `shared/`: shared KMP library for app graph and remaining common code
 - `shared/core/store/`: extracted store API and runtime modules
 
@@ -73,7 +73,6 @@ If a task touches these areas, start here:
 - Android app convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidApplicationConventionPlugin.kt`
 - Compose KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/compose/KoloComposeMultiplatformConventionPlugin.kt`
 - shared KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/shared/KoloSharedMultiplatformConventionPlugin.kt`
-- server convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/server/KoloServerJvmConventionPlugin.kt`
 - convention helpers: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/convention/internal/`
 
 ### Android app boundary
@@ -117,8 +116,11 @@ If a task touches these areas, start here:
 
 ### Server
 
-- build: `server/build.gradle.kts`
-- entry point: `server/src/main/kotlin/com/focus/kolo/Application.kt`
+- package manifest: `server/package.json`
+- entry point: `server/src/main.ts`
+- app module: `server/src/app.module.ts`
+- Docker services: `server/docker-compose.yml`
+- Flyway migrations: `server/db/migration/`
 
 ### Versions and root build
 
@@ -212,7 +214,7 @@ Default validation expectations by area:
 - root/module/build changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64`
 - store API or runtime changes: `./gradlew qualityCheck`, then `./gradlew test :androidApp:assembleDebug :shared:compileKotlinIosSimulatorArm64`
 - shared Kotlin changes: `./gradlew qualityCheck`, then add `:shared:compileKotlinIosSimulatorArm64`
-- server changes: keep `./gradlew test`
+- server changes: `cd server && npm install && npm run build`, then add `npm run db:up && npm run db:migrate` when database wiring changes
 - planning/doc-only changes: no build required, but keep links and status coherent
 
 If you change build logic, module wiring, or shared Kotlin, prefer validating Android plus iOS Kotlin compilation, not just JVM.
@@ -286,6 +288,7 @@ Agents should know these before editing:
 - preserve the API vs impl split when extending store code
 - `shared` is still broad outside the extracted store modules and will likely be split further later
 - `build-logic` is now the source of truth for shared plugin wiring; prefer changing conventions there before copying build setup into modules
+- `server` is now a standalone Node/NestJS workspace and is not part of Gradle aggregate quality tasks
 - shared SDK and toolchain values, including `java-toolchain`, now live in `gradle/libs.versions.toml`; keep toolchain-related build settings aligned with the catalog
 - the current convention plugins are intentionally thin; the shared base KMP Android library convention owns the common plugin stack, toolchain, and default Android SDK values, while modules still keep local Android-KMP target settings such as namespace and source-set options
 - the root `build.gradle.kts` plugin block should stay small, but the external `apply false` aliases still need to stay there; removing them breaks convention-plugin loading for AGP-backed plugins

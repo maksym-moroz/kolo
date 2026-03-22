@@ -82,9 +82,6 @@ ktor-clientJava = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-clientOkHttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-http = { module = "io.ktor:ktor-http", version.ref = "ktor" }
 ktor-serializationKotlinxJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-serverCore = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
-ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
-ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
 spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
@@ -95,7 +92,6 @@ kolo-android-kotlin-multiplatform-library = { id = "kolo.android.kotlin.multipla
 kolo-android-application = { id = "kolo.android.application" }
 kolo-compose-multiplatform = { id = "kolo.compose.multiplatform" }
 kolo-root = { id = "kolo.root" }
-kolo-server-jvm = { id = "kolo.server.jvm" }
 kolo-shared-multiplatform = { id = "kolo.shared.multiplatform" }
 
 # External plugins
@@ -111,7 +107,6 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 mappie = { id = "tech.mappie.plugin", version.ref = "mappie" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

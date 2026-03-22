@@ -1,0 +1,32 @@
+{
+  "name": "kolo-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal NestJS server for Kolo.",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "start:dev": "tsx src/main.ts",
+    "start:watch": "tsx watch src/main.ts",
+    "db:up": "docker compose -f docker-compose.yml up -d postgres",
+    "db:down": "docker compose -f docker-compose.yml down",
+    "db:reset": "docker compose -f docker-compose.yml down -v",
+    "db:migrate": "docker compose -f docker-compose.yml run --rm flyway migrate",
+    "db:info": "docker compose -f docker-compose.yml run --rm flyway info"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.1.6",
+    "@nestjs/config": "4.0.2",
+    "@nestjs/core": "11.1.6",
+    "@nestjs/platform-express": "11.1.6",
+    "pg": "8.16.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.1",
+    "@types/pg": "8.20.0",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3"
+  }
+}

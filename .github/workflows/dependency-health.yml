@@ -42,4 +42,3 @@ jobs:
           path: |
             build/reports/dependency-analysis/**
             androidApp/build/reports/dependency-analysis/**
-            server/build/reports/dependency-analysis/**

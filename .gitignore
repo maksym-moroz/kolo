@@ -31,3 +31,6 @@ DerivedData/
 
 # Node-based repo tooling
 node_modules/
+dist/
+coverage/
+server/.env

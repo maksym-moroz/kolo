@@ -46,9 +46,5 @@ gradlePlugin {
             id = "kolo.shared.multiplatform"
             implementationClass = "com.focus.kolo.buildlogic.shared.KoloSharedMultiplatformConventionPlugin"
         }
-        register("koloServerJvm") {
-            id = "kolo.server.jvm"
-            implementationClass = "com.focus.kolo.buildlogic.server.KoloServerJvmConventionPlugin"
-        }
     }
 }

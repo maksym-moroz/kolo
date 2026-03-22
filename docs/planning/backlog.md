@@ -217,7 +217,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 ## Server
 
-### SRV-001: Define Ktor server starter contract
+### SRV-001: Define NestJS server starter contract
 
 - Status: Draft
 - Owner: Unassigned

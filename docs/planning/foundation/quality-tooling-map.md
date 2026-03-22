@@ -23,7 +23,6 @@ Module quality behavior:
 - shared helpers: [QualityConventions.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/convention/internal/QualityConventions.kt)
 - Android app convention: [KoloAndroidApplicationConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidApplicationConventionPlugin.kt)
 - base Android-KMP library convention: [KoloAndroidKotlinMultiplatformLibraryConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidKotlinMultiplatformLibraryConventionPlugin.kt)
-- server convention: [KoloServerJvmConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/server/KoloServerJvmConventionPlugin.kt)
 
 Workflow definitions:
 
@@ -55,13 +54,11 @@ Current root participation lists:
 - `qualityModules`
   - `:androidApp`
   - `:composeApp`
-  - `:server`
   - `:shared`
   - `:shared:core:store:api`
   - `:shared:core:store:impl`
 - `dependencyHealthModules`
   - `:androidApp`
-  - `:server`
 
 Aggregate task behavior:
 
@@ -93,8 +90,6 @@ Convention-specific additions:
   - applies dependency analysis
 - base Android-KMP library convention
   - adds `lintAnalyzeAndroidHostTest` to module `qualityCheck` when present
-- server JVM convention
-  - applies dependency analysis
 - compose/shared conventions
   - inherit the base Android-KMP library quality behavior
 
@@ -115,6 +110,7 @@ Baseline Profile generation is separate from aggregate quality checks:
 `quality.yml`
 
 - runs `./gradlew qualityCheck`
+- runs `cd server && npm ci && npm run build`
 - this is the main CI entry point for formatting, Detekt, module lint, and API check coverage
 
 `dependency-health.yml`
@@ -155,6 +151,7 @@ Use these before changing the quality system:
 - `./gradlew help`
 - `./gradlew test :androidApp:assembleDebug :androidApp:assembleRelease :androidApp:bundleRelease :shared:compileKotlinIosSimulatorArm64`
 - `./gradlew :androidApp:generateBaselineProfile`
+- `cd server && npm install && npm run build`
 
 ## Update Rules
 
