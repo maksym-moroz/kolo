@@ -8,7 +8,7 @@ kotlin {
     jvmToolchain(
         libs.versions.java.toolchain
             .get()
-            .toInt(),
+            .toInt()
     )
     explicitApi()
 }
@@ -21,11 +21,17 @@ dependencies {
 }
 
 tasks.validatePlugins {
-    enableStricterValidation.set(true)
+    enableStricterValidation
+        .set(true)
 }
 
 gradlePlugin {
     plugins {
+        register("koloAndroidComposeLibrary") {
+            id = "kolo.android.compose.library"
+            implementationClass =
+                "com.focus.kolo.buildlogic.android.KoloAndroidComposeLibraryConventionPlugin"
+        }
         register("koloAndroidKotlinMultiplatformLibrary") {
             id = "kolo.android.kotlin.multiplatform.library"
             implementationClass = "com.focus.kolo.buildlogic.android.KoloAndroidKotlinMultiplatformLibraryConventionPlugin"

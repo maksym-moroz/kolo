@@ -1,27 +1,15 @@
 import SwiftUI
-import Shared
 
 struct ContentView: View {
-    @State private var showContent = false
     var body: some View {
-        VStack {
-            Button("Click me!") {
-                withAnimation {
-                    showContent = !showContent
-                }
-            }
-
-            if showContent {
-                VStack(spacing: 16) {
-                    Image(systemName: "swift")
-                        .font(.system(size: 200))
-                        .foregroundColor(.accentColor)
-                    Text("SwiftUI: \(AppServices.shared.greetingText())")
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
+        VStack(spacing: 12) {
+            Text("Kolo")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+            Text("iOS app shell is ready.")
+                .font(.body)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
     }
 }

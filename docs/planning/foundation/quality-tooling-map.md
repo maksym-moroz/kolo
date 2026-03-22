@@ -15,12 +15,15 @@ Use it when you need to:
 Root orchestration:
 
 - root build entry: [build.gradle.kts](/Users/maksymmoroz/startup/kolo/build.gradle.kts)
+- root editor config: [.editorconfig](/Users/maksymmoroz/startup/kolo/.editorconfig)
 - root convention plugin: [KoloRootConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/root/KoloRootConventionPlugin.kt)
 - root extension: [KoloRootExtension.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/root/KoloRootExtension.kt)
 
 Module quality behavior:
 
 - shared helpers: [QualityConventions.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/convention/internal/QualityConventions.kt)
+- Spotless ktlint overrides: [KoloRootConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/root/KoloRootConventionPlugin.kt)
+- shared Detekt overrides: [config/detekt/detekt.yml](/Users/maksymmoroz/startup/kolo/config/detekt/detekt.yml)
 - Android app convention: [KoloAndroidApplicationConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidApplicationConventionPlugin.kt)
 - base Android-KMP library convention: [KoloAndroidKotlinMultiplatformLibraryConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidKotlinMultiplatformLibraryConventionPlugin.kt)
 - server convention: [KoloServerJvmConventionPlugin.kt](/Users/maksymmoroz/startup/kolo/build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/server/KoloServerJvmConventionPlugin.kt)
@@ -82,9 +85,21 @@ Shared behavior from [QualityConventions.kt](/Users/maksymmoroz/startup/kolo/bui
 
 - registers a module-local `qualityCheck` task
 - applies Detekt
-- configures Detekt source scope, reports, base path, and JVM target
+- configures Detekt source scope, reports, base path, JVM target, and shared config overrides from `config/detekt/detekt.yml`
 - wires Detekt into the module `check` task
 - wires Detekt into the module `qualityCheck` task
+
+Repository-wide style policy from [.editorconfig](/Users/maksymmoroz/startup/kolo/.editorconfig):
+
+- ktlint uses the `android_studio` code-style baseline with a shared `140` character line-length limit for Kotlin and Gradle Kotlin files
+- ktlint disables trailing commas in declarations and call sites so IDE formatting, Spotless, and review diffs stay consistent
+- ktlint allows `@Composable` functions to use UpperCamelCase names
+- ktlint keeps expression-body functions on the same line as `=` when the first expression line still fits by setting `ktlint_function_signature_body_expression_wrapping = default`
+- ktlint forces class and constructor signatures to multiline from `1` parameter and function signatures from `2` parameters, matching the formatting baseline used in `~/work/autodoc/autodoc-android`
+- ktlint keeps chained calls like `.map` and `.catch` on clean continuation lines by combining the Android Studio code style with the shared chain-method continuation overrides
+- ktlint disables `no-line-break-before-assignment` and `multiline-expression-wrapping` so multiline expressions do not fight the formatter
+- Spotless applies the same ktlint editor-config overrides directly in the root convention plugin so Gradle formatting stays aligned with the repo policy
+- Detekt keeps the same `140` character line-length limit, leaves function naming to ktlint to avoid conflicting Compose rules, and ignores data classes in `LongParameterList` so constructor layout stays formatter-led
 
 Convention-specific additions:
 
@@ -101,7 +116,7 @@ Convention-specific additions:
 What stays module-local:
 
 - `namespace`
-- target declarations such as `iosArm64()`, `iosSimulatorArm64()`, `jvm()`
+- target declarations such as `iosArm64()` and `iosSimulatorArm64()`
 - source-set dependencies
 - Android-KMP-specific options such as `withHostTest {}` or `androidResources { enable = true }`
 

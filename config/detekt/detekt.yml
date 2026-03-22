@@ -1,0 +1,18 @@
+naming:
+  FunctionNaming:
+    active: false
+
+complexity:
+  LongParameterList:
+    active: true
+    ignoreDataClasses: true
+    ignoreDefaultParameters: true
+
+style:
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
+    excludePackageStatements: true
+    excludeImportStatements: true
+    excludeCommentStatements: false
+    excludeRawStrings: true

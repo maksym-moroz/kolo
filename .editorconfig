@@ -4,9 +4,21 @@ root = true
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
-indent_style = space
-indent_size = 4
 trim_trailing_whitespace = true
 
-[*.md]
-trim_trailing_whitespace = false
+[*.{kt,kts}]
+ktlint_code_style = android_studio
+max_line_length = 140
+ij_kotlin_allow_trailing_comma = false
+ij_kotlin_allow_trailing_comma_on_call_site = false
+ktlint_function_naming_ignore_when_annotated_with = Composable
+ktlint_function_signature_body_expression_wrapping = default
+ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = 2
+ktlint_class_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = 1
+ktlint_argument_list_wrapping_ignore_when_parameter_count_greater_or_equal_than = 4
+ij_kotlin_line_break_after_multiline_when_entry = false
+ktlint_standard_chain-method-continuation = enabled
+ktlint_chain_method_rule_force_multiline_when_chain_operator_count_greater_or_equal_than = 2
+ktlint_standard_no-blank-lines-in-chained-method-calls = disabled
+ktlint_standard_no-line-break-before-assignment = disabled
+ktlint_standard_multiline-expression-wrapping = disabled

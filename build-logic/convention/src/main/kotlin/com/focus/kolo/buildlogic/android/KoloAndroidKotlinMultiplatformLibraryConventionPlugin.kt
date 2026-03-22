@@ -14,14 +14,18 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 public class KoloAndroidKotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("org.jetbrains.kotlin.multiplatform")
-            pluginManager.apply("com.android.kotlin.multiplatform.library")
+            pluginManager
+                .apply("org.jetbrains.kotlin.multiplatform")
+            pluginManager
+                .apply("com.android.kotlin.multiplatform.library")
 
             extensions.configure<KotlinProjectExtension> {
                 jvmToolchain(versionInt("java-toolchain"))
             }
 
-            val kotlin = extensions.getByType<KotlinProjectExtension>()
+            val kotlin =
+                extensions
+                    .getByType<KotlinProjectExtension>()
             (kotlin as ExtensionAware).extensions.configure<KotlinMultiplatformAndroidLibraryTarget>("android") {
                 compileSdk = versionInt("android-compileSdk")
                 minSdk = versionInt("android-minSdk")
@@ -31,7 +35,9 @@ public class KoloAndroidKotlinMultiplatformLibraryConventionPlugin : Plugin<Proj
             configureDetekt(qualityCheck)
 
             tasks.matching { it.name == "lintAnalyzeAndroidHostTest" }.configureEach {
-                qualityCheck.get().dependsOn(this)
+                qualityCheck
+                    .get()
+                    .dependsOn(this)
             }
         }
     }

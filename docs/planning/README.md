@@ -15,6 +15,7 @@ It exists for two reasons:
 - [foundation/README.md](/Users/maksymmoroz/startup/kolo/docs/planning/foundation/README.md): entry point for the AGP 9 and version baseline artifacts
 - [foundation/quality-tooling-map.md](/Users/maksymmoroz/startup/kolo/docs/planning/foundation/quality-tooling-map.md): durable map for CI, formatting, static analysis, linting, and dependency health wiring
 - [foundation/udf-store-contract.md](/Users/maksymmoroz/startup/kolo/docs/planning/foundation/udf-store-contract.md): implemented shared UDF/store contract
+- [workstreams/navigation.md](/Users/maksymmoroz/startup/kolo/docs/planning/workstreams/navigation.md): layered navigation program, route ownership, back behavior, modal policy, deep links, and migration path
 - [workstreams/persistence.md](/Users/maksymmoroz/startup/kolo/docs/planning/workstreams/persistence.md): deep notes and ticket detail for local persistence
 
 ## Status Model
@@ -38,6 +39,7 @@ If two agents need the same write scope, split the ticket or serialize the work.
 
 - the AGP 9 first cut is already implemented with `androidApp` as the real Android boundary
 - Android Baseline Profile generation now lives in a dedicated `baselineprofile` test module
+- shared runtime config now exists in extracted `shared:core:config:api` and `shared:core:config:impl` modules, with Android and iOS debug-menu tooling surfaces as its first internal consumers
 - shared Gradle wiring now lives in the `build-logic` included build
 - the shared store contract is already extracted into `shared:core:store:api` and `shared:core:store:impl`
 - the next planning focus is persistence, navigation, and reminders on top of that baseline
@@ -54,6 +56,6 @@ If two agents need the same write scope, split the ticket or serialize the work.
 The current highest-value sequence is:
 
 1. `PERS-001` through `PERS-004` to establish durable local persistence on top of the extracted store modules
-2. `NAV-001` and `REM-001` so navigation and reminders do not get bolted on later
+2. `NAV-001` through `NAV-004` plus `REM-001` so navigation and reminders do not get bolted on later
 3. first feature slices for tasks and journaling
 4. deeper shared module decomposition after the first feature boundaries are clearer

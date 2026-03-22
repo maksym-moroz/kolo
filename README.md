@@ -4,8 +4,10 @@ Current targets:
 
 - Android app in `androidApp`
 - Android baseline profile generator in `baselineprofile`
+- shared debug menu feature in `debugmenu`, hosted only from debug-only Android and internal iOS entry points
 - iOS host app in `iosApp`
 - shared Kotlin and app graph code in `shared`
+- shared runtime-config contract and implementation in `shared:core:config:api` and `shared:core:config:impl`
 - shared store contract and runtime in `shared:core:store:api` and `shared:core:store:impl`
 - shared Compose-facing UI library in `composeApp`
 - Ktor server in `server`
@@ -100,17 +102,26 @@ Generate Android baseline profiles with the configured Gradle-managed device:
 ./gradlew :androidApp:generateBaselineProfile
 ```
 
+Open the Android debug menu on a connected debug build:
+
+```shell
+adb shell am start -W -a android.intent.action.VIEW -d 'kolo://debug/menu' com.focus.kolo
+```
+
 ## Repo Map
 
 - `androidApp/`: Android application boundary and entry point
 - `baselineprofile/`: Android Baseline Profile generator module targeting `androidApp`
 - `build-logic/`: included Gradle build for shared convention plugins
 - `composeApp/`: Compose Multiplatform UI library consumed by the Android app
+- `debugmenu/`: shared debug-menu feature module consumed by Android and iOS hosts
 - `docs/planning/`: backlog, architecture, workstreams, and foundation docs
 - `iosApp/`: iOS host app and SwiftUI shell
 - `openspec/`: change proposals, tasks, and archive artifacts
 - `server/`: Ktor server module
 - `shared/`: shared Kotlin, Metro app graph, and remaining common code
+- `shared/core/config/api/`: runtime-config models and read contract
+- `shared/core/config/impl/`: runtime-config implementation, persistence, and use cases
 - `shared/core/store/api/`: public store contract
 - `shared/core/store/impl/`: store runtime implementation
 
@@ -122,6 +133,8 @@ Generate Android baseline profiles with the configured Gradle-managed device:
 - the durable implementation map for CI and linting lives in `docs/planning/foundation/quality-tooling-map.md`
 - `androidApp` is the real Android app boundary
 - `baselineprofile` owns Baseline Profile generation for Android startup and critical user journeys
+- shared runtime config now lives under `shared/core/config/api/` and `shared/core/config/impl/`
+- the Android-only debug menu lives under `androidApp/debugmenu/`, is entered through a debug-only deep link, and stays on `debugImplementation`
 - `composeApp` is not the Android application module
 - `shared` is still broad outside the extracted store modules and will be split further later
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`

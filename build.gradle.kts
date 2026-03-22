@@ -22,16 +22,19 @@ kolo {
         listOf(
             ":androidApp",
             ":composeApp",
+            ":debugmenu",
             ":server",
             ":shared",
+            ":shared:core:config:api",
+            ":shared:core:config:impl",
             ":shared:core:store:api",
-            ":shared:core:store:impl",
-        ),
+            ":shared:core:store:impl"
+        )
     )
     dependencyHealthModules.addAll(
         listOf(
             ":androidApp",
-            ":server",
-        ),
+            ":server"
+        )
     )
 }

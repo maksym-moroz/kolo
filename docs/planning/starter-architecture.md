@@ -24,7 +24,10 @@ Current implemented structure:
 - `baselineprofile` is the Android Baseline Profile generator module
 - `build-logic` is the included build for shared convention plugins
 - `composeApp` is a KMP UI library, not the Android app module
+- `debugmenu` is the shared KMP debug-menu feature module
 - `shared` is the remaining broad KMP library
+- `shared:core:config:api` and `shared:core:config:impl` now hold the runtime-config contract and implementation
+- the debug menu now has platform-hosted internal tooling surfaces on Android and iOS and remains isolated from release-facing product UI
 - `shared:core:store:api` and `shared:core:store:impl` are already extracted
 - `iosApp` remains the iOS host
 - `server` remains the Ktor server starter
@@ -78,8 +81,12 @@ The AGP 9 migration first cut is already in place. The remaining module work is 
 Target module direction:
 
 - `androidApp`: Android app entry point only
+- `composeApp`: shared Compose UI surface
+- `debugmenu`: shared debug-menu feature module with thin Android and iOS hosts
 - `iosApp`: iOS host app only
 - `shared:core:model`: IDs, primitives, and serializable contracts
+- `shared:core:config:api`: runtime-config models and read-side contracts
+- `shared:core:config:impl`: runtime-config merge logic, persistence, and mutation use cases
 - `shared:core:common`: clocks, dispatchers, logging, result types, utilities
 - `shared:core:network`: Ktor client setup, DTOs, resources, error mapping
 - `shared:core:database`: Room KMP database, DAOs, mappers, schema history
@@ -138,7 +145,12 @@ Keep ViewModel as:
 - intent forwarder
 - restoration edge
 
-Do not let ViewModel become the side-effect engine.
+Do not let ViewModel become the side effect engine.
+
+Internal tooling note:
+
+- internal Android tooling surfaces such as the debug menu may observe a shared read model and dispatch explicit commands without inventing a separate feature-local persisted state machine
+- internal iOS tooling surfaces should follow the same observer-plus-command shape, with URL entry and modal presentation owned by the SwiftUI host
 
 Implemented first cut:
 
@@ -155,6 +167,7 @@ Current location:
 Future multi-module destination:
 
 - `shared:core:store:*` is now the actual shape
+- `shared:core:config:*` is now the actual shape for runtime config
 
 ## DI Direction
 
@@ -163,7 +176,7 @@ Use Metro as the DI baseline.
 Current integration shape:
 
 - shared base graph contract in `commonMain`
-- platform-specific final `@DependencyGraph` types in `androidMain`, `iosMain`, and `jvmMain`
+- platform-specific final `@DependencyGraph` types in `androidMain` and `iosMain`
 - platform-only bindings supplied at the platform graph edge
 
 This follows Metro's multiplatform guidance and keeps common code free from platform-specific binding details.
@@ -174,6 +187,7 @@ Use:
 
 - Room KMP for tasks, journals, reminder definitions, and sync metadata
 - DataStore KMP for theme, week start, defaults, and other small preferences
+- DataStore KMP for persisted local runtime-config overrides used by the shared debug menu
 
 Persistence rules:
 
@@ -211,9 +225,15 @@ Key rules:
 - validate all deep links as untrusted input
 - keep a single deep-link parsing strategy in shared code
 - define modal behavior early instead of letting screens improvise
+- treat app-global stacks, modal presentation, and feature-local flows as separate navigation layers
+- make back resolution first-class instead of equating back with a naive stack pop
 - support predictive back on Android
 - verify iOS swipe-back before introducing custom transitions
 - use multiple back stacks only when tabs or root sections justify them
+
+Detailed working agreement:
+
+- [workstreams/navigation.md](/Users/maksymmoroz/startup/kolo/docs/planning/workstreams/navigation.md)
 
 ## Force Update Strategy
 

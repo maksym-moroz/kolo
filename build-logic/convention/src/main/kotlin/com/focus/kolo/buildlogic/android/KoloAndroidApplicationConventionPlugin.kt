@@ -12,10 +12,14 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 public class KoloAndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("com.android.application")
-            pluginManager.apply("androidx.baselineprofile")
-            pluginManager.apply("org.jetbrains.compose")
-            pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
+            pluginManager
+                .apply("com.android.application")
+            pluginManager
+                .apply("androidx.baselineprofile")
+            pluginManager
+                .apply("org.jetbrains.compose")
+            pluginManager
+                .apply("org.jetbrains.kotlin.plugin.compose")
 
             extensions.configure<KotlinProjectExtension> {
                 jvmToolchain(versionInt("java-toolchain"))
@@ -23,10 +27,14 @@ public class KoloAndroidApplicationConventionPlugin : Plugin<Project> {
 
             val qualityCheck = registerModuleQualityCheckTask()
             configureDetekt(qualityCheck)
-            pluginManager.apply("com.autonomousapps.dependency-analysis")
+            pluginManager
+                .apply("com.autonomousapps.dependency-analysis")
 
             qualityCheck.configure {
-                dependsOn(tasks.named("lintDebug"))
+                dependsOn(
+                    tasks
+                        .named("lintDebug")
+                )
             }
 
             extensions.configure<ApplicationExtension> {
@@ -53,7 +61,7 @@ public class KoloAndroidApplicationConventionPlugin : Plugin<Project> {
                         isShrinkResources = true
                         proguardFiles(
                             getDefaultProguardFile("proguard-android-optimize.txt"),
-                            "proguard-rules.pro",
+                            "proguard-rules.pro"
                         )
                     }
                 }
