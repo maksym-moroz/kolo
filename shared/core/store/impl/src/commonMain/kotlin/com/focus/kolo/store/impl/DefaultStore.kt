@@ -10,10 +10,10 @@ import com.focus.kolo.store.UiAction
 import com.focus.kolo.store.UiEffect
 import com.focus.kolo.store.UiState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 internal class DefaultStore<S : UiState, A : UiAction, E : UiEffect>(
     initialState: S,
@@ -26,6 +26,7 @@ internal class DefaultStore<S : UiState, A : UiAction, E : UiEffect>(
     override val actions = MutableSharedFlow<A>(extraBufferCapacity = ACTION_BUFFER_CAPACITY)
     override val state = MutableStateFlow(initialState)
     override val effects = MutableSharedFlow<E>(extraBufferCapacity = effectBufferCapacity)
+    private val actionQueue = Channel<A>(capacity = Channel.BUFFERED)
 
     private val reducerDispatch =
         Next<A> { action ->
@@ -36,21 +37,22 @@ internal class DefaultStore<S : UiState, A : UiAction, E : UiEffect>(
     private var pipeline: Next<A> = reducerDispatch
 
     init {
-        actions
-            .onEach { action ->
-                pipeline
-                    .dispatch(action)
-            }.launchIn(scope)
-
         pipeline =
             middlewares.foldRight(reducerDispatch) { middleware, next ->
                 middleware
                     .interfere(this, next)
             }
+
+        scope.launch {
+            for (action in actionQueue) {
+                actions.emit(action)
+                pipeline.dispatch(action)
+            }
+        }
     }
 
     override suspend fun dispatch(action: A) {
-        actions.emit(action)
+        actionQueue.send(action)
     }
 
     override suspend fun emit(effect: E) {
