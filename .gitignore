@@ -31,3 +31,9 @@ DerivedData/
 
 # Node-based repo tooling
 node_modules/
+
+# Env files
+.env
+
+# Local Flyway config
+server/flyway.local.conf

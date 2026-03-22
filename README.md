@@ -82,6 +82,19 @@ Run the server:
 ./gradlew :server:run
 ```
 
+Run the flyway migration:
+```shell
+./gradlew :server:flywayMigrate --no-configuration-cache
+```
+
+Server configuration contract:
+
+- export `POSTGRES_DB`, `POSTGRES_USER`, and `POSTGRES_PASSWORD` before running the server or Flyway
+- optional overrides: `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_TIME_ZONE`
+- runtime and Flyway both consume process environment variables directly
+- non-secret runtime defaults live in `server/src/main/resources/application.conf`
+- if you want `.env` locally, use shell or tooling to load it into the environment before invoking Gradle rather than relying on app-side file discovery
+
 Open the iOS host app in Xcode:
 
 ```shell
