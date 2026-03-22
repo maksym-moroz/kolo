@@ -1,0 +1,14 @@
+package com.focus.kolo.config.impl.override
+
+enum class AppConfigOverrideField {
+    ENVIRONMENT,
+    TASKS_ENABLED,
+    JOURNAL_ENABLED,
+    REMINDERS_ENABLED,
+    FORCED_UPDATE_ENABLED,
+    DEEPLINK_HANDLING_ENABLED,
+    LATEST_VERSION,
+    MINIMUM_SUPPORTED_VERSION,
+    SUPPORT_URL,
+    PRIVACY_POLICY_URL
+}

@@ -9,13 +9,18 @@ import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test
-    fun testRoot() =
-        testApplication {
-            application {
-                module()
-            }
-            val response = client.get("/")
-            assertEquals(HttpStatusCode.OK, response.status)
-            assertEquals("Ktor: ${AppServices.greetingText()}", response.bodyAsText())
+    fun testRoot() = testApplication {
+        application {
+            module()
         }
+        val response =
+            client
+                .get("/")
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals(
+            "Kolo server is running.",
+            response
+                .bodyAsText()
+        )
+    }
 }

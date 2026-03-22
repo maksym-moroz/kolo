@@ -13,17 +13,16 @@ import kotlinx.coroutines.CoroutineScope
 @Inject
 class DefaultStoreFactory : StoreFactory {
     override fun <S : UiState, A : UiAction, E : UiEffect> create(
-        initialState: S,
         scope: CoroutineScope,
+        initialState: S,
         reducer: Reducer<S, A>,
         middlewares: List<Middleware<S, A, E>>,
-        effectBufferCapacity: Int,
-    ): Store<S, A, E> =
-        DefaultStore(
-            initialState = initialState,
-            scope = scope,
-            reducer = reducer,
-            middlewares = middlewares,
-            effectBufferCapacity = effectBufferCapacity,
-        )
+        effectBufferCapacity: Int
+    ): Store<S, A, E> = DefaultStore(
+        initialState = initialState,
+        scope = scope,
+        reducer = reducer,
+        middlewares = middlewares,
+        effectBufferCapacity = effectBufferCapacity
+    )
 }

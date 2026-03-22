@@ -22,6 +22,7 @@ Read these in order when starting work:
 High-value deep docs:
 
 - `docs/planning/foundation/agp9-migration.md`
+- `docs/planning/foundation/code-style.md`
 - `docs/planning/foundation/quality-tooling-map.md`
 - `docs/planning/foundation/udf-store-contract.md`
 - `docs/planning/foundation/version-baseline.md`
@@ -42,11 +43,13 @@ Current top-level structure:
 - `baselineprofile/`: Android Baseline Profile generator module
 - `build-logic/`: included Gradle build for convention plugins
 - `composeApp/`: KMP UI library, currently the Compose-facing UI surface
+- `debugmenu/`: shared KMP debug-menu feature module
 - `docs/planning/`: planning, backlog, architecture, and workstreams
 - `iosApp/`: iOS host app and SwiftUI host shell
 - `openspec/`: change proposals, task tracking, and archive/spec artifacts
 - `server/`: Ktor server module
 - `shared/`: shared KMP library for app graph and remaining common code
+- `shared/core/config/`: extracted runtime-config API and implementation modules
 - `shared/core/store/`: extracted store API and runtime modules
 
 Current architectural reality:
@@ -55,7 +58,10 @@ Current architectural reality:
 - `build-logic` is the source of truth for shared Gradle plugin wiring
 - `androidApp` is the real Android app boundary
 - `baselineprofile` generates Baseline Profiles for the Android app and is not a shipping app module
+- shared runtime config now lives in `shared:core:config:api` and `shared:core:config:impl`
+- the debug menu now lives in the shared `debugmenu` KMP module, with thin Android and iOS hosts at the app edge
 - `composeApp` is not the Android application module anymore
+- the runtime-config read contract remains in shared Kotlin, while debug-only mutation wiring is exposed through platform graphs at the app edge
 - the store contract has already been extracted into `shared:core:store:api` and `shared:core:store:impl`
 - `shared` is still broad outside the extracted store modules and has not yet been split into the rest of `shared/core/*` and `shared/feature/*`
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
@@ -71,6 +77,7 @@ If a task touches these areas, start here:
 - convention plugin build: `build-logic/convention/build.gradle.kts`
 - base KMP Android library convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidKotlinMultiplatformLibraryConventionPlugin.kt`
 - Android app convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidApplicationConventionPlugin.kt`
+- Android Compose library convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/android/KoloAndroidComposeLibraryConventionPlugin.kt`
 - Compose KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/compose/KoloComposeMultiplatformConventionPlugin.kt`
 - shared KMP convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/shared/KoloSharedMultiplatformConventionPlugin.kt`
 - server convention: `build-logic/convention/src/main/kotlin/com/focus/kolo/buildlogic/server/KoloServerJvmConventionPlugin.kt`
@@ -86,6 +93,23 @@ If a task touches these areas, start here:
 
 - build: `baselineprofile/build.gradle.kts`
 - generator: `baselineprofile/src/main/kotlin/com/focus/kolo/baselineprofile/BaselineProfileGenerator.kt`
+
+### Runtime config and debug menu
+
+- config API build: `shared/core/config/api/build.gradle.kts`
+- config API effective models and read contract: `shared/core/config/api/src/commonMain/kotlin/com/focus/kolo/config/`
+- config impl build: `shared/core/config/impl/build.gradle.kts`
+- config impl overrides: `shared/core/config/impl/src/commonMain/kotlin/com/focus/kolo/config/impl/override/`
+- config impl repo/defaults: `shared/core/config/impl/src/commonMain/kotlin/com/focus/kolo/config/impl/repo/`
+- config impl local and remote sources: `shared/core/config/impl/src/commonMain/kotlin/com/focus/kolo/config/impl/source/`
+- platform DataStore path/source wiring: `shared/core/config/impl/src/androidMain/kotlin/com/focus/kolo/config/impl/source/local/` and `shared/core/config/impl/src/iosMain/kotlin/com/focus/kolo/config/impl/source/local/`
+- config impl use cases: `shared/core/config/impl/src/commonMain/kotlin/com/focus/kolo/config/impl/usecase/`
+- shared debug-menu module build: `debugmenu/build.gradle.kts`
+- Android debug-menu host activity entry: `androidApp/src/debug/kotlin/com/focus/kolo/debugmenu/`
+- shared debug-menu feature sources: `debugmenu/src/commonMain/kotlin/com/focus/kolo/debugmenu/`
+- iOS debug-menu controller factory: `debugmenu/src/iosMain/kotlin/com/focus/kolo/debugmenu/`
+- debug-menu deep-link manifest wiring: `androidApp/src/debug/AndroidManifest.xml`
+- iOS debug-menu host wiring and URL handling: `iosApp/iosApp/`
 
 ### Shared UI library
 
@@ -107,8 +131,6 @@ If a task touches these areas, start here:
 - Metro graphs:
   - `shared/src/androidMain/kotlin/com/focus/kolo/AndroidAppGraph.kt`
   - `shared/src/iosMain/kotlin/com/focus/kolo/IosAppGraph.kt`
-  - `shared/src/jvmMain/kotlin/com/focus/kolo/JvmAppGraph.kt`
-- current example dependency: `shared/src/commonMain/kotlin/com/focus/kolo/Greeting.kt`
 
 ### iOS host
 
@@ -136,12 +158,14 @@ These are the current project defaults unless a ticket explicitly changes them.
 
 ### Build and structure
 
+- follow `docs/planning/foundation/code-style.md` for repository-specific style rules that go beyond formatter defaults
 - keep platform entry points thin
 - keep reusable logic in shared Kotlin
 - prefer boring module boundaries over clever indirection
 - keep shared Gradle setup in `build-logic` convention plugins rather than repeating plugin stacks in module build files
 - keep module build scripts focused on namespace, target-specific compiler settings, and direct dependencies
 - keep Baseline Profile generation isolated in `baselineprofile` instead of mixing generator code into `androidApp`
+- keep shared runtime-config contracts in `shared:core:config:api`, runtime wiring in `shared:core:config:impl`, and keep platform entry and hosting details out at the Android/iOS app edge
 - do not reintroduce the old KMP + Android app pairing in `composeApp`
 - never put several top-level classes, interfaces, or objects in one Kotlin file
 - prefer one top-level type per file, especially for actions, effects, state, reducers, and middleware
@@ -159,7 +183,15 @@ These are the current project defaults unless a ticket explicitly changes them.
 - keep ViewModel thin
 - persistent state belongs in shared feature/store layers, not platform entry points
 - one-off events should not be modeled as persistent state
+- repositories and data aggregators must not create their own lifetime `CoroutineScope`; scope ownership and any `stateIn`/sharing policy belong at the graph or feature-runtime edge
+- config repositories and override sources should expose plain `Flow` contracts unless a caller has a real need for hot shared state at its own runtime edge
+- if the intended architecture or requested pattern is unclear, stop and ask a concise clarifying question instead of guessing and implementing an inferred design
+- when an interface exposes a `StateFlow` or `SharedFlow`, implementations must override that property directly with the mutable flow they own instead of keeping separate mutable and read-only mirror fields
+- never introduce `private val mutableX` plus `override val x = mutableX.asStateFlow()` or `asSharedFlow()` patterns in implementation code
 - use `shared:core:store:api` rather than inventing feature-local store primitives
+- prefer the shared generic store contract over feature-specific store types unless the generic store is no longer sufficient for the slice
+- feature slices, including internal tooling like the Android debug menu, should follow the same `IntentMapper -> Store -> Middleware -> Reducer -> UiState/UiEffect` shape rather than bypassing the shared store contract
+- action effects belong behind middleware and should consume the store action stream there, not be launched directly from a ViewModel
 - depend on `shared:core:store:impl` only where runtime wiring is actually needed
 - structure packages so they can be extracted into future modules with minimal redesign
 
@@ -175,6 +207,14 @@ These are the current project defaults unless a ticket explicitly changes them.
 - Baseline Profiles are part of the Android release-performance baseline
 - keep the profile generator focused on startup and the most important user journeys
 - regenerate profiles after meaningful Android startup or navigation-path changes
+
+### Runtime config
+
+- production code should read runtime config from the shared repo contract, not from debug-only mutation surfaces
+- keep effective config read models in `shared:core:config:api` and keep override, mutation, and merge mechanics in `shared:core:config:impl`
+- within config impl, keep overrides under `impl/override`, source adapters under `impl/source`, repo assembly under `impl/repo`, and mutation entry points under `impl/usecase`
+- local runtime-config overrides belong in DataStore-backed settings storage, not the database
+- environment switching is restart-sensitive and should preserve other overrides
 
 ### Multi-agent work
 
@@ -284,8 +324,10 @@ Agents should know these before editing:
 
 - the store contract has already been extracted into `shared:core:store:api` and `shared:core:store:impl`
 - preserve the API vs impl split when extending store code
+- the runtime-config contract is now split between `shared:core:config:api` and `shared:core:config:impl`; keep pure models and read contracts out of `shared`
 - `shared` is still broad outside the extracted store modules and will likely be split further later
 - `build-logic` is now the source of truth for shared plugin wiring; prefer changing conventions there before copying build setup into modules
+- the debug menu is isolated in the shared `debugmenu` module, with Android debug-entry wiring in `androidApp` and SwiftUI host glue in `iosApp`
 - shared SDK and toolchain values, including `java-toolchain`, now live in `gradle/libs.versions.toml`; keep toolchain-related build settings aligned with the catalog
 - the current convention plugins are intentionally thin; the shared base KMP Android library convention owns the common plugin stack, toolchain, and default Android SDK values, while modules still keep local Android-KMP target settings such as namespace and source-set options
 - the root `build.gradle.kts` plugin block should stay small, but the external `apply false` aliases still need to stay there; removing them breaks convention-plugin loading for AGP-backed plugins

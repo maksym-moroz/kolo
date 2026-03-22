@@ -11,9 +11,12 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 public class KoloServerJvmConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("org.jetbrains.kotlin.jvm")
-            pluginManager.apply("io.ktor.plugin")
-            pluginManager.apply("application")
+            pluginManager
+                .apply("org.jetbrains.kotlin.jvm")
+            pluginManager
+                .apply("io.ktor.plugin")
+            pluginManager
+                .apply("application")
 
             extensions.configure<KotlinJvmProjectExtension> {
                 jvmToolchain(versionInt("java-toolchain"))
@@ -21,7 +24,8 @@ public class KoloServerJvmConventionPlugin : Plugin<Project> {
 
             val qualityCheck = registerModuleQualityCheckTask()
             configureDetekt(qualityCheck)
-            pluginManager.apply("com.autonomousapps.dependency-analysis")
+            pluginManager
+                .apply("com.autonomousapps.dependency-analysis")
         }
     }
 }

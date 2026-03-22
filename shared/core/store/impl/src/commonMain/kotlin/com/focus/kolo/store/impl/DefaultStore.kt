@@ -10,55 +10,54 @@ import com.focus.kolo.store.UiAction
 import com.focus.kolo.store.UiEffect
 import com.focus.kolo.store.UiState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class DefaultStore<S : UiState, A : UiAction, E : UiEffect>(
     initialState: S,
-    scope: CoroutineScope,
+    override val scope: CoroutineScope,
     private val reducer: Reducer<S, A>,
     middlewares: List<Middleware<S, A, E>> = emptyList(),
-    effectBufferCapacity: Int = StoreFactory.DEFAULT_EFFECT_BUFFER_CAPACITY,
+    effectBufferCapacity: Int = StoreFactory.DEFAULT_EFFECT_BUFFER_CAPACITY
 ) : Store<S, A, E>,
     StoreScope<S, A, E> {
-    private val actions = Channel<A>(capacity = Channel.BUFFERED)
-    private val mutableState = MutableStateFlow(initialState)
-    private val mutableEffects = MutableSharedFlow<E>(extraBufferCapacity = effectBufferCapacity)
+    override val actions = MutableSharedFlow<A>(extraBufferCapacity = ACTION_BUFFER_CAPACITY)
+    override val state = MutableStateFlow(initialState)
+    override val effects = MutableSharedFlow<E>(extraBufferCapacity = effectBufferCapacity)
 
-    override val state = mutableState.asStateFlow()
-    override val effects = mutableEffects.asSharedFlow()
-
-    private val pipeline: Next<A> =
-        middlewares
-            .asReversed()
-            .fold(
-                Next<A> { action ->
-                    mutableState.value = reducer.reduce(mutableState.value, action)
-                },
-            ) { next, middleware ->
-                Next { action ->
-                    middleware.intercept(action, this, next)
-                }
-            }
+    private val reducerDispatch =
+        Next<A> { action ->
+            state.value =
+                reducer
+                    .reduce(state.value, action)
+        }
+    private var pipeline: Next<A> = reducerDispatch
 
     init {
-        scope.launch {
-            actions.consumeEach { action ->
-                pipeline.dispatch(action)
+        actions
+            .onEach { action ->
+                pipeline
+                    .dispatch(action)
+            }.launchIn(scope)
+
+        pipeline =
+            middlewares.foldRight(reducerDispatch) { middleware, next ->
+                middleware
+                    .interfere(this, next)
             }
-        }
     }
 
     override suspend fun dispatch(action: A) {
-        actions.send(action)
+        actions.emit(action)
     }
 
     override suspend fun emit(effect: E) {
-        mutableEffects.emit(effect)
+        effects.emit(effect)
+    }
+
+    private companion object {
+        const val ACTION_BUFFER_CAPACITY = 64
     }
 }

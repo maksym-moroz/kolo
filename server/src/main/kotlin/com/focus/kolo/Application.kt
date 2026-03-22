@@ -15,7 +15,8 @@ fun main() {
 fun Application.module() {
     routing {
         get("/") {
-            call.respondText("Ktor: ${AppServices.greetingText()}")
+            call
+                .respondText("Kolo server is running.")
         }
     }
 }

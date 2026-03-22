@@ -3,12 +3,18 @@ plugins {
 }
 
 group = "com.focus.kolo"
-version = providers.gradleProperty("kolo.version.name").get()
+version =
+    providers
+        .gradleProperty("kolo.version.name")
+        .get()
 
 application {
-    mainClass.set("com.focus.kolo.ApplicationKt")
+    mainClass
+        .set("com.focus.kolo.ApplicationKt")
 
-    val isDevelopment: Boolean = project.ext.has("development")
+    val isDevelopment: Boolean =
+        project.ext
+            .has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 

@@ -35,6 +35,7 @@ spotless = "8.4.0"
 detekt = "2.0.0-alpha.2"
 dependencyAnalysis = "3.6.1"
 binaryCompatibilityValidator = "0.18.1"
+processPhoenix = "2.1.2"
 work = "2.11.1"
 
 [libraries]
@@ -87,10 +88,12 @@ ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "kt
 ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
+process-phoenix = { module = "com.jakewharton:process-phoenix", version.ref = "processPhoenix" }
 spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 
 [plugins]
 # Convention plugins
+kolo-android-compose-library = { id = "kolo.android.compose.library" }
 kolo-android-kotlin-multiplatform-library = { id = "kolo.android.kotlin.multiplatform.library" }
 kolo-android-application = { id = "kolo.android.application" }
 kolo-compose-multiplatform = { id = "kolo.compose.multiplatform" }

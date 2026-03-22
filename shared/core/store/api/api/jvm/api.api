@@ -3,7 +3,7 @@ public abstract interface class com/focus/kolo/store/IntentMapper {
 }
 
 public abstract interface class com/focus/kolo/store/Middleware {
-	public abstract fun intercept (Lcom/focus/kolo/store/UiAction;Lcom/focus/kolo/store/StoreScope;Lcom/focus/kolo/store/Next;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun interfere (Lcom/focus/kolo/store/StoreScope;Lcom/focus/kolo/store/Next;)Lcom/focus/kolo/store/Next;
 }
 
 public abstract interface class com/focus/kolo/store/Next {
@@ -16,15 +16,18 @@ public abstract interface class com/focus/kolo/store/Reducer {
 
 public abstract interface class com/focus/kolo/store/Store {
 	public abstract fun dispatch (Lcom/focus/kolo/store/UiAction;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun emit (Lcom/focus/kolo/store/UiEffect;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getActions ()Lkotlinx/coroutines/flow/SharedFlow;
 	public abstract fun getEffects ()Lkotlinx/coroutines/flow/SharedFlow;
+	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public abstract interface class com/focus/kolo/store/StoreFactory {
 	public static final field Companion Lcom/focus/kolo/store/StoreFactory$Companion;
 	public static final field DEFAULT_EFFECT_BUFFER_CAPACITY I
-	public abstract fun create (Lcom/focus/kolo/store/UiState;Lkotlinx/coroutines/CoroutineScope;Lcom/focus/kolo/store/Reducer;Ljava/util/List;I)Lcom/focus/kolo/store/Store;
-	public static synthetic fun create$default (Lcom/focus/kolo/store/StoreFactory;Lcom/focus/kolo/store/UiState;Lkotlinx/coroutines/CoroutineScope;Lcom/focus/kolo/store/Reducer;Ljava/util/List;IILjava/lang/Object;)Lcom/focus/kolo/store/Store;
+	public abstract fun create (Lkotlinx/coroutines/CoroutineScope;Lcom/focus/kolo/store/UiState;Lcom/focus/kolo/store/Reducer;Ljava/util/List;I)Lcom/focus/kolo/store/Store;
+	public static synthetic fun create$default (Lcom/focus/kolo/store/StoreFactory;Lkotlinx/coroutines/CoroutineScope;Lcom/focus/kolo/store/UiState;Lcom/focus/kolo/store/Reducer;Ljava/util/List;IILjava/lang/Object;)Lcom/focus/kolo/store/Store;
 }
 
 public final class com/focus/kolo/store/StoreFactory$Companion {
@@ -32,14 +35,11 @@ public final class com/focus/kolo/store/StoreFactory$Companion {
 }
 
 public final class com/focus/kolo/store/StoreFactory$DefaultImpls {
-	public static synthetic fun create$default (Lcom/focus/kolo/store/StoreFactory;Lcom/focus/kolo/store/UiState;Lkotlinx/coroutines/CoroutineScope;Lcom/focus/kolo/store/Reducer;Ljava/util/List;IILjava/lang/Object;)Lcom/focus/kolo/store/Store;
+	public static synthetic fun create$default (Lcom/focus/kolo/store/StoreFactory;Lkotlinx/coroutines/CoroutineScope;Lcom/focus/kolo/store/UiState;Lcom/focus/kolo/store/Reducer;Ljava/util/List;IILjava/lang/Object;)Lcom/focus/kolo/store/Store;
 }
 
-public abstract interface class com/focus/kolo/store/StoreScope {
-	public abstract fun dispatch (Lcom/focus/kolo/store/UiAction;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun emit (Lcom/focus/kolo/store/UiEffect;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+public abstract interface class com/focus/kolo/store/StoreScope : com/focus/kolo/store/Store {
 	public fun getCurrentState ()Lcom/focus/kolo/store/UiState;
-	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public final class com/focus/kolo/store/StoreScope$DefaultImpls {
