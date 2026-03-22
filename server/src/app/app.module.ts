@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { DatabaseService } from '../database/database.service';
+import { HealthController } from '../health/health.controller';
+import { UsersController } from '../users/users.controller';
+import { UsersService } from '../users/users.service';
 import { AppController } from './app.controller';
-import { DatabaseService } from './database.service';
-import { HealthController } from './health.controller';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
 
 @Module({
   imports: [

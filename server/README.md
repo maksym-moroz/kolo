@@ -30,7 +30,7 @@ POSTGRES_PASSWORD=pass
 POSTGRES_DB=db
 ```
 
-The NestJS app reads these variables in [src/app.module.ts](/Users/sergijnikitenko/AndroidStudioProjects/kolo/server/src/app.module.ts) and [src/database.service.ts](/Users/sergijnikitenko/AndroidStudioProjects/kolo/server/src/database.service.ts).
+The NestJS app reads these variables in [src/app/app.module.ts](/Users/sergijnikitenko/AndroidStudioProjects/kolo/server/src/app/app.module.ts) and [src/database/database.service.ts](/Users/sergijnikitenko/AndroidStudioProjects/kolo/server/src/database/database.service.ts).
 
 ## First Run
 
@@ -51,7 +51,7 @@ If everything is up, try:
 
 ## How The App Connects To PostgreSQL
 
-The PostgreSQL client is created in [src/database.service.ts](/Users/sergijnikitenko/AndroidStudioProjects/kolo/server/src/database.service.ts).
+The PostgreSQL client is created in [src/database/database.service.ts](/Users/sergijnikitenko/AndroidStudioProjects/kolo/server/src/database/database.service.ts).
 
 Connection flow:
 

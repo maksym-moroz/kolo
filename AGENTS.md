@@ -118,7 +118,7 @@ If a task touches these areas, start here:
 
 - package manifest: `server/package.json`
 - entry point: `server/src/main.ts`
-- app module: `server/src/app.module.ts`
+- app module: `server/src/app/app.module.ts`
 - Docker services: `server/docker-compose.yml`
 - Flyway migrations: `server/db/migration/`
 

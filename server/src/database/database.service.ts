@@ -8,11 +8,11 @@ export class DatabaseService implements OnModuleDestroy {
 
   constructor(@Inject(ConfigService) private readonly configService: ConfigService) {
     this.pool = new Pool({
-      host: this.configService.get<string>('POSTGRES_HOST') ?? 'localhost',
-      port: Number(this.configService.get<string>('POSTGRES_PORT') ?? '5432'),
-      user: this.configService.get<string>('POSTGRES_USER') ?? 'kolodbuser',
-      password: this.configService.get<string>('POSTGRES_PASSWORD') ?? 'kolodbpass',
-      database: this.configService.get<string>('POSTGRES_DB') ?? 'kolodb',
+      host: this.requireEnv('POSTGRES_HOST'),
+      port: Number(this.requireEnv('POSTGRES_PORT')),
+      user: this.requireEnv('POSTGRES_USER'),
+      password: this.requireEnv('POSTGRES_PASSWORD'),
+      database: this.requireEnv('POSTGRES_DB'),
     });
   }
 
@@ -32,5 +32,15 @@ export class DatabaseService implements OnModuleDestroy {
 
   async onModuleDestroy() {
     await this.pool.end();
+  }
+
+  private requireEnv(name: string) {
+    const value = this.configService.get<string>(name);
+
+    if (!value) {
+      throw new Error(`Missing required environment variable: ${name}`);
+    }
+
+    return value;
   }
 }
