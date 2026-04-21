@@ -7,6 +7,7 @@ Current targets:
 - shared debug menu feature in `debugmenu`, hosted only from debug-only Android and internal iOS entry points
 - iOS reference app host in `apps/reference/iosApp`
 - shared Kotlin and app graph code in `shared`
+- shared app-shell identity and capability contract in `shared:core:appshell`
 - shared runtime-config contract and implementation in `shared:core:config:api` and `shared:core:config:impl`
 - shared store contract and runtime in `shared:core:store:api` and `shared:core:store:impl`
 - shared Compose-facing UI library in `composeApp`
@@ -115,12 +116,13 @@ adb shell am start -W -a android.intent.action.VIEW -d 'kolo://debug/menu' com.f
 - `apps/reference/iosApp/`: iOS reference app and SwiftUI shell
 - `baselineprofile/`: Android Baseline Profile generator module targeting `androidApp`
 - `build-logic/`: included Gradle build for shared convention plugins
-- `composeApp/`: Compose Multiplatform UI library consumed by the Android app
+- `composeApp/`: Compose Multiplatform UI library consumed by the Android and iOS hosts
 - `debugmenu/`: shared debug-menu feature module consumed by Android and iOS hosts
 - `docs/planning/`: backlog, architecture, workstreams, and foundation docs
 - `openspec/`: change proposals, tasks, and archive artifacts
 - `server/`: Ktor server module
-- `shared/`: shared Kotlin, Metro app graph, and remaining common code
+- `shared/`: shared Kotlin, Metro app graph, and remaining runtime-composition code
+- `shared/core/appshell/`: app-shell identity and capability contract
 - `shared/core/config/api/`: runtime-config models and read contract
 - `shared/core/config/impl/`: runtime-config implementation, persistence, and use cases
 - `shared/core/store/api/`: public store contract
@@ -134,10 +136,12 @@ adb shell am start -W -a android.intent.action.VIEW -d 'kolo://debug/menu' com.f
 - the durable implementation map for CI and linting lives in `docs/planning/foundation/quality-tooling-map.md`
 - `apps/reference/androidApp` is the current Android host location for the `:androidApp` module
 - `baselineprofile` owns Baseline Profile generation for Android startup and critical user journeys
+- app-shell identity and capability contracts now live under `shared/core/appshell/`
+- the current shared app root lives in `composeApp/src/commonMain/kotlin/com/focus/kolo/KoloApp.kt`
 - shared runtime config now lives under `shared/core/config/api/` and `shared/core/config/impl/`
-- the Android-only debug menu lives under `apps/reference/androidApp/debugmenu/`, is entered through a debug-only deep link, and stays on `debugImplementation`
+- the shared `debugmenu` module is wired at the app edge: Android attaches it with `debugImplementation`, and the iOS host presents it through an internal URI path
 - `composeApp` is not the Android application module
-- `shared` is still broad outside the extracted store modules and will be split further later
+- `shared` is now mainly the runtime-composition and app-graph layer outside the extracted core modules and will likely still be split further later
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
 - shared SDK and toolchain versions live in `gradle/libs.versions.toml`
 

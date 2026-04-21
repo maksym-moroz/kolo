@@ -26,7 +26,8 @@ Current implemented structure:
 - `composeApp` is a KMP UI library, not the Android app module
 - `debugmenu` is the shared KMP debug-menu feature module
 - `apps/reference/iosApp` is the current iOS host shell
-- `shared` is the remaining broad KMP library
+- `shared` is now primarily the runtime-composition and app-graph KMP layer
+- `shared:core:appshell` now holds the app-shell identity and capability contract
 - `shared:core:config:api` and `shared:core:config:impl` now hold the runtime-config contract and implementation
 - the debug menu now has platform-hosted internal tooling surfaces on Android and iOS and remains isolated from release-facing product UI
 - `shared:core:store:api` and `shared:core:store:impl` are already extracted
@@ -86,6 +87,7 @@ Target module direction:
 - `apps/reference/iosApp`: current iOS reference app host
 - `apps/<app-id>`: future app shell location once the platform baseline is reused beyond the reference app
 - `shared:core:model`: IDs, primitives, and serializable contracts
+- `shared:core:appshell`: app identity, capability list, and shell definition contract
 - `shared:core:config:api`: runtime-config models and read-side contracts
 - `shared:core:config:impl`: runtime-config merge logic, persistence, and mutation use cases
 - `shared:core:common`: clocks, dispatchers, logging, result types, utilities

@@ -58,8 +58,11 @@ Current root participation lists:
 - `qualityModules`
   - `:androidApp`
   - `:composeApp`
+  - `:debugmenu`
   - `:server`
   - `:shared`
+  - `:shared:core:config:api`
+  - `:shared:core:config:impl`
   - `:shared:core:store:api`
   - `:shared:core:store:impl`
 - `dependencyHealthModules`

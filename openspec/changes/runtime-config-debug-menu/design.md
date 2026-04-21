@@ -8,7 +8,7 @@ Constraints:
 
 - Naming and layering should align with the repo's existing vocabulary: `Repo`, `UseCase`, and `ViewModel`, while keeping internal tooling responsibilities explicit instead of forcing a fake feature state machine.
 - The runtime-config domain should live in shared Kotlin.
-- The debug menu UI should remain Android-only for now.
+- The debug menu should stay platform-hosted internal tooling rather than product UI, with Android and iOS hosts free to present the shared surface differently at the app edge.
 - The debug menu should be reachable through a debug-only internal URI entry path for the first iteration.
 - Remote config support should exist as an architectural boundary now, but its initial implementation should return no overrides.
 - Local overrides must persist on device and be able to override every field in scope for this proposal.
@@ -30,7 +30,7 @@ Constraints:
 - Implement real remote config fetching or backend integration.
 - Support server-driven UI, experimentation tooling, or dynamic key/value config maps.
 - Add numeric/behavioral limits or broader debug tooling controls in this proposal.
-- Build a multiplatform debug menu UI.
+- Treat the debug menu as a normal product route or release-facing feature.
 - Guarantee that every future config concern belongs in this system.
 - Make URL/config fields editable in the first debug-menu UI.
 
@@ -113,7 +113,7 @@ Alternatives considered:
 
 ### 6. Keep the debug menu as an observer-plus-command tooling surface
 
-The Android debug menu should expose the effective runtime config truthfully, let the UI issue explicit override commands, and keep Android-only behavior such as Process Phoenix restart at the Android boundary.
+The shared debug menu should expose the effective runtime config truthfully, let the UI issue explicit override commands, and keep platform-specific behavior such as Android Process Phoenix restart at the platform boundary.
 
 Why:
 
@@ -124,7 +124,7 @@ Why:
 Alternatives considered:
 
 - Build a thin utility activity/fragment with direct repo calls: rejected because it bypasses the repo-plus-use-case boundary and makes Android own too much assembly logic.
-- Make the UI multiplatform now: rejected because the internal debug surface does not justify that complexity yet.
+- Build unrelated product-specific debug surfaces per platform: rejected because the internal tooling surface should stay shared even though platform hosts present it differently.
 
 ### 7. Use a debug-only internal URI entry path as the first access path
 
@@ -173,7 +173,7 @@ Alternatives considered:
 ## Risks / Trade-offs
 
 - [Config surface grows too quickly] → Keep proposal 1 limited to flags, version policy, URLs/constants, and environment selection; defer numeric limits and additional tooling to a second proposal.
-- [Debug menu leaks into release behavior] → Keep the debug menu Android-only and debug-oriented, with product code reading only `AppConfigRepo`.
+- [Debug menu leaks into release behavior] → Keep the debug menu internal and debug-oriented, with product code reading only `AppConfigRepo` and platform-specific entry/restart behavior owned at the app edge.
 - [Environment switching causes inconsistent state] → Persist the override first, then restart via Process Phoenix instead of hot-swapping process-wide dependencies.
 - [Remote-ready architecture adds overhead before it is needed] → Use an empty remote override implementation initially so the boundary exists without adding backend complexity.
 - [Overrides become hard to reason about] → Keep precedence explicit: defaults, then remote override, then local override.

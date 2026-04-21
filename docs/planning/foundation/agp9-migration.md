@@ -140,4 +140,4 @@ The current implemented cut keeps the structure intentionally small:
 Intentional follow-up:
 
 - split `shared` into narrower `shared/core/*` and `shared/feature/*` modules later
-- decide whether `composeApp` stays Android-only in practice or grows into a broader shared UI module
+- keep `composeApp` as the shared Compose UI module now that it already builds Android and iOS surfaces, and continue moving app-specific host concerns out to `apps/reference/*`

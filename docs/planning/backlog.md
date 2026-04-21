@@ -166,7 +166,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `apps/reference/androidApp/debugmenu/**`
+- Write scope: `debugmenu/**`
 - Dependencies: none
 - Goal: stop the debug menu from rendering bundled fallback values as truth and only restart the app when the environment actually changes
 - Done when:
@@ -180,7 +180,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `apps/reference/androidApp/debugmenu/src/main/kotlin/com/focus/kolo/debugmenu/presentation/**`
+- Write scope: `debugmenu/src/commonMain/kotlin/com/focus/kolo/debugmenu/**`
 - Dependencies: DBG-001
 - Goal: remove ceremonial per-action effect fan-out and make one explicit command path own debug-menu mutations
 - Done when:
@@ -218,7 +218,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `apps/reference/androidApp/debugmenu/**`, `shared/core/config/**`
+- Write scope: `debugmenu/**`, `apps/reference/androidApp/src/debug/**`, `shared/core/config/**`
 - Dependencies: DBG-001, CFG-002
 - Goal: treat the debug menu as internal tooling rather than product routing and remove self-referential config noise
 - Done when:

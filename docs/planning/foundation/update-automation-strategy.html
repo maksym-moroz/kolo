@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo Update Automation Strategy</title>
+  <style>
+    :root {
+      --bg: #f4efe8;
+      --panel: rgba(255, 252, 246, 0.92);
+      --ink: #17212b;
+      --muted: #5f6974;
+      --line: rgba(23, 33, 43, 0.12);
+      --accent: #136e63;
+      --accent-2: #9a5f2d;
+      --shadow: 0 18px 48px rgba(21, 31, 41, 0.08);
+      --max: 1100px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 24px 56px;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f8f3ec 0%, #eee7de 100%);
+    }
+    .shell { max-width: var(--max); margin: 0 auto; }
+    .hero, .panel, .card, .table {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .hero, .panel, .table { border-radius: 28px; }
+    .hero { padding: 34px; }
+    .panel, .table { padding: 26px; margin-top: 22px; }
+    .eyebrow, .label, th {
+      color: var(--accent);
+      font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      margin-top: 16px;
+      max-width: 11em;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+    h2 {
+      font-size: clamp(28px, 3vw, 40px);
+      letter-spacing: -0.03em;
+    }
+    .lede, .copy, li, td {
+      color: var(--muted);
+      font: 500 15px/1.65 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .lede { margin-top: 16px; max-width: 790px; font-size: 19px; }
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+    .note {
+      max-width: 360px;
+      text-align: right;
+      color: var(--muted);
+      font: 500 13px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .grid { display: grid; gap: 16px; }
+    .two-col { grid-template-columns: 1fr 1fr; }
+    .three-col { grid-template-columns: repeat(3, 1fr); }
+    .card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+    .card h3 {
+      margin-top: 10px;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+    }
+    .card.good { border-left: 6px solid var(--accent); }
+    .card.warn { border-left: 6px solid var(--accent-2); }
+    ul { margin: 12px 0 0; padding-left: 20px; }
+    li + li { margin-top: 8px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 14px 12px;
+      border-top: 1px solid var(--line);
+    }
+    th:first-child, td:first-child { padding-left: 0; }
+    th:last-child, td:last-child { padding-right: 0; }
+    .decision {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(19, 110, 99, 0.1);
+      color: var(--accent);
+      font: 700 13px/1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    code {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.94em;
+    }
+    @media (max-width: 960px) {
+      .two-col, .three-col { grid-template-columns: 1fr; }
+      .head { flex-direction: column; align-items: start; }
+      .note { text-align: left; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · Update Automation Strategy</div>
+      <h1>Automate version drift, but do it as part of a broader release integrity system.</h1>
+      <p class="lede">
+        The best setup for Kolo is not “just turn on a dependency bot.” It is a stack:
+        one PR engine for updates, GitHub-native review and alerting, Gradle-level verification,
+        and a staged rollout so the repo can scale without drowning in noisy upgrade work.
+      </p>
+      <div class="decision">Decision: use Renovate as the primary updater for Kolo</div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="label">Current Repo Readiness</div>
+          <h2>What Kolo already has vs what is still missing</h2>
+        </div>
+        <div class="note">This is based on the current repo state, not generic advice.</div>
+      </div>
+      <div class="grid two-col">
+        <div class="card good">
+          <div class="label">Already in place</div>
+          <h3>Strong baseline for automation</h3>
+          <ul>
+            <li>Central version catalog in <code>gradle/libs.versions.toml</code>.</li>
+            <li>Shared Gradle wiring in <code>build-logic</code>, which gives one stable update surface.</li>
+            <li>Aggregate CI entry points: <code>qualityCheck</code>, <code>dependencyHealth</code>, and health builds.</li>
+            <li>GitHub Actions already split quality, dependency analysis, and health concerns into separate workflows.</li>
+          </ul>
+        </div>
+        <div class="card warn">
+          <div class="label">Missing today</div>
+          <h3>Automation and integrity gaps</h3>
+          <ul>
+            <li>No update bot config is checked in yet.</li>
+            <li>No Gradle dependency lockfiles are checked in.</li>
+            <li>No <code>gradle/verification-metadata.xml</code> exists for dependency verification.</li>
+            <li>No explicit dependency-review gate, dependency-submission workflow, or SBOM/provenance flow exists yet.</li>
+            <li>The Gradle Wrapper uses <code>validateDistributionUrl=true</code>, but does not yet pin <code>distributionSha256Sum</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="table">
+      <div class="head">
+        <div>
+          <div class="label">Tool Decision</div>
+          <h2>Which updater should own the repo</h2>
+        </div>
+        <div class="note">One PR engine is cleaner than overlapping bots that raise duplicate work.</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>Where it fits</th>
+            <th>Why it is or is not the best primary choice</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Renovate</strong></td>
+            <td>KMP / Android / server repos with Gradle, version catalogs, GitHub Actions, wrapper upgrades, and custom version files.</td>
+            <td>Best fit for Kolo because it can cover Gradle, the wrapper, GitHub Actions, and custom version strings in one system, while giving strong grouping, scheduling, package rules, dashboards, and custom managers.</td>
+          </tr>
+          <tr>
+            <td><strong>Dependabot</strong></td>
+            <td>Teams that want the simplest possible GitHub-native setup and can live with less policy control.</td>
+            <td>Good default for simpler repos. For Kolo it is weaker as the single source of update automation because the repo spans Gradle catalogs, wrapper, build logic, and broader workflow hygiene. Keep GitHub security features even if Renovate owns update PRs.</td>
+          </tr>
+          <tr>
+            <td><strong>Gradle-only discovery tools</strong></td>
+            <td>Manual visibility, local audits, or CI reporting.</td>
+            <td>Useful as supplements, not as the main operating model. They tell you updates exist, but they do not provide the full PR workflow, cross-ecosystem coverage, scheduling, or policy rails needed for a scaling product repo.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="label">Recommended Stack</div>
+          <h2>What “good” looks like for a fast-scaling product repo</h2>
+        </div>
+        <div class="note">This is broader than dependencies alone because supply-chain drift is a platform problem.</div>
+      </div>
+      <div class="grid three-col">
+        <div class="card good">
+          <div class="label">1. Update PR engine</div>
+          <h3>Renovate</h3>
+          <p class="copy">Use Renovate as the single bot that raises version PRs for Gradle dependencies, plugins, the Gradle Wrapper, and GitHub Actions. Do not run Dependabot version PRs in parallel unless there is a very specific split of responsibility.</p>
+        </div>
+        <div class="card good">
+          <div class="label">2. Security graph</div>
+          <h3>GitHub-native alerts and review</h3>
+          <p class="copy">Keep GitHub dependency graph, alerts, and dependency review in place regardless of which bot raises update PRs. These are repository safety rails, not bot competitors.</p>
+        </div>
+        <div class="card good">
+          <div class="label">3. Build integrity</div>
+          <h3>Gradle verification</h3>
+          <p class="copy">Enable dependency verification and add wrapper checksum pinning. This is the line between “we upgraded” and “we know exactly which artifacts we trust.”</p>
+        </div>
+        <div class="card good">
+          <div class="label">4. Reproducibility</div>
+          <h3>Selective locking</h3>
+          <p class="copy">Introduce Gradle dependency locking where it protects release-critical or unstable resolution paths. For a KMP repo, start selectively rather than locking every configuration on day one.</p>
+        </div>
+        <div class="card good">
+          <div class="label">5. Workflow hardening</div>
+          <h3>Immutable CI inputs</h3>
+          <p class="copy">Pin GitHub Actions more strictly over time, prefer immutable references for critical workflows, and keep wrapper validation on every build path.</p>
+        </div>
+        <div class="card good">
+          <div class="label">6. Release integrity</div>
+          <h3>SBOM, attestations, immutable releases</h3>
+          <p class="copy">As Kolo starts shipping real products, add dependency submission or SBOM generation, artifact attestations, and immutable releases so releases are traceable and auditable.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="label">Operating Model</div>
+          <h2>Best practices that matter more than the specific bot</h2>
+        </div>
+        <div class="note">The failure mode is usually process shape, not tool choice.</div>
+      </div>
+      <div class="grid two-col">
+        <div class="card">
+          <div class="label">PR policy</div>
+          <h3>Separate safe churn from planned churn</h3>
+          <ul>
+            <li>Auto-merge only low-risk patch and small minor updates after full CI.</li>
+            <li>Group related updates: Kotlin + Compose + KSP, AndroidX families, Ktor family, GitHub Actions.</li>
+            <li>Keep majors manual and explicitly owned.</li>
+            <li>Use schedules so upgrades land when the team is available to react.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Ownership</div>
+          <h3>Every update lane needs a human owner</h3>
+          <ul>
+            <li>Assign CODEOWNERS or labels for Android, build logic, server, and workflow updates.</li>
+            <li>Use dashboards or issue views to track blocked majors.</li>
+            <li>Do not let “someday” majors silently pile up for quarters.</li>
+            <li>Treat upgrade debt like backlog, not background noise.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Testing</div>
+          <h3>Gate on the same commands people trust locally</h3>
+          <ul>
+            <li>Reuse <code>./gradlew qualityCheck</code> and the existing health build path as the merge gate for update PRs.</li>
+            <li>Keep update PRs small enough that failures are attributable.</li>
+            <li>Add a fast path for safe auto-merge lanes and a fuller path for risky groups.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Release safety</div>
+          <h3>Provenance and rollback are part of scaling</h3>
+          <ul>
+            <li>Know which artifact was built from which commit and dependency graph.</li>
+            <li>Prefer immutable releases once published artifacts matter.</li>
+            <li>Keep rollback cheap by avoiding giant batched upgrade trains.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="label">Kolo Rollout</div>
+          <h2>The practical order for this repo</h2>
+        </div>
+        <div class="note">This sequence aims for real leverage early without loading the repo with ceremony.</div>
+      </div>
+      <div class="grid three-col">
+        <div class="card good">
+          <div class="label">Phase 1</div>
+          <h3>Now</h3>
+          <ul>
+            <li>Add Renovate config.</li>
+            <li>Group update lanes by risk.</li>
+            <li>Add dependency review on pull requests.</li>
+            <li>Keep GitHub dependency graph and alerts enabled.</li>
+          </ul>
+        </div>
+        <div class="card good">
+          <div class="label">Phase 2</div>
+          <h3>Next</h3>
+          <ul>
+            <li>Add Gradle dependency verification metadata.</li>
+            <li>Pin the Gradle distribution checksum in the wrapper properties.</li>
+            <li>Add explicit dependency submission if GitHub graph visibility is incomplete or too implicit.</li>
+          </ul>
+        </div>
+        <div class="card warn">
+          <div class="label">Phase 3</div>
+          <h3>Later</h3>
+          <ul>
+            <li>Add selective dependency locking for release-critical paths.</li>
+            <li>Harden GitHub Actions pinning policy.</li>
+            <li>Add SBOM, attestations, and immutable release posture when product shipping risk justifies it.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="label">Non-Goals</div>
+          <h2>What not to do</h2>
+        </div>
+        <div class="note">Most noisy automation programs fail here.</div>
+      </div>
+      <div class="grid two-col">
+        <div class="card warn">
+          <div class="label">Avoid</div>
+          <h3>Bot overlap and giant churn</h3>
+          <ul>
+            <li>Do not let Renovate and Dependabot both raise version PRs for the same surfaces.</li>
+            <li>Do not auto-merge major updates.</li>
+            <li>Do not batch unrelated risky upgrades into one “maintenance” PR.</li>
+            <li>Do not turn on every hardening feature in one step before the repo learns the workflow.</li>
+          </ul>
+        </div>
+        <div class="card warn">
+          <div class="label">Remember</div>
+          <h3>Scaling speed comes from boring discipline</h3>
+          <ul>
+            <li>Central version control is necessary, but not sufficient.</li>
+            <li>Reproducibility and provenance matter once more than one product depends on the baseline.</li>
+            <li>The upgrade program must stay legible to humans, not just “fully automated.”</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

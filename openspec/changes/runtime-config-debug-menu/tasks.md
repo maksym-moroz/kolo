@@ -23,8 +23,8 @@
 
 ## 4. Debug menu surface
 
-- [x] 4.1 Add the Android-only debug menu feature location and debug-only internal URI entry wiring without exposing it as a normal production surface
-- [x] 4.2 Implement a thin Android debug-menu presentation layer that observes effective config and dispatches override commands
+- [x] 4.1 Add the shared debug-menu feature location plus debug-only internal URI entry wiring at the app edge without exposing it as a normal production surface
+- [x] 4.2 Implement a thin platform-hosted debug-menu presentation layer that observes effective config and dispatches override commands
 - [x] 4.3 Render effective config in the debug menu with sections for environment, feature flags, version policy, and URLs/constants
 - [x] 4.4 Support editing and persisting in-scope environment, feature-flag, and version-policy override fields from the debug menu while keeping URL/config fields visible and read-only
 - [x] 4.5 Support clearing individual overrides and resetting all overrides from the debug menu

@@ -26,7 +26,7 @@ The app needs one coherent place for runtime configuration before feature work s
 
 - Affected code:
   - `shared/**` for runtime-config models, repo contracts, sources, and use cases
-  - Android debug-only UI surface in `androidApp` or a dedicated Android-only debug module
+  - platform-hosted debug-menu surfaces in the shared `debugmenu` module plus thin Android and iOS host wiring at the app edge
   - Android app wiring for Process Phoenix restart on environment switch
 - Affected systems:
   - local override persistence

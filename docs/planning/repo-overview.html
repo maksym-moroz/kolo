@@ -164,7 +164,11 @@
           </div>
           <div class="module-row">
             <div class="module-name">shared</div>
-            <div class="module-desc">The remaining broad shared KMP library. It still contains app graph wiring and common runtime pieces outside the already extracted core modules.</div>
+            <div class="module-desc">The runtime-composition and app-graph KMP layer. It still contains common runtime pieces outside the already extracted core modules, but it is no longer the place for pure shell contracts.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">shared:core:appshell</div>
+            <div class="module-desc">The extracted app-shell identity and capability contract used by the reference shell and shared UI without pulling in the full runtime-composition module.</div>
           </div>
           <div class="module-row">
             <div class="module-name">shared:core:config:api / impl</div>

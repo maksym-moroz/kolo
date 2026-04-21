@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo Next Capabilities</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --panel: rgba(255, 252, 246, 0.9);
+      --ink: #18212b;
+      --muted: #5e6974;
+      --line: rgba(24, 33, 43, 0.12);
+      --accent: #0d7a69;
+      --accent-2: #315c98;
+      --accent-3: #d9822b;
+      --shadow: 0 20px 50px rgba(21, 31, 41, 0.08);
+      --max: 1180px;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 105, 0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(49, 92, 152, 0.09), transparent 28%),
+        linear-gradient(180deg, #f7f3ec 0%, #f1ece5 100%);
+      padding: 32px 24px 72px;
+    }
+
+    .shell {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .hero, .panel, .card, .capability, .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      border-radius: 32px;
+      padding: 38px;
+    }
+
+    .eyebrow, .label, .rank {
+      font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow, .label { color: var(--accent); }
+
+    h1, h2, h3, h4, p {
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 18px;
+      max-width: 11em;
+      font-size: clamp(42px, 6vw, 74px);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+    }
+
+    .lede {
+      margin-top: 18px;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.55;
+    }
+
+    .hero-grid, .sections, .metrics, .cards, .capability-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-grid {
+      margin-top: 28px;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .sections {
+      margin-top: 28px;
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .note {
+      max-width: 360px;
+      color: var(--muted);
+      font: 500 14px/1.45 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-align: right;
+    }
+
+    .metrics {
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 16px;
+    }
+
+    .metric {
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .metric-value {
+      margin-top: 14px;
+      font-size: 34px;
+      letter-spacing: -0.05em;
+    }
+
+    .metric-copy, .card p, .capability p, .bullet, .footer {
+      color: var(--muted);
+      font: 500 14px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .cards {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 16px;
+    }
+
+    .card {
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin-top: 10px;
+    }
+
+    .capability-grid {
+      margin-top: 16px;
+    }
+
+    .capability {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 18px;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .rank {
+      display: grid;
+      place-items: center;
+      height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-size: 20px;
+    }
+
+    .capability h3 {
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .capability p {
+      margin-top: 10px;
+    }
+
+    .bullets {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .bullet {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .bar {
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, var(--accent-3), var(--accent));
+    }
+
+    .callout {
+      margin-top: 18px;
+      padding: 20px;
+      border-radius: 18px;
+      border-left: 6px solid var(--accent-3);
+      background: rgba(255, 252, 246, 0.94);
+      color: var(--muted);
+      font: 500 15px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .callout strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 8px;
+      font: 700 16px/1.35 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .footer {
+      margin-top: 24px;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid, .metrics, .cards, .capability {
+        grid-template-columns: 1fr;
+      }
+
+      .head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .note {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · Next Core Infra</div>
+      <h1>The next capability set we are building before real app and MVP work.</h1>
+      <p class="lede">
+        This is the next owner-facing capability list for Kolo as a reusable platform baseline.
+        These are not end-user product features like tasks or journaling. They are the shared
+        core capabilities the baseline needs so future apps do not feel underpowered, improvised,
+        or too shell-specific.
+      </p>
+
+      <div class="hero-grid">
+        <div class="card">
+          <div class="label">Important distinction</div>
+          <h3>Infra first, product capability second</h3>
+          <p>
+            Tasks, journals, reminders, and settings screens are shared product capabilities built on
+            top of core infra. The list below focuses on the infra layer first: the contracts, seams,
+            and runtime rails that make those future capabilities portable across apps.
+          </p>
+        </div>
+        <div class="card">
+          <div class="label">Not in this wave</div>
+          <h3>Billing is intentionally not first-class yet</h3>
+          <p>
+            Billing may become a reusable capability later, but it is not yet baseline core infra.
+            Unless most future apps monetize in the same way, billing should stay behind the first
+            foundation wave instead of shaping the platform too early.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="sections">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Summary</div>
+            <h2>The ten most important next capabilities</h2>
+          </div>
+          <div class="note">Ordered by how foundational they are to app-factory credibility and to avoiding repeated shell-specific rewrites.</div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="label">Immediate focus</div>
+            <div class="metric-value">Composition</div>
+            <div class="metric-copy">Make app definition and capability selection real first.</div>
+          </div>
+          <div class="metric">
+            <div class="label">Runtime seam</div>
+            <div class="metric-value">Config</div>
+            <div class="metric-copy">Runtime config, feature flags, and dev-menu control the development loop.</div>
+          </div>
+          <div class="metric">
+            <div class="label">Platform feel</div>
+            <div class="metric-value">Notifications</div>
+            <div class="metric-copy">Scheduling, permissions, and update policy make the baseline feel like a real app platform.</div>
+          </div>
+          <div class="metric">
+            <div class="label">Safety rails</div>
+            <div class="metric-value">Observability</div>
+            <div class="metric-copy">The baseline should be debuggable and releasable before it is feature-rich.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Immediate wave</div>
+            <h2>Start with these first</h2>
+          </div>
+          <div class="note">These are the first cuts I would actually put under implementation before branching into more specialized work.</div>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="label">Start Here</div>
+            <h3>1. App definition and capability composition</h3>
+            <p>A single source of truth for app id, package/bundle ids, enabled capabilities, environments, observability keys, and release identity.</p>
+          </div>
+          <div class="card">
+            <div class="label">Then</div>
+            <h3>2. Shell bootstrap and runtime ownership</h3>
+            <p>A clean Android/iOS startup contract: graph creation, lifecycle ownership, startup sequencing, and where shell-only bindings live.</p>
+          </div>
+          <div class="card">
+            <div class="label">Then</div>
+            <h3>3. Runtime config, flags, and dev menu</h3>
+            <p>Environment switching, local overrides, future remote config hooks, and internal tooling for safe inspection and mutation.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Full Ordered List</div>
+            <h2>The next ten core capabilities</h2>
+          </div>
+          <div class="note">Each item is written as a reusable baseline capability, not as a one-off feature for the reference app.</div>
+        </div>
+
+        <div class="capability-grid">
+          <div class="capability">
+            <div class="rank">01</div>
+            <div>
+              <h3>App definition and capability composition</h3>
+              <p>The platform needs a real contract for what an app is: metadata, environment profile, enabled capabilities, release identity, and composition rules.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>Lets future shells opt into capabilities intentionally instead of inheriting everything by accident.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Creates the seam other shared infra can depend on.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">02</div>
+            <div>
+              <h3>Shell bootstrap and DI/runtime ownership</h3>
+              <p>Android and iOS hosts should follow one predictable startup model for graph creation, lifecycle boundaries, and app-owned platform bindings.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>Prevents each future shell from inventing its own wiring style.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Keeps the shared layer honest about what it owns versus what only the shell can own.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">03</div>
+            <div>
+              <h3>Persistence and migration contract</h3>
+              <p>Room/DataStore ownership, repository boundaries, stable ids, schema export, and migration testing need to be part of the baseline before feature slices spread.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>This is where “durable storage shape” becomes real instead of implied.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Later tasks, reminders, journals, and settings should plug into this rather than redefine it.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">04</div>
+            <div>
+              <h3>Navigation, deep links, and restoration</h3>
+              <p>Typed routes, modal rules, back behavior, deep-link parsing, and restoration policy should be infrastructure, not screen-by-screen improvisation.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>Without this, every MVP flow ends up teaching the shell a different navigation language.</span></div>
+                <div class="bullet"><span class="bar"></span><span>This is a portability requirement for future apps, not just a UI convenience.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">05</div>
+            <div>
+              <h3>Runtime config, feature flags, and dev menu</h3>
+              <p>Environment switching, local overrides, feature toggles, and safe internal tooling make the baseline debuggable and rollout-ready.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>The repo already has a first cut here, but it should be treated as one of the main platform capabilities, not a side utility.</span></div>
+                <div class="bullet"><span class="bar"></span><span>This is one of the biggest force multipliers for development speed.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">06</div>
+            <div>
+              <h3>Settings and preferences framework</h3>
+              <p>A shared way to model user preferences, default values, persistence, and shell-facing configuration surfaces.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>Small on paper, but a baseline feels incomplete without it.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Should stay distinct from runtime config and from end-user feature state.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">07</div>
+            <div>
+              <h3>Notifications and scheduling abstraction</h3>
+              <p>Local and push notification contracts, permission flow seams, reminder delivery boundaries, and scheduler ownership on Android and iOS.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>Critical for any product family where reminders are part of the shape.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Should separate stored intent from platform delivery mechanics.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">08</div>
+            <div>
+              <h3>Background work and offline job orchestration</h3>
+              <p>A standard place for deferred work, retries, cleanup, refresh jobs, and future sync triggers instead of scattering platform schedulers across features.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>Even before full sync exists, the baseline needs a home for background behavior.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Protects the shared platform from “just launch a worker here” entropy.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">09</div>
+            <div>
+              <h3>Observability</h3>
+              <p>Structured logging, analytics seams, crash reporting, performance traces, and diagnostics hooks should ship as platform defaults.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>A reusable baseline should be measurable and debuggable in production by default.</span></div>
+                <div class="bullet"><span class="bar"></span><span>App shells can provide app-specific keys and policies at the edge.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capability">
+            <div class="rank">10</div>
+            <div>
+              <h3>Release policy rails</h3>
+              <p>Force-update/version gating, release channels, rollout safety checks, smoke validation, and release performance baselines.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="bar"></span><span>This is where the baseline starts feeling “ship-ready” rather than just architecturally tidy.</span></div>
+                <div class="bullet"><span class="bar"></span><span>Force update belongs here as a release-policy concern, not as a one-off screen feature.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Practical reading of this list</strong>
+          The first implementation wave does not mean building all ten at once. It means starting with
+          the composition seam, then the runtime/bootstrap seams, then the capabilities that make the
+          baseline feel like a real app platform: config, settings, notifications, observability, and
+          release policy.
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Boundary Rule</div>
+            <h2>What this list is not</h2>
+          </div>
+          <div class="note">This keeps the platform from collapsing back into “everything is shared infra.”</div>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="label">Not core infra</div>
+            <h3>Tasks, journals, reminders</h3>
+            <p>These are shared product capabilities that should be built on top of the infra listed here, not confused with the infra itself.</p>
+          </div>
+          <div class="card">
+            <div class="label">Not first-wave baseline</div>
+            <h3>Billing</h3>
+            <p>Billing only becomes baseline when it is clearly common across the future app family; otherwise it stays a later capability.</p>
+          </div>
+          <div class="card">
+            <div class="label">Not shell-owned</div>
+            <h3>Core contracts</h3>
+            <p>App shells should choose capabilities and supply app-specific bindings, but the platform should own how these shared contracts behave.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      This document is the owner-facing list of the next shared core capabilities. Detailed tickets and implementation sequencing should continue to live in the Markdown planning docs and backlog.
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo iOS Compose + Navigation 3 Cut</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --panel: rgba(255, 252, 246, 0.92);
+      --ink: #18212b;
+      --muted: #5e6974;
+      --line: rgba(24, 33, 43, 0.12);
+      --accent: #0d7a69;
+      --accent-2: #315c98;
+      --accent-3: #d9822b;
+      --shadow: 0 20px 50px rgba(21, 31, 41, 0.08);
+      --max: 1180px;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 105, 0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(49, 92, 152, 0.08), transparent 28%),
+        linear-gradient(180deg, #f7f3ec 0%, #f1ece5 100%);
+      padding: 32px 24px 72px;
+    }
+
+    .shell {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .hero, .panel, .card, .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      border-radius: 32px;
+      padding: 38px;
+    }
+
+    .eyebrow, .label {
+      font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 18px;
+      max-width: 10em;
+      font-size: clamp(42px, 6vw, 74px);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+    }
+
+    .lede {
+      margin-top: 18px;
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.55;
+    }
+
+    .sections {
+      display: grid;
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .note {
+      max-width: 360px;
+      color: var(--muted);
+      font: 500 14px/1.45 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-align: right;
+    }
+
+    .metrics, .cards, .two-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .metrics {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .metric, .card {
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .metric-value {
+      margin-top: 14px;
+      font-size: 30px;
+      letter-spacing: -0.05em;
+    }
+
+    .metric-copy, .card p, .list {
+      color: var(--muted);
+      font: 500 14px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .two-col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin-top: 10px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .callout {
+      margin-top: 18px;
+      padding: 20px;
+      border-radius: 18px;
+      border-left: 6px solid var(--accent-3);
+      background: rgba(255, 252, 246, 0.94);
+      color: var(--muted);
+      font: 500 15px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .callout strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 8px;
+      font: 700 16px/1.35 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font: 500 13px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (max-width: 960px) {
+      .metrics, .cards, .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .note {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · Implementation Cut</div>
+      <h1>iOS now points at shared Compose, and the shared root is using Navigation 3 on top of a narrow app-shell contract.</h1>
+      <p class="lede">
+        This cut moves Kolo away from the split world where Android rendered shared Compose and iOS
+        still showed a native placeholder. The app root is now shared Compose on both platforms at
+        the source level, the shared root uses a typed Navigation 3 back stack instead of
+        static placeholder content, and shell identity now comes from the extracted
+        <code>shared:core:appshell</code> contract rather than the broader runtime-composition module.
+      </p>
+    </section>
+
+    <div class="sections">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Outcome</div>
+            <h2>What changed</h2>
+          </div>
+          <div class="note">This is a foundation cut, not the full navigation architecture.</div>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="label">Platform move</div>
+            <h3>iOS host now mounts Compose</h3>
+            <p>The iOS app no longer stops at a SwiftUI placeholder screen. SwiftUI stays as a thin host, but the root UI is now provided by the shared Compose framework.</p>
+          </div>
+          <div class="card">
+            <div class="label">Shared root</div>
+            <h3>Compose moved to commonMain</h3>
+            <p>The main app composable and root presentation logic now live in shared code so Android and iOS point at the same app surface.</p>
+          </div>
+          <div class="card">
+            <div class="label">Shell contract</div>
+            <h3>App identity is now narrow</h3>
+            <p>The shared UI now reads shell identity and capability metadata from <code>shared:core:appshell</code> instead of depending on the broader <code>shared</code> runtime-composition module.</p>
+          </div>
+          <div class="card">
+            <div class="label">Navigation runtime</div>
+            <h3>Navigation 3 is live</h3>
+            <p>The shared root now owns a typed Navigation 3 back stack with serializable routes and a simple proof path through multiple destinations.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Current State</div>
+            <h2>What the repo now supports</h2>
+          </div>
+          <div class="note">This is the structural answer to whether Kolo can actually carry shared multiplatform navigation.</div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="label">Android root</div>
+            <div class="metric-value">Shared Compose</div>
+            <div class="metric-copy">Still mounted from the Android host, now through the same commonMain root used elsewhere.</div>
+          </div>
+          <div class="metric">
+            <div class="label">iOS root</div>
+            <div class="metric-value">Shared Compose</div>
+            <div class="metric-copy">Mounted through a thin SwiftUI `UIViewControllerRepresentable` wrapper over `ComposeApp.framework`.</div>
+          </div>
+          <div class="metric">
+            <div class="label">Navigation runtime</div>
+            <div class="metric-value">Navigation 3</div>
+            <div class="metric-copy">Shared typed routes and saved-state configuration are now part of the root app surface.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Implementation Shape</div>
+            <h2>What was added</h2>
+          </div>
+          <div class="note">The goal was the smallest coherent cut, not a broad rewrite.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="label">Shared Compose</div>
+            <h3>New root structure</h3>
+            <div class="list">
+              <div>`composeApp/src/commonMain` now owns the app root composable and route types.</div>
+              <div>A simple `KoloRoute` hierarchy provides typed Navigation 3 destinations.</div>
+              <div>The root uses explicit serializer registration so the back stack is valid on iOS, not just Android.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="label">iOS host</div>
+            <h3>Host-side changes</h3>
+            <div class="list">
+              <div>The iOS host now imports `ComposeApp` and wraps a Kotlin `ComposeUIViewController` factory.</div>
+              <div>Xcode now has a `ComposeApp` framework build phase alongside the existing Kotlin framework phases.</div>
+              <div>The debug-menu presentation flow stays at the host edge for now instead of being folded into the app root.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Important boundary</strong>
+          This cut does not mean SwiftUI disappears from the iOS app lifecycle. It means SwiftUI is no longer the owner of the product root UI. The host remains thin, while the app surface moves into shared Compose where a shared navigation model can actually exist.
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Validation</div>
+            <h2>What was proven</h2>
+          </div>
+          <div class="note">The Kotlin side is verified directly. Full Xcode execution is partially blocked by the sandbox.</div>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="label">Passed</div>
+            <h3>Kotlin compile</h3>
+            <p>`:composeApp:compileAndroidMain` and `:composeApp:compileKotlinIosSimulatorArm64` both pass with the new shared root and Navigation 3 code.</p>
+          </div>
+          <div class="card">
+            <div class="label">Passed</div>
+            <h3>Android app assembly</h3>
+            <p>`:androidApp:assembleDebug` passed during the first integrated compile after the Navigation 3 API corrections.</p>
+          </div>
+          <div class="card">
+            <div class="label">Blocked</div>
+            <h3>Full Xcode build</h3>
+            <p>The Xcode host reaches the new script phases, but sandbox restrictions block Gradle wrapper process behavior and CoreSimulator access before a full app build can complete.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">What This Is Not</div>
+            <h2>What still remains</h2>
+          </div>
+          <div class="note">This establishes the base. It does not finish the navigation architecture.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="label">Not done yet</div>
+            <h3>Deep links and restoration policy</h3>
+            <p>There is now a real typed back stack, but external entry, guard handling, safe-root behavior, and cross-feature route ownership are not yet formalized.</p>
+          </div>
+          <div class="card">
+            <div class="label">Not done yet</div>
+            <h3>Module extraction</h3>
+            <p>The first Navigation 3 runtime cut lives in `composeApp` to make the platform move real quickly. The next architectural step is still to extract the route contracts and app-owned navigation seam into dedicated navigation modules.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      This page is the owner-facing summary for the iOS Compose + Navigation 3 platform cut. The detailed implementation still lives in code and the Markdown planning/workstream docs.
+    </div>
+  </main>
+</body>
+</html>

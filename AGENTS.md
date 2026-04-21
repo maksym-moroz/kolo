@@ -12,14 +12,14 @@ If this file starts reading like a full design document, it is too big.
 
 ## 1. Source Of Truth Map
 
-Read these in order when starting work:
+Start here:
 
 1. `docs/planning/README.md`
 2. `docs/planning/backlog.md`
 3. `docs/planning/starter-architecture.md`
 4. the relevant workstream or foundation doc for the ticket
 
-High-value deep docs:
+High-value references:
 
 - `docs/planning/foundation/agp9-migration.md`
 - `docs/planning/foundation/code-style.md`
@@ -29,17 +29,17 @@ High-value deep docs:
 - `docs/planning/workstreams/persistence.md`
 - `docs/planning/multi-agent-workflow.md`
 
-Rule:
+Interpretation:
 
 - `AGENTS.md` tells you where to look
-- `docs/planning/*` tells you what the project believes
+- `docs/planning/*` tells you what the project believes and plans next
 - code and build files tell you what is actually implemented
 - for forward-facing docs meant to keep the repo owner in the loop, prefer HTML as the primary human-facing source-of-truth format
 - if an HTML doc conflicts with code or build files, treat code and build files as the implementation truth and update the HTML doc
 
 ## 2. Repo Map
 
-Current top-level structure:
+Top-level structure:
 
 - `apps/`: app shells built on top of the shared Kolo platform
 - `apps/reference/androidApp/`: Android reference app entry point
@@ -51,22 +51,24 @@ Current top-level structure:
 - `docs/planning/`: planning, backlog, architecture, and workstreams
 - `openspec/`: change proposals, task tracking, and archive/spec artifacts
 - `server/`: Ktor server module
-- `shared/`: shared KMP library for app graph and remaining common code
+- `shared/`: shared KMP library for app graph and remaining runtime-composition code
+- `shared/core/appshell/`: extracted app-shell identity and capability contract module
 - `shared/core/config/`: extracted runtime-config API and implementation modules
 - `shared/core/store/`: extracted store API and runtime modules
 
-Current architectural reality:
+Current reality:
 
-- AGP 9 migration first cut is done
+- the AGP 9 migration first cut is done
 - `build-logic` is the source of truth for shared Gradle plugin wiring
 - `:androidApp` is still the real Android app boundary, but its host now lives under `apps/reference/androidApp`
 - `baselineprofile` generates Baseline Profiles for the Android app and is not a shipping app module
-- shared runtime config now lives in `shared:core:config:api` and `shared:core:config:impl`
+- the app-shell identity and capability contract lives in `shared:core:appshell`
+- shared runtime config lives in `shared:core:config:api` and `shared:core:config:impl`
 - the debug menu now lives in the shared `debugmenu` KMP module, with thin Android and iOS hosts at the app edge
 - `composeApp` is not the Android application module anymore
 - the runtime-config read contract remains in shared Kotlin, while debug-only mutation wiring is exposed through platform graphs at the app edge
-- the store contract has already been extracted into `shared:core:store:api` and `shared:core:store:impl`
-- `shared` is still broad outside the extracted store modules and has not yet been split into the rest of `shared/core/*` and `shared/feature/*`
+- the store contract is extracted into `shared:core:store:api` and `shared:core:store:impl`
+- `shared` is now primarily the runtime-composition and app-graph layer outside the extracted core modules, but it is still broader than the eventual target split
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
 - some planning docs still describe the pre-`androidApp` or future split state; prefer code and build files when they disagree
 
@@ -97,8 +99,10 @@ If a task touches these areas, start here:
 - build: `baselineprofile/build.gradle.kts`
 - generator: `baselineprofile/src/main/kotlin/com/focus/kolo/baselineprofile/BaselineProfileGenerator.kt`
 
-### Runtime config and debug menu
+### App shell, runtime config, and debug menu
 
+- app-shell contract build: `shared/core/appshell/build.gradle.kts`
+- app-shell contract sources: `shared/core/appshell/src/commonMain/kotlin/com/focus/kolo/appshell/`
 - config API build: `shared/core/config/api/build.gradle.kts`
 - config API effective models and read contract: `shared/core/config/api/src/commonMain/kotlin/com/focus/kolo/config/`
 - config impl build: `shared/core/config/impl/build.gradle.kts`
@@ -117,7 +121,8 @@ If a task touches these areas, start here:
 ### Shared UI library
 
 - build: `composeApp/build.gradle.kts`
-- current UI entry: `composeApp/src/androidMain/kotlin/com/focus/kolo/App.kt`
+- current shared app root: `composeApp/src/commonMain/kotlin/com/focus/kolo/KoloApp.kt`
+- Android preview/host-side wrapper: `composeApp/src/androidMain/kotlin/com/focus/kolo/App.kt`
 
 ### Shared store modules
 
@@ -157,21 +162,19 @@ If a task touches these areas, start here:
 
 ## 4. Common Practice Map
 
-These are the current project defaults unless a ticket explicitly changes them.
+These are the repo defaults unless a ticket explicitly changes them.
 
 ### Build and structure
 
 - follow `docs/planning/foundation/code-style.md` for repository-specific style rules that go beyond formatter defaults
 - prefer HTML for durable forward-facing project overviews and architecture/source-of-truth documents so the repo owner can read them quickly even when most work is done by agents
-- keep platform entry points thin
-- keep reusable logic in shared Kotlin
+- keep platform entry points thin and reusable logic in shared Kotlin
 - prefer boring module boundaries over clever indirection
-- keep shared Gradle setup in `build-logic` convention plugins rather than repeating plugin stacks in module build files
-- keep module build scripts focused on namespace, target-specific compiler settings, and direct dependencies
+- keep shared Gradle setup in `build-logic`; keep module build scripts focused on namespace, target-specific compiler settings, and direct dependencies
 - keep Baseline Profile generation isolated in `baselineprofile` instead of mixing generator code into `androidApp`
+- keep app-shell identity and capability contracts in `shared:core:appshell` instead of `shared`
 - keep shared runtime-config contracts in `shared:core:config:api`, runtime wiring in `shared:core:config:impl`, and keep platform entry and hosting details out at the Android/iOS app edge
 - do not reintroduce the old KMP + Android app pairing in `composeApp`
-- never put several top-level classes, interfaces, or objects in one Kotlin file
 - prefer one top-level type per file, especially for actions, effects, state, reducers, and middleware
 
 ### Dependency injection
@@ -184,16 +187,13 @@ These are the current project defaults unless a ticket explicitly changes them.
 ### Architecture
 
 - use unidirectional data flow
-- keep ViewModel thin
-- persistent state belongs in shared feature/store layers, not platform entry points
-- one-off events should not be modeled as persistent state
+- keep ViewModel thin; keep persistent state in shared feature/store layers, not platform entry points
+- model one-off events as effects, not persistent state
 - repositories and data aggregators must not create their own lifetime `CoroutineScope`; scope ownership and any `stateIn`/sharing policy belong at the graph or feature-runtime edge
 - config repositories and override sources should expose plain `Flow` contracts unless a caller has a real need for hot shared state at its own runtime edge
 - if the intended architecture or requested pattern is unclear, stop and ask a concise clarifying question instead of guessing and implementing an inferred design
-- when an interface exposes a `StateFlow` or `SharedFlow`, implementations must override that property directly with the mutable flow they own instead of keeping separate mutable and read-only mirror fields
-- never introduce `private val mutableX` plus `override val x = mutableX.asStateFlow()` or `asSharedFlow()` patterns in implementation code
-- use `shared:core:store:api` rather than inventing feature-local store primitives
-- prefer the shared generic store contract over feature-specific store types unless the generic store is no longer sufficient for the slice
+- when an interface exposes a `StateFlow` or `SharedFlow`, implementations should override it directly with the mutable flow they own; do not introduce mirrored `mutableX` plus `x = mutableX.asStateFlow()` or `asSharedFlow()` fields
+- use `shared:core:store:api` rather than inventing feature-local store primitives; prefer the shared generic store contract unless it is no longer sufficient for the slice
 - feature slices, including internal tooling like the Android debug menu, should follow the same `IntentMapper -> Store -> Middleware -> Reducer -> UiState/UiEffect` shape rather than bypassing the shared store contract
 - action effects belong behind middleware and should consume the store action stream there, not be launched directly from a ViewModel
 - depend on `shared:core:store:impl` only where runtime wiring is actually needed
@@ -223,6 +223,9 @@ These are the current project defaults unless a ticket explicitly changes them.
 ### Multi-agent work
 
 - one ticket, one owner, one declared write scope
+- the coordinating agent should decide whether a task should stay single-agent or be split across subagents
+- use subagents when the runtime and user instructions allow delegation and the write scopes are clearly disjoint
+- if delegation is unavailable or not allowed, keep the same ownership and write-scope discipline in a single-agent pass
 - if write scope overlaps, do not parallelize
 - update planning docs when architecture or sequencing changes
 
@@ -263,7 +266,7 @@ If you change build logic, module wiring, or shared Kotlin, prefer validating An
 
 ## 7. Fast Start Paths
 
-If you need to move fast, use one of these entry paths:
+If you need to move fast, use one of these paths:
 
 ### I need architecture context
 
@@ -326,16 +329,12 @@ Those belong in `docs/planning/*` or in the ticket/workstream docs.
 
 Agents should know these before editing:
 
-- the store contract has already been extracted into `shared:core:store:api` and `shared:core:store:impl`
-- preserve the API vs impl split when extending store code
-- the runtime-config contract is now split between `shared:core:config:api` and `shared:core:config:impl`; keep pure models and read contracts out of `shared`
-- `shared` is still broad outside the extracted store modules and will likely be split further later
-- `build-logic` is now the source of truth for shared plugin wiring; prefer changing conventions there before copying build setup into modules
-- the debug menu is isolated in the shared `debugmenu` module, with Android debug-entry wiring in `apps/reference/androidApp` and SwiftUI host glue in `apps/reference/iosApp`
-- shared SDK and toolchain values, including `java-toolchain`, now live in `gradle/libs.versions.toml`; keep toolchain-related build settings aligned with the catalog
-- the current convention plugins are intentionally thin; the shared base KMP Android library convention owns the common plugin stack, toolchain, and default Android SDK values, while modules still keep local Android-KMP target settings such as namespace and source-set options
-- the root `build.gradle.kts` plugin block should stay small, but the external `apply false` aliases still need to stay there; removing them breaks convention-plugin loading for AGP-backed plugins
-- the root quality entry points are `qualityCheck`, `qualityFix`, and `dependencyHealth`; prefer those over memorizing individual lint or formatting tasks
+- preserve the API vs impl splits for `shared:core:store:*` and `shared:core:config:*`
+- `shared:core:appshell` is the narrow app-shell contract; `composeApp` should depend on it instead of `shared`
+- `shared` is now mainly the runtime-composition and app-graph layer, but it is still broader than the eventual target split
+- shared SDK and toolchain values, including `java-toolchain`, live in `gradle/libs.versions.toml`; keep build settings aligned with the catalog
+- the convention plugins are intentionally thin; the root `build.gradle.kts` plugin block should also stay small, but the external `apply false` aliases must remain or AGP-backed convention loading breaks
+- prefer root entry points like `qualityCheck`, `qualityFix`, and `dependencyHealth` over memorizing leaf tasks
 - `composeApp` still has a non-blocking unused `commonTest` source-set warning under the Android-KMP layout
-- Metro is integrated, but only as a small first cut; do not assume a full app graph already exists
+- Metro is only a first cut; do not assume a full app graph already exists
 - the current UI is still template-level and should not be mistaken for settled architecture
