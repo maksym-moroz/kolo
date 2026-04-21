@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo Repo Overview</title>
+  <style>
+    :root {
+      --bg: #f3efe7;
+      --paper: rgba(255, 252, 246, 0.88);
+      --ink: #18212b;
+      --muted: #5b6671;
+      --line: rgba(24, 33, 43, 0.12);
+      --accent: #0d7a69;
+      --accent-2: #d9822b;
+      --accent-3: #315c98;
+      --shadow: 0 24px 64px rgba(21, 31, 41, 0.12);
+      --radius: 28px;
+      --max: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 36px 24px 80px;
+      color: var(--ink);
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 105, 0.12), transparent 34%),
+        radial-gradient(circle at top right, rgba(217, 130, 43, 0.12), transparent 28%),
+        linear-gradient(180deg, #f7f2ea 0%, #f1ece4 100%);
+    }
+
+    .shell { max-width: var(--max); margin: 0 auto; }
+    .hero, .panel, .metric, .strip, .module-row { background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .hero { padding: 40px; border-radius: 32px; }
+    .eyebrow, .kicker {
+      font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { max-width: 9.6em; margin-top: 18px; font-size: clamp(44px, 6vw, 78px); line-height: 0.93; letter-spacing: -0.04em; }
+    .lede { max-width: 780px; margin-top: 18px; color: var(--muted); font-size: 20px; line-height: 1.55; }
+    .hero-grid, .metrics, .two-col, .three-col { display: grid; gap: 18px; }
+    .hero-grid { margin-top: 28px; grid-template-columns: 1.1fr 0.9fr; }
+    .metrics { grid-template-columns: repeat(4, 1fr); margin-top: 18px; }
+    .two-col { grid-template-columns: 1.1fr 0.9fr; }
+    .three-col { grid-template-columns: repeat(3, 1fr); }
+    .sections { display: grid; gap: 22px; margin-top: 28px; }
+    .panel { padding: 28px; border-radius: var(--radius); }
+    .metric, .strip { padding: 20px; border-radius: 18px; }
+    .metric-label { color: var(--muted); font: 700 11px/1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
+    .metric-value { margin-top: 14px; font-size: 36px; letter-spacing: -0.05em; }
+    .metric-copy, .strip p, .note, .module-desc, .list-item { color: var(--muted); font: 500 14px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .head { display: flex; justify-content: space-between; align-items: end; gap: 16px; padding-bottom: 14px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .note { max-width: 360px; text-align: right; }
+    .module-map, .list, .flow { display: grid; gap: 12px; margin-top: 14px; }
+    .module-row { display: grid; grid-template-columns: 240px 1fr; gap: 16px; padding: 14px 16px; border-radius: 16px; }
+    .module-name { font: 700 14px/1.35 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+    .list-item { display: grid; grid-template-columns: 10px 1fr; gap: 12px; }
+    .bar { width: 10px; height: 10px; margin-top: 6px; border-radius: 3px; background: linear-gradient(180deg, var(--accent-2), var(--accent)); }
+    .flow-step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 14px; border-radius: 14px; background: rgba(255,255,255,0.55); border: 1px solid var(--line); }
+    .flow-num { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), var(--accent-3)); color: white; font: 700 18px/1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .callout { margin-top: 18px; padding: 20px; border-radius: 18px; border-left: 6px solid var(--accent-2); background: var(--paper); border-top: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .callout strong { display: block; margin-bottom: 8px; font: 700 16px/1.3 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .callout span, .footer { color: var(--muted); font: 500 13px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .footer { margin-top: 24px; }
+    @media (max-width: 980px) {
+      .hero-grid, .metrics, .two-col, .three-col, .module-row { grid-template-columns: 1fr; }
+      .head { flex-direction: column; align-items: start; }
+      .note { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · Repo Overview</div>
+      <h1>A multiplatform platform baseline moving toward an app factory shape.</h1>
+      <p class="lede">
+        Kolo is a Kotlin Multiplatform baseline for future mobile apps with shared architecture,
+        shared runtime infrastructure, and thin app shells. It is already beyond wizard-template
+        territory, but it is not yet a finished end-user product app or a fully proven multi-app factory.
+      </p>
+      <div class="hero-grid">
+        <div class="strip">
+          <h3>What it actually is today</h3>
+          <p>
+            A platform-oriented repo with Android and iOS reference hosts, shared KMP modules,
+            shared build logic, internal tooling, and a small server starter. The platform foundation
+            is real. Feature extraction and app-factory scaling are still in progress.
+          </p>
+        </div>
+        <div class="strip">
+          <h3>What comes next</h3>
+          <p>
+            The current sequence is persistence, navigation, reminder contracts, and the first real
+            feature slices on top of the extracted store baseline, followed by deeper shared-module
+            decomposition and more explicit app-shell scaling.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="sections">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="kicker">At A Glance</div>
+            <h2>The repo in four signals</h2>
+          </div>
+          <div class="note">Grounded in planning docs, settings.gradle.kts, host entry points, and current Gradle wiring.</div>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Identity</div>
+            <div class="metric-value">Platform</div>
+            <div class="metric-copy">A reusable baseline for future apps, with a reference app shell already carved out.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">UI Surface</div>
+            <div class="metric-value">Shared</div>
+            <div class="metric-copy">Compose Multiplatform is the main shared UI direction.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Architecture</div>
+            <div class="metric-value">UDF</div>
+            <div class="metric-copy">Shared store primitives and the UiState / UiEffect flow already exist.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Near-Term Work</div>
+            <div class="metric-value">PERS / NAV</div>
+            <div class="metric-copy">Persistence, navigation, reminders, then the first real feature slices.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="kicker">Module / Repo Map</div>
+            <h2>What lives where</h2>
+          </div>
+          <div class="note">This is the live repo and module shape, not just aspirational architecture.</div>
+        </div>
+        <div class="module-map">
+          <div class="module-row">
+            <div class="module-name">apps/reference/androidApp</div>
+            <div class="module-desc">The current Android host location for the real Gradle app module <code>:androidApp</code>. MainActivity is deliberately thin and mounts the shared UI.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">apps/reference/iosApp</div>
+            <div class="module-desc">The current iOS host shell. It is a real repo host, but not a Gradle module.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">composeApp</div>
+            <div class="module-desc">The shared Compose UI library. It is no longer the Android application module; it is the current shared presentation surface.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">debugmenu</div>
+            <div class="module-desc">A separate KMP internal-tooling module for runtime config inspection and mutation, intentionally isolated from release-facing product UI.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">shared</div>
+            <div class="module-desc">The remaining broad shared KMP library. It still contains app graph wiring and common runtime pieces outside the already extracted core modules.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">shared:core:config:api / impl</div>
+            <div class="module-desc">The split runtime-config contract and implementation: pure models and read-side contracts in API, persistence / merge / mutation logic in impl.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">shared:core:store:api / impl</div>
+            <div class="module-desc">The extracted shared store/UDF contract and runtime implementation used as the baseline state architecture.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">baselineprofile</div>
+            <div class="module-desc">Android Baseline Profile generation. This is release-performance tooling, not a shipping app module.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">server</div>
+            <div class="module-desc">A small Ktor server starter that currently exposes a minimal “Kolo server is running” endpoint.</div>
+          </div>
+          <div class="module-row">
+            <div class="module-name">build-logic</div>
+            <div class="module-desc">The included Gradle build that owns convention plugins and repo-wide build wiring. This is the source of truth for shared plugin stacks.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="kicker">Runtime Path</div>
+            <h2>How the app works today</h2>
+          </div>
+          <div class="note">This is the practical execution path, not just the intended architecture.</div>
+        </div>
+        <div class="two-col">
+          <div class="strip">
+            <h3>Android path</h3>
+            <div class="flow">
+              <div class="flow-step">
+                <div class="flow-num">1</div>
+                <div>
+                  <strong>Android host</strong><br>
+                  <span class="metric-copy"><code>MainActivity</code> enables edge-to-edge and renders <code>KoloApp()</code>.</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-num">2</div>
+                <div>
+                  <strong>Shared UI</strong><br>
+                  <span class="metric-copy"><code>composeApp</code> provides the current shared Compose-facing UI surface.</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-num">3</div>
+                <div>
+                  <strong>Shared graph</strong><br>
+                  <span class="metric-copy"><code>AndroidAppGraph</code> provides the store factory and app config repository, plus Android-specific config mutation wiring.</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-num">4</div>
+                <div>
+                  <strong>Debug-only tooling</strong><br>
+                  <span class="metric-copy"><code>debugmenu</code> is attached with <code>debugImplementation</code>, keeping the surface at the app edge instead of product UI.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="strip">
+            <h3>iOS path</h3>
+            <div class="list">
+              <div class="list-item"><span class="bar"></span><span>SwiftUI owns the host shell and window scene.</span></div>
+              <div class="list-item"><span class="bar"></span><span>An iOS graph provides the same shared runtime contracts as Android, with iOS-specific local config persistence wiring.</span></div>
+              <div class="list-item"><span class="bar"></span><span>The internal debug menu can be opened through a debug-only route and presented modally from the iOS shell.</span></div>
+            </div>
+            <div class="callout">
+              <strong>Architectural intent</strong>
+              <span>Keep shells thin, keep reusable logic in shared Kotlin, and push platform-only bindings to the graph edge instead of leaking them through common code.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="kicker">Roadmap</div>
+            <h2>What happens next</h2>
+          </div>
+          <div class="note">This is the live planning sequence, not a speculative wishlist.</div>
+        </div>
+        <div class="three-col">
+          <div class="strip">
+            <h3>1. Persistence</h3>
+            <p>Lock the v1 persistence model for tasks, journals, reminders, settings, and sync metadata.</p>
+          </div>
+          <div class="strip">
+            <h3>2. Navigation</h3>
+            <p>Define typed route ownership, back behavior, modal policy, deep links, restoration, and rollout sequencing.</p>
+          </div>
+          <div class="strip">
+            <h3>3. Reminders & features</h3>
+            <p>Formalize reminder scheduling contracts, then build the first real feature slices on the shared store baseline.</p>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>The shortest accurate summary</strong>
+          <span>Kolo is a serious multiplatform platform baseline with a reference app shell, centralized build conventions, shared state/config contracts, internal tooling, Android performance tooling, and a small server starter. The foundation is real; the app-factory story is still being proven.</span>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      Sources: planning docs, starter architecture, platform charter, app shell contract, settings.gradle.kts, Android/iOS host entry points, shared app graphs, and root convention wiring.
+    </div>
+  </main>
+</body>
+</html>

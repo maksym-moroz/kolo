@@ -1,0 +1,25 @@
+id: reference
+displayName: Kolo
+packageName: com.focus.kolo
+bundleId: com.focus.kolo
+kind: reference
+
+capabilities:
+  - tasks
+  - journal
+  - reminders
+  - settings
+  - debugmenu
+
+runtimeConfigProfile: default
+
+observability:
+  logging: baseline
+  crashReporting: placeholder
+  analytics: placeholder
+
+release:
+  baselineProfileEnabled: true
+  environments:
+    - dev
+    - prod

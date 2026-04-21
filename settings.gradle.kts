@@ -36,6 +36,7 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":androidApp")
+project(":androidApp").projectDir = file("apps/reference/androidApp")
 include(":baselineprofile")
 include(":composeApp")
 include(":debugmenu")

@@ -166,7 +166,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `androidApp/debugmenu/**`
+- Write scope: `apps/reference/androidApp/debugmenu/**`
 - Dependencies: none
 - Goal: stop the debug menu from rendering bundled fallback values as truth and only restart the app when the environment actually changes
 - Done when:
@@ -180,7 +180,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `androidApp/debugmenu/src/main/kotlin/com/focus/kolo/debugmenu/presentation/**`
+- Write scope: `apps/reference/androidApp/debugmenu/src/main/kotlin/com/focus/kolo/debugmenu/presentation/**`
 - Dependencies: DBG-001
 - Goal: remove ceremonial per-action effect fan-out and make one explicit command path own debug-menu mutations
 - Done when:
@@ -206,7 +206,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `androidApp/**`, `shared/src/androidMain/**`
+- Write scope: `apps/reference/androidApp/**`, `shared/src/androidMain/**`
 - Dependencies: CFG-001
 - Goal: stop creating debug-menu dependencies ad hoc from `Context` and make Android graph ownership explicit
 - Done when:
@@ -218,7 +218,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `androidApp/debugmenu/**`, `shared/core/config/**`
+- Write scope: `apps/reference/androidApp/debugmenu/**`, `shared/core/config/**`
 - Dependencies: DBG-001, CFG-002
 - Goal: treat the debug menu as internal tooling rather than product routing and remove self-referential config noise
 - Done when:
@@ -242,7 +242,7 @@ This is the shared delivery backlog for the starter app. Tickets are intentional
 
 - Status: Done
 - Owner: Codex
-- Write scope: `composeApp/**`, `iosApp/**`, `shared/src/iosMain/**`, `shared/core/config/impl/src/iosMain/**`, and architecture docs
+- Write scope: `composeApp/**`, `apps/reference/iosApp/**`, `shared/src/iosMain/**`, `shared/core/config/impl/src/iosMain/**`, and architecture docs
 - Dependencies: DBG-002, CFG-002, DBG-003
 - Goal: expose the runtime-config debug menu on iOS through a Compose-backed internal tooling surface instead of leaving the capability Android-only
 - Done when:

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo Planning Index</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --panel: rgba(255, 252, 246, 0.9);
+      --ink: #18212b;
+      --muted: #5e6974;
+      --line: rgba(24, 33, 43, 0.12);
+      --accent: #0d7a69;
+      --accent-2: #315c98;
+      --shadow: 0 20px 50px rgba(21, 31, 41, 0.08);
+      --max: 1180px;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 105, 0.12), transparent 32%),
+        linear-gradient(180deg, #f7f3ec 0%, #f1ece5 100%);
+      padding: 32px 24px 64px;
+    }
+
+    .shell {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .hero, .panel, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      border-radius: 32px;
+      padding: 36px;
+    }
+
+    .eyebrow, .label {
+      font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 18px;
+      max-width: 10em;
+      font-size: clamp(42px, 6vw, 74px);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+    }
+
+    .lede {
+      margin-top: 18px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.55;
+    }
+
+    .sections {
+      display: grid;
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .note {
+      max-width: 360px;
+      color: var(--muted);
+      font: 500 14px/1.45 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-align: right;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      display: block;
+      padding: 20px;
+      border-radius: 18px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .card:hover {
+      border-color: rgba(13, 122, 105, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin-top: 10px;
+      color: var(--muted);
+      font: 500 15px/1.6 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font: 500 14px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font: 500 13px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (max-width: 900px) {
+      .grid, .two-col { grid-template-columns: 1fr; }
+      .head { flex-direction: column; align-items: start; }
+      .note { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · Owner-Facing Planning</div>
+      <h1>HTML source of truth for staying in the loop.</h1>
+      <p class="lede">
+        This is the forward-facing planning set for Kolo. These HTML documents are the primary reading
+        surfaces for the repo owner: fast to scan, easy to digest, and meant to stay aligned with the
+        live implementation and detailed Markdown planning docs.
+      </p>
+    </section>
+
+    <div class="sections">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Forward-Facing Set</div>
+            <h2>Primary HTML documents</h2>
+          </div>
+          <div class="note">Read these first when you want the owner-facing view instead of ticket-by-ticket working detail.</div>
+        </div>
+
+        <div class="grid">
+          <a class="card" href="repo-overview.html">
+            <div class="label">Overview</div>
+            <h3>Repo Overview</h3>
+            <p>What Kolo is, how the repo is shaped today, and what the near-term roadmap actually is.</p>
+          </a>
+          <a class="card" href="starter-architecture.html">
+            <div class="label">Architecture</div>
+            <h3>Starter Architecture</h3>
+            <p>The current baseline for shells, shared modules, runtime contracts, persistence, reminders, and testing.</p>
+          </a>
+          <a class="card" href="platform-charter.html">
+            <div class="label">Charter</div>
+            <h3>Platform Charter</h3>
+            <p>The durable mission and ownership rules that keep Kolo as a reusable baseline instead of a dumping ground.</p>
+          </a>
+          <a class="card" href="app-shell-contract.html">
+            <div class="label">Contract</div>
+            <h3>App Shell Contract</h3>
+            <p>What every app shell must own, what stays in the platform, and how capability composition should work.</p>
+          </a>
+          <a class="card" href="app-factory-workflow.html">
+            <div class="label">Workflow</div>
+            <h3>App Factory Workflow</h3>
+            <p>The current first-cut process for creating a new app shell from the platform baseline.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <div>
+            <div class="label">Working Rule</div>
+            <h2>How HTML and Markdown split</h2>
+          </div>
+          <div class="note">The point is readable owner visibility, not replacing every detailed working artifact with presentation docs.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="label">Prefer HTML</div>
+            <h3>Owner-facing surfaces</h3>
+            <div class="list">
+              <div>Repo overviews</div>
+              <div>Architecture summaries</div>
+              <div>Platform/source-of-truth summaries</div>
+              <div>App shell and factory contracts</div>
+              <div>Major status or roadmap summaries</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="label">Prefer Markdown</div>
+            <h3>Agent-facing working detail</h3>
+            <div class="list">
+              <div>Backlog and ticket tracking</div>
+              <div>Workstream details</div>
+              <div>Implementation notes</div>
+              <div>Specs under active editing</div>
+              <div>Diff-heavy technical docs</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      If an owner-facing HTML document drifts from code or build files, update the HTML to match implementation reality.
+    </div>
+  </main>
+</body>
+</html>

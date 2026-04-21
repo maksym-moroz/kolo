@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo App Factory Workflow</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --panel: rgba(255, 252, 246, 0.92);
+      --ink: #18212b;
+      --muted: #5e6974;
+      --line: rgba(24, 33, 43, 0.12);
+      --accent: #0d7a69;
+      --accent-2: #315c98;
+      --shadow: 0 18px 48px rgba(21, 31, 41, 0.08);
+      --max: 980px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px 24px 56px; font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif; color: var(--ink); background: linear-gradient(180deg, #f8f3ec 0%, #f0ebe3 100%); }
+    .shell { max-width: var(--max); margin: 0 auto; }
+    .hero, .panel, .step { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .hero, .panel { border-radius: 28px; }
+    .hero { padding: 34px; }
+    .panel { padding: 26px; margin-top: 22px; }
+    .eyebrow, .label { color: var(--accent); font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { margin-top: 16px; max-width: 10em; font-size: clamp(38px, 5vw, 62px); line-height: 0.96; letter-spacing: -0.04em; }
+    .lede, .copy, li { color: var(--muted); font: 500 15px/1.6 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .lede { margin-top: 16px; max-width: 760px; font-size: 19px; }
+    .head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 18px; }
+    .steps { display: grid; gap: 14px; }
+    .step { display: grid; grid-template-columns: 48px 1fr; gap: 14px; padding: 16px; border-radius: 18px; }
+    .num { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; font: 700 18px/1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    ul { margin: 12px 0 0; padding-left: 20px; }
+    li + li { margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · App Factory Workflow</div>
+      <h1>The current first-cut workflow for launching a new app shell.</h1>
+      <p class="lede">
+        This is the working creation path for new apps built on top of the Kolo baseline. It is intentionally
+        manual and explicit for now; the rule is to prove the shell contract on real apps before automating it away.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div class="label">Workflow</div>
+        <h2>Launch a new shell in eight steps</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><div><h3>Create the shell</h3><p class="copy">Create a new shell under <code>apps/&lt;app-id&gt;/</code>.</p></div></div>
+        <div class="step"><div class="num">2</div><div><h3>Add app-definition metadata</h3><p class="copy">Create <code>app-definition.yaml</code> and name ids, display metadata, capabilities, runtime-config profile, and observability configuration.</p></div></div>
+        <div class="step"><div class="num">3</div><div><h3>Copy or template the hosts</h3><p class="copy">Use <code>apps/reference/</code> as the truth source for Android and iOS host structure.</p></div></div>
+        <div class="step"><div class="num">4</div><div><h3>Rename identities</h3><p class="copy">Rename package ids, bundle ids, display names, and app-facing metadata.</p></div></div>
+        <div class="step"><div class="num">5</div><div><h3>Select capabilities</h3><p class="copy">Decide which shared features the shell includes and how they are composed.</p></div></div>
+        <div class="step"><div class="num">6</div><div><h3>Bind app-specific integrations</h3><p class="copy">Keep app-specific adapters at the shell edge instead of pushing them into shared modules.</p></div></div>
+        <div class="step"><div class="num">7</div><div><h3>Wire observability and environment config</h3><p class="copy">Make sure logs, crash reporting, analytics, and runtime-config selection are set for the new app.</p></div></div>
+        <div class="step"><div class="num">8</div><div><h3>Run baseline validation</h3><p class="copy">Prove the shell inherits baseline quality before treating it as a real launch candidate.</p></div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div class="label">Validation</div>
+        <h2>What the first shell must prove</h2>
+      </div>
+      <ul>
+        <li>Android host assembles</li>
+        <li>Shared Kotlin compiles for iOS</li>
+        <li>Capability composition is valid</li>
+        <li>Smoke flows run for the chosen feature set</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div class="label">Reference Rule</div>
+        <h2>Do not automate too early</h2>
+      </div>
+      <p class="copy">
+        <code>apps/reference/</code> stays as the truth source for shell structure until the contract has survived at least one additional real app.
+        Do not jump to generators or scaffolding systems until the manual shape has proven stable.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

@@ -34,18 +34,21 @@ Rule:
 - `AGENTS.md` tells you where to look
 - `docs/planning/*` tells you what the project believes
 - code and build files tell you what is actually implemented
+- for forward-facing docs meant to keep the repo owner in the loop, prefer HTML as the primary human-facing source-of-truth format
+- if an HTML doc conflicts with code or build files, treat code and build files as the implementation truth and update the HTML doc
 
 ## 2. Repo Map
 
 Current top-level structure:
 
-- `androidApp/`: Android application entry point
+- `apps/`: app shells built on top of the shared Kolo platform
+- `apps/reference/androidApp/`: Android reference app entry point
+- `apps/reference/iosApp/`: iOS reference app and SwiftUI host shell
 - `baselineprofile/`: Android Baseline Profile generator module
 - `build-logic/`: included Gradle build for convention plugins
 - `composeApp/`: KMP UI library, currently the Compose-facing UI surface
 - `debugmenu/`: shared KMP debug-menu feature module
 - `docs/planning/`: planning, backlog, architecture, and workstreams
-- `iosApp/`: iOS host app and SwiftUI host shell
 - `openspec/`: change proposals, task tracking, and archive/spec artifacts
 - `server/`: Ktor server module
 - `shared/`: shared KMP library for app graph and remaining common code
@@ -56,7 +59,7 @@ Current architectural reality:
 
 - AGP 9 migration first cut is done
 - `build-logic` is the source of truth for shared Gradle plugin wiring
-- `androidApp` is the real Android app boundary
+- `:androidApp` is still the real Android app boundary, but its host now lives under `apps/reference/androidApp`
 - `baselineprofile` generates Baseline Profiles for the Android app and is not a shipping app module
 - shared runtime config now lives in `shared:core:config:api` and `shared:core:config:impl`
 - the debug menu now lives in the shared `debugmenu` KMP module, with thin Android and iOS hosts at the app edge
@@ -85,9 +88,9 @@ If a task touches these areas, start here:
 
 ### Android app boundary
 
-- build: `androidApp/build.gradle.kts`
-- entry point: `androidApp/src/main/kotlin/com/focus/kolo/MainActivity.kt`
-- manifest: `androidApp/src/main/AndroidManifest.xml`
+- build: `apps/reference/androidApp/build.gradle.kts`
+- entry point: `apps/reference/androidApp/src/main/kotlin/com/focus/kolo/MainActivity.kt`
+- manifest: `apps/reference/androidApp/src/main/AndroidManifest.xml`
 
 ### Android baseline profiles
 
@@ -105,11 +108,11 @@ If a task touches these areas, start here:
 - platform DataStore path/source wiring: `shared/core/config/impl/src/androidMain/kotlin/com/focus/kolo/config/impl/source/local/` and `shared/core/config/impl/src/iosMain/kotlin/com/focus/kolo/config/impl/source/local/`
 - config impl use cases: `shared/core/config/impl/src/commonMain/kotlin/com/focus/kolo/config/impl/usecase/`
 - shared debug-menu module build: `debugmenu/build.gradle.kts`
-- Android debug-menu host activity entry: `androidApp/src/debug/kotlin/com/focus/kolo/debugmenu/`
+- Android debug-menu host activity entry: `apps/reference/androidApp/src/debug/kotlin/com/focus/kolo/debugmenu/`
 - shared debug-menu feature sources: `debugmenu/src/commonMain/kotlin/com/focus/kolo/debugmenu/`
 - iOS debug-menu controller factory: `debugmenu/src/iosMain/kotlin/com/focus/kolo/debugmenu/`
-- debug-menu deep-link manifest wiring: `androidApp/src/debug/AndroidManifest.xml`
-- iOS debug-menu host wiring and URL handling: `iosApp/iosApp/`
+- debug-menu deep-link manifest wiring: `apps/reference/androidApp/src/debug/AndroidManifest.xml`
+- iOS debug-menu host wiring and URL handling: `apps/reference/iosApp/iosApp/`
 
 ### Shared UI library
 
@@ -134,8 +137,8 @@ If a task touches these areas, start here:
 
 ### iOS host
 
-- app shell: `iosApp/iosApp/iOSApp.swift`
-- current screen: `iosApp/iosApp/ContentView.swift`
+- app shell: `apps/reference/iosApp/iosApp/iOSApp.swift`
+- current screen: `apps/reference/iosApp/iosApp/ContentView.swift`
 
 ### Server
 
@@ -159,6 +162,7 @@ These are the current project defaults unless a ticket explicitly changes them.
 ### Build and structure
 
 - follow `docs/planning/foundation/code-style.md` for repository-specific style rules that go beyond formatter defaults
+- prefer HTML for durable forward-facing project overviews and architecture/source-of-truth documents so the repo owner can read them quickly even when most work is done by agents
 - keep platform entry points thin
 - keep reusable logic in shared Kotlin
 - prefer boring module boundaries over clever indirection
@@ -327,7 +331,7 @@ Agents should know these before editing:
 - the runtime-config contract is now split between `shared:core:config:api` and `shared:core:config:impl`; keep pure models and read contracts out of `shared`
 - `shared` is still broad outside the extracted store modules and will likely be split further later
 - `build-logic` is now the source of truth for shared plugin wiring; prefer changing conventions there before copying build setup into modules
-- the debug menu is isolated in the shared `debugmenu` module, with Android debug-entry wiring in `androidApp` and SwiftUI host glue in `iosApp`
+- the debug menu is isolated in the shared `debugmenu` module, with Android debug-entry wiring in `apps/reference/androidApp` and SwiftUI host glue in `apps/reference/iosApp`
 - shared SDK and toolchain values, including `java-toolchain`, now live in `gradle/libs.versions.toml`; keep toolchain-related build settings aligned with the catalog
 - the current convention plugins are intentionally thin; the shared base KMP Android library convention owns the common plugin stack, toolchain, and default Android SDK values, while modules still keep local Android-KMP target settings such as namespace and source-set options
 - the root `build.gradle.kts` plugin block should stay small, but the external `apply false` aliases still need to stay there; removing them breaks convention-plugin loading for AGP-backed plugins

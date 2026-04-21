@@ -1,11 +1,11 @@
-This is a Kotlin Multiplatform repo for the Kolo starter app.
+This is a Kotlin Multiplatform repo for the Kolo platform baseline and reference app.
 
 Current targets:
 
-- Android app in `androidApp`
+- Android reference app host in `apps/reference/androidApp`
 - Android baseline profile generator in `baselineprofile`
 - shared debug menu feature in `debugmenu`, hosted only from debug-only Android and internal iOS entry points
-- iOS host app in `iosApp`
+- iOS reference app host in `apps/reference/iosApp`
 - shared Kotlin and app graph code in `shared`
 - shared runtime-config contract and implementation in `shared:core:config:api` and `shared:core:config:impl`
 - shared store contract and runtime in `shared:core:store:api` and `shared:core:store:impl`
@@ -87,7 +87,7 @@ Run the server:
 Open the iOS host app in Xcode:
 
 ```shell
-open iosApp/iosApp.xcodeproj
+open apps/reference/iosApp/iosApp.xcodeproj
 ```
 
 Generate dependency analysis reports:
@@ -110,13 +110,14 @@ adb shell am start -W -a android.intent.action.VIEW -d 'kolo://debug/menu' com.f
 
 ## Repo Map
 
-- `androidApp/`: Android application boundary and entry point
+- `apps/`: app shells built on top of the shared Kolo platform
+- `apps/reference/androidApp/`: Android reference app boundary and entry point
+- `apps/reference/iosApp/`: iOS reference app and SwiftUI shell
 - `baselineprofile/`: Android Baseline Profile generator module targeting `androidApp`
 - `build-logic/`: included Gradle build for shared convention plugins
 - `composeApp/`: Compose Multiplatform UI library consumed by the Android app
 - `debugmenu/`: shared debug-menu feature module consumed by Android and iOS hosts
 - `docs/planning/`: backlog, architecture, workstreams, and foundation docs
-- `iosApp/`: iOS host app and SwiftUI shell
 - `openspec/`: change proposals, tasks, and archive artifacts
 - `server/`: Ktor server module
 - `shared/`: shared Kotlin, Metro app graph, and remaining common code
@@ -131,10 +132,10 @@ adb shell am start -W -a android.intent.action.VIEW -d 'kolo://debug/menu' com.f
 - root repository orchestration now lives in the `kolo.root` convention plugin and the root `kolo {}` block only declares which modules participate in aggregate checks
 - the base Android-KMP library convention owns the common plugin stack, toolchain, and default Android SDK values for library modules
 - the durable implementation map for CI and linting lives in `docs/planning/foundation/quality-tooling-map.md`
-- `androidApp` is the real Android app boundary
+- `apps/reference/androidApp` is the current Android host location for the `:androidApp` module
 - `baselineprofile` owns Baseline Profile generation for Android startup and critical user journeys
 - shared runtime config now lives under `shared/core/config/api/` and `shared/core/config/impl/`
-- the Android-only debug menu lives under `androidApp/debugmenu/`, is entered through a debug-only deep link, and stays on `debugImplementation`
+- the Android-only debug menu lives under `apps/reference/androidApp/debugmenu/`, is entered through a debug-only deep link, and stays on `debugImplementation`
 - `composeApp` is not the Android application module
 - `shared` is still broad outside the extracted store modules and will be split further later
 - the root build exposes `qualityCheck`, `qualityFix`, and `dependencyHealth`
@@ -171,7 +172,7 @@ The repo uses Semantic Versioning for the shared release version.
 - Gradle source of truth: `kolo.version.name` and `kolo.version.code` in `gradle.properties`
 - Android reads both values from Gradle properties
 - Server reads `kolo.version.name` from Gradle properties
-- iOS `MARKETING_VERSION` is currently mirrored in `iosApp/Configuration/Config.xcconfig`
+- iOS `MARKETING_VERSION` is currently mirrored in `apps/reference/iosApp/Configuration/Config.xcconfig`
 
 Use these bump rules:
 

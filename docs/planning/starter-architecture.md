@@ -20,16 +20,16 @@ The repo is no longer just the default Kotlin Multiplatform wizard shape.
 
 Current implemented structure:
 
-- `androidApp` is the Android application boundary
+- `apps/reference/androidApp` is the current Android host location for the `:androidApp` application module
 - `baselineprofile` is the Android Baseline Profile generator module
 - `build-logic` is the included build for shared convention plugins
 - `composeApp` is a KMP UI library, not the Android app module
 - `debugmenu` is the shared KMP debug-menu feature module
+- `apps/reference/iosApp` is the current iOS host shell
 - `shared` is the remaining broad KMP library
 - `shared:core:config:api` and `shared:core:config:impl` now hold the runtime-config contract and implementation
 - the debug menu now has platform-hosted internal tooling surfaces on Android and iOS and remains isolated from release-facing product UI
 - `shared:core:store:api` and `shared:core:store:impl` are already extracted
-- `iosApp` remains the iOS host
 - `server` remains the Ktor server starter
 
 That means the first AGP 9 migration cut has landed. The remaining structural work is mostly deeper shared-module decomposition and feature extraction rather than re-establishing the app boundary.
@@ -76,14 +76,15 @@ Choose Compose on Android and SwiftUI on iOS if:
 
 ## Build And Module Direction
 
-The AGP 9 migration first cut is already in place. The remaining module work is to continue decomposing `shared` into narrower core and feature modules without regressing the current platform boundaries.
+The AGP 9 migration first cut is already in place. The remaining module work is to continue decomposing `shared` into narrower core and feature modules without regressing the current platform boundaries or the new `platform + reference app shell` split.
 
 Target module direction:
 
-- `androidApp`: Android app entry point only
+- `apps/reference/androidApp`: current Android reference app host
 - `composeApp`: shared Compose UI surface
 - `debugmenu`: shared debug-menu feature module with thin Android and iOS hosts
-- `iosApp`: iOS host app only
+- `apps/reference/iosApp`: current iOS reference app host
+- `apps/<app-id>`: future app shell location once the platform baseline is reused beyond the reference app
 - `shared:core:model`: IDs, primitives, and serializable contracts
 - `shared:core:config:api`: runtime-config models and read-side contracts
 - `shared:core:config:impl`: runtime-config merge logic, persistence, and mutation use cases
@@ -99,7 +100,7 @@ Target module direction:
 - `shared:feature:settings`
 - `server`: Ktor server starter
 
-This is a direction, not a locked final tree. The important part is the separation between platform entry points and reusable KMP libraries.
+This is a direction, not a locked final tree. The important part is the separation between reusable KMP platform libraries and thin app shells.
 
 ## Stack Baseline
 

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolo Platform Charter</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --panel: rgba(255, 252, 246, 0.92);
+      --ink: #18212b;
+      --muted: #5e6974;
+      --line: rgba(24, 33, 43, 0.12);
+      --accent: #0d7a69;
+      --warn: #c66a20;
+      --shadow: 0 18px 48px rgba(21, 31, 41, 0.08);
+      --max: 980px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px 24px 56px; font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif; color: var(--ink); background: linear-gradient(180deg, #f8f3ec 0%, #f0ebe3 100%); }
+    .shell { max-width: var(--max); margin: 0 auto; }
+    .hero, .panel, .card { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .hero, .panel { border-radius: 28px; }
+    .hero { padding: 34px; }
+    .panel { padding: 26px; margin-top: 22px; }
+    .eyebrow, .label { color: var(--accent); font: 700 12px/1.1 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { margin-top: 16px; max-width: 11em; font-size: clamp(38px, 5vw, 62px); line-height: 0.96; letter-spacing: -0.04em; }
+    .lede, .copy, li { color: var(--muted); font: 500 15px/1.6 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .lede { margin-top: 16px; max-width: 760px; font-size: 19px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+    .card { padding: 18px; border-radius: 18px; }
+    .card h3 { margin-top: 10px; font-size: 22px; letter-spacing: -0.03em; }
+    .head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 18px; }
+    ul { margin: 12px 0 0; padding-left: 20px; }
+    li + li { margin-top: 8px; }
+    .warning { border-left: 6px solid var(--warn); }
+    @media (max-width: 840px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Kolo · Platform Charter</div>
+      <h1>Kolo exists to launch new mobile apps quickly with consistent quality.</h1>
+      <p class="lede">
+        This repo is a platform baseline, not a single app codebase with reusable leftovers. The charter
+        exists to keep the baseline honest when multiple apps, shells, and agents start competing for space.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div class="label">Mission</div>
+        <h2>What Kolo is optimizing for</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Launch velocity</div>
+          <h3>Cheap and repeatable app creation</h3>
+          <p class="copy">New apps should be faster to launch because they inherit architecture, tooling, quality rails, and shell conventions instead of rebuilding them.</p>
+        </div>
+        <div class="card">
+          <div class="label">Quality</div>
+          <h3>Testability and observability are baseline features</h3>
+          <p class="copy">Reliability is part of the platform, not a later cleanup. Every app should inherit deterministic boundaries, validation paths, and observability hooks.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div class="label">Ownership</div>
+        <h2>What Kolo owns vs what shells own</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Kolo owns</div>
+          <h3>Platform baseline</h3>
+          <ul>
+            <li>Build logic and repo-wide quality rails</li>
+            <li>Shared DI, store, persistence, navigation, and runtime-config contracts</li>
+            <li>Reusable capability modules</li>
+            <li>Observability and test infrastructure</li>
+            <li>Shell conventions and app-definition contracts</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">App shells own</div>
+          <h3>App-specific identity</h3>
+          <ul>
+            <li>App ids and bundle ids</li>
+            <li>Branding, naming, icons, and market metadata</li>
+            <li>Enabled capabilities</li>
+            <li>App-specific integrations and monetization</li>
+            <li>Market- or client-specific composition</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel warning">
+      <div class="head">
+        <div class="label">Guardrails</div>
+        <h2>What must stay out</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Do not add</div>
+          <h3>Baseline pollution</h3>
+          <ul>
+            <li>App-specific copy with no reuse value</li>
+            <li>Partner-specific or one-off integrations in shared modules</li>
+            <li>Shell-specific hacks hidden as baseline abstractions</li>
+            <li>Broad feature logic added to <code>shared</code> without a named destination</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Prefer instead</div>
+          <h3>Extension rule</h3>
+          <ul>
+            <li>App-definition config</li>
+            <li>Capability composition</li>
+            <li>Adapter interfaces at the shell edge</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
