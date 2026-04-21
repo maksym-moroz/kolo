@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.focus.kolo.appshell.ReferenceAppShell
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +13,7 @@ class MainActivity : ComponentActivity() {
             .onCreate(savedInstanceState)
 
         setContent {
-            KoloApp()
+            KoloApp(appShellDefinition = ReferenceAppShell.definition)
         }
     }
 }

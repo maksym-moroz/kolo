@@ -17,11 +17,7 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
 
 @DependencyGraph
-interface AndroidAppGraph : AppGraph {
-    val updateAppConfigOverrideUseCase: UpdateAppConfigOverrideUseCase
-    val clearAppConfigOverrideUseCase: ClearAppConfigOverrideUseCase
-    val resetAppConfigOverridesUseCase: ResetAppConfigOverridesUseCase
-
+interface AndroidAppGraph : DebugMenuGraph {
     @DependencyGraph.Factory
     fun interface Factory {
         fun create(@Provides applicationContext: Context): AndroidAppGraph

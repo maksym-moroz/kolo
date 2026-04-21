@@ -2,7 +2,7 @@ package com.focus.kolo.debugmenu
 
 import com.focus.kolo.store.Reducer
 
-class DebugMenuReducer : Reducer<DebugMenuState, DebugMenuAction> {
+internal class DebugMenuReducer : Reducer<DebugMenuState, DebugMenuAction> {
     override fun reduce(
         current: DebugMenuState,
         action: DebugMenuAction

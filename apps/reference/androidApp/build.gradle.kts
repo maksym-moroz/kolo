@@ -22,6 +22,7 @@ android {
 dependencies {
     implementation(projects.composeApp)
     implementation(projects.shared)
+    implementation(projects.shared.core.appshell)
     implementation(projects.shared.core.config.impl)
 
     implementation(libs.androidx.activity)

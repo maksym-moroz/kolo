@@ -6,29 +6,27 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.focus.kolo.KoloApplication
+import com.focus.kolo.appshell.AppCapability
 import com.jakewharton.processphoenix.ProcessPhoenix
 
 class DebugMenuActivity : ComponentActivity() {
-    private val dependencies: DebugMenuDependencies by lazy {
-        val appGraph = (application as KoloApplication).appGraph
-
-        object : DebugMenuDependencies {
-            override val storeFactory = appGraph.storeFactory
-            override val appConfigRepository = appGraph.appConfigRepository
-            override val updateAppConfigOverrideUseCase = appGraph.updateAppConfigOverrideUseCase
-            override val clearAppConfigOverrideUseCase = appGraph.clearAppConfigOverrideUseCase
-            override val resetAppConfigOverridesUseCase = appGraph.resetAppConfigOverridesUseCase
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        val app = application as KoloApplication
+        if (
+            !app.appShellDefinition
+                .supports(AppCapability.DebugMenu)
+        ) {
+            finish()
+            return
+        }
+
         setContent {
             MaterialTheme {
-                DebugMenuRoute(
-                    dependencies = dependencies,
+                DebugMenuHost(
+                    appGraph = app.appGraph,
                     onClose = ::finish,
                     onRestartRequired = { ProcessPhoenix.triggerRebirth(this) }
                 )

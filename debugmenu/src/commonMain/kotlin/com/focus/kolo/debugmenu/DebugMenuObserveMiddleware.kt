@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
-class DebugMenuObserveMiddleware(
+internal class DebugMenuObserveMiddleware(
     private val appConfigRepository: AppConfigRepository
 ) : Middleware<DebugMenuState, DebugMenuAction, DebugMenuEffect> {
     override fun interfere(

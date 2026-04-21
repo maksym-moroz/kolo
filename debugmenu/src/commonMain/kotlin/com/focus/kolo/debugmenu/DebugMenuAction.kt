@@ -6,7 +6,7 @@ import com.focus.kolo.config.impl.override.AppConfigOverrideField
 import com.focus.kolo.config.impl.override.AppFeatureFlagKey
 import com.focus.kolo.store.UiAction
 
-sealed interface DebugMenuAction : UiAction {
+internal sealed interface DebugMenuAction : UiAction {
     sealed interface IntentAction : DebugMenuAction {
         data object Close : IntentAction
 

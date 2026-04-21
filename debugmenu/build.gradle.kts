@@ -22,16 +22,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.shared.core.config.api)
-            api(projects.shared.core.config.impl)
-            api(projects.shared.core.store.api)
+            implementation(projects.shared)
+            implementation(projects.shared.core.config.api)
+            implementation(projects.shared.core.config.impl)
+            implementation(projects.shared.core.store.api)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
-        }
-        iosMain.dependencies {
-            implementation(projects.shared)
         }
     }
 }

@@ -5,7 +5,7 @@ import com.focus.kolo.config.impl.override.AppConfigOverrideField
 import com.focus.kolo.config.impl.override.AppFeatureFlagKey
 import com.focus.kolo.store.UiIntent
 
-sealed interface DebugMenuIntent : UiIntent {
+internal sealed interface DebugMenuIntent : UiIntent {
     data class SetFeatureFlag(
         val key: AppFeatureFlagKey,
         val enabled: Boolean

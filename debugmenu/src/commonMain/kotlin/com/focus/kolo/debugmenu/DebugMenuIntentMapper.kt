@@ -2,7 +2,7 @@ package com.focus.kolo.debugmenu
 
 import com.focus.kolo.store.IntentMapper
 
-class DebugMenuIntentMapper : IntentMapper<DebugMenuIntent, DebugMenuAction> {
+internal class DebugMenuIntentMapper : IntentMapper<DebugMenuIntent, DebugMenuAction> {
     override fun map(intent: DebugMenuIntent): DebugMenuAction = when (intent) {
         is DebugMenuIntent.ClearOverride -> {
             DebugMenuAction.IntentAction

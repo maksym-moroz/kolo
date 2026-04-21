@@ -27,12 +27,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.focus.kolo.DebugMenuGraph
 import com.focus.kolo.config.AppConfigSnapshot
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
-fun DebugMenuRoute(
+fun DebugMenuHost(
+    appGraph: DebugMenuGraph,
+    onClose: () -> Unit,
+    onRestartRequired: () -> Unit
+) {
+    val dependencies = remember(appGraph) {
+        appGraph.asDebugMenuDependencies()
+    }
+
+    DebugMenuRoute(
+        dependencies = dependencies,
+        onClose = onClose,
+        onRestartRequired = onRestartRequired
+    )
+}
+
+@Composable
+internal fun DebugMenuRoute(
     dependencies: DebugMenuDependencies,
     onClose: () -> Unit,
     onRestartRequired: () -> Unit

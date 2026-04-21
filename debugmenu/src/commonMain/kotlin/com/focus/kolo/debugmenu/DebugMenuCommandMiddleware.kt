@@ -10,7 +10,7 @@ import com.focus.kolo.store.StoreScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
-class DebugMenuCommandMiddleware(
+internal class DebugMenuCommandMiddleware(
     private val updateAppConfigOverrideUseCase: UpdateAppConfigOverrideUseCase,
     private val clearAppConfigOverrideUseCase: ClearAppConfigOverrideUseCase,
     private val resetAppConfigOverridesUseCase: ResetAppConfigOverridesUseCase

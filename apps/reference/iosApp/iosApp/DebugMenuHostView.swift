@@ -1,8 +1,8 @@
 import SwiftUI
-import DebugMenu
+import ComposeApp
 
 struct DebugMenuHostView: UIViewControllerRepresentable {
-    let factory: IosDebugMenuControllerFactory
+    let factory: ComposeDebugMenuControllerFactory
     let onClose: () -> Void
     let onRestartRequired: () -> Void
 
