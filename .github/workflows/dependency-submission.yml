@@ -31,3 +31,5 @@ jobs:
 
       - name: "📦 Submit dependency graph"
         uses: gradle/actions/dependency-submission@v6
+        with:
+          dependency-graph-continue-on-failure: true
