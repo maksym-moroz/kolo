@@ -1,17 +1,17 @@
-name: "✅ Quality"
+name: "📨 Dependency Submission"
 
 on:
-  pull_request:
+  workflow_dispatch:
   push:
     branches:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  quality:
-    name: "🔍 Format, detekt, and lint"
+  dependency-submission:
+    name: "🧾 Submit dependency graph"
     runs-on: ubuntu-latest
     steps:
       - name: "📥 Check out repository"
@@ -29,8 +29,5 @@ jobs:
       - name: "📦 Install Android platform 36"
         run: sdkmanager "platforms;android-36"
 
-      - name: "🛠️ Set up Gradle"
-        uses: gradle/actions/setup-gradle@v6
-
-      - name: "🧪 Run quality checks"
-        run: ./gradlew qualityCheck
+      - name: "📦 Submit dependency graph"
+        uses: gradle/actions/dependency-submission@v6

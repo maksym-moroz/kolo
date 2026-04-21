@@ -1,0 +1,82 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "minimumReleaseAge": "3 days",
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 8,
+  "enabledManagers": [
+    "gradle",
+    "github-actions"
+  ],
+  "packageRules": [
+    {
+      "description": "Keep Gradle and language toolchain upgrades together.",
+      "groupName": "build toolchain",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchPackagePrefixes": [
+        "com.android.tools.build:",
+        "org.jetbrains.kotlin",
+        "com.google.devtools.ksp",
+        "org.jetbrains.compose",
+        "org.gradle.toolchains."
+      ]
+    },
+    {
+      "description": "Keep Jetpack and AndroidX libraries together.",
+      "groupName": "androidx",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchPackagePrefixes": [
+        "androidx.",
+        "org.jetbrains.androidx."
+      ]
+    },
+    {
+      "description": "Keep Ktor client and server upgrades aligned.",
+      "groupName": "ktor",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchPackagePrefixes": [
+        "io.ktor:"
+      ]
+    },
+    {
+      "description": "Bundle repo quality tooling upgrades.",
+      "groupName": "quality tooling",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchPackagePrefixes": [
+        "com.autonomousapps.dependency-analysis",
+        "com.diffplug.spotless",
+        "dev.detekt",
+        "org.jetbrains.kotlinx.binary-compatibility-validator"
+      ]
+    },
+    {
+      "description": "Keep GitHub workflow action updates together.",
+      "groupName": "github actions",
+      "matchManagers": [
+        "github-actions"
+      ]
+    },
+    {
+      "description": "Make majors stand out for manual review.",
+      "addLabels": [
+        "dependencies-major"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ]
+    }
+  ]
+}
