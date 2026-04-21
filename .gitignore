@@ -4,6 +4,7 @@
 
 # Local tooling
 .codex/
+.superpowers/
 .idea/
 .vscode/
 *.iml

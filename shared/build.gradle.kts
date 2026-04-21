@@ -27,9 +27,5 @@ kotlin {
             implementation(projects.shared.core.store.impl)
             implementation(libs.metro.runtime)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
-        }
     }
 }
